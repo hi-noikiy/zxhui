@@ -1,0 +1,132 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/header')}
+		<section role="main" class="subpage active">
+			<div class="main-box">
+				<div class="sidebar-header">
+					<div class="sidebar-icon active">
+						<i class="fa fa-arrow-left"></i>
+						<i class="fa fa-th-list"></i>
+					</div>
+					<div class="sidebar-nav">
+						<ul>
+                            <li class="{if $id == $all['id']}active{/if}">
+								<a href="{php echo foregUrl('class',array('id'=>$all['id']))}" title="{$lastclass['title']}" class="{if $id == $all['id']}active{/if}">全部</a>
+							</li>
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+        					<li class="{if $id == $n['id'] || $class_info['parid'] == $n['id']}active{/if}">
+        						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}" class="{if $id == $n['id']}active{/if}">{$n['title']}{if $n['t']} <span class="caret"></span>{/if}</a>
+                                {if $n['t']}
+                                <ul>
+                                    {loop $n['t'] $n_t}
+                                    {if $n_t['status'] == '1'}
+                                    <li><a href="{php echo foregUrl('class',array('id'=>$n_t['id']))}" title="{$n_t['title']}">{$n_t['title']}</a></li>
+                                    {/if}
+                                    {/loop}
+                                </ul>
+                                {/if}
+        					</li>
+                            {/if}
+        					{/loop}
+						</ul>
+					</div>
+                    
+					{php include $this->mytemplate('common/search')}
+                    
+				</div>
+				<div class="met-img animsition">
+					<div class="container-fluid">
+						<div class="row">
+							<ul class="blocks-100 blocks-sm-2 blocks-md-3 blocks-xlg-4 no-space met-page-ajax" data-scale="0.66666666666667" id="items"></ul>
+						</div>
+					</div>
+				</div>
+                <button type="button" class="btn btn-icon btn-primary btn-squared met-scroll-top hide">
+					<i class="fa fa-chevron-up" aria-hidden="true"></i>
+				</button>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+		</section>
+        <script type="text/javascript">
+        layui.use('flow', function() {
+        	var flow = layui.flow;
+        	flow.load({
+        		elem: '#items'
+                ,isLazyimg: true
+        		,done: function(page, next) {
+        			var lis = [];
+                    $.post("{php echo foregUrl('class/getArticles_list', array('id' => $id), true)}&page=" + page
+                        ,{psize:'{$psize}', thumb_crop:{width:'600',height:'400'}}
+                        ,function(res){
+                            layui.each(res.data, function(index, item) {
+                                var thumb = '{M_URL}template/mobile/metinfo_328/static/images/1481262873.jpg';
+                                if(item.thumb){
+                                    thumb = item.thumb;
+                                }
+                                
+                                var tag = '';
+                                if(item.tag.length > 0){
+                                    var itag = '';
+                                    for (var i=0;i<item.tag.length;i++){
+                                        itag = itag + '、'+item.tag[i];
+                                    }
+                                    tag = itag;
+                                }
+                                
+                                var item_data = [];
+                                if(item.status == 1){
+                                    item_data = ''+
+                                    '<li class="widget ">'+
+    									'<div class="cover overlay overlay-hover">'+
+    										'<img class="cover-image overlay-scale" lay-src="'+thumb+'" alt="'+item.title+'">'+
+    										'<div class="overlay-panel overlay-fade overlay-background overlay-background-fixed text-center vertical-align">'+
+    											'<div class="vertical-align-middle">'+
+    												'<button type="button" class="btn btn-outline btn-inverse met-img-showbtn" data-imglist="'+item.title+'*'+thumb+'|">'+
+    													'浏览'+
+    												'</button>'+
+    											'</div>'+
+    										'</div>'+
+    									'</div>'+
+    									'<div class="cover-title">'+
+    										'<h3>'+item.title+'</h3>'+
+    										'<p>'+tag+'</p>'+
+    									'</div>'+
+    								'</li>';
+                                }
+            					lis.push(item_data);
+            				});
+                            
+            				next(lis.join(''), page < res.pages);
+                            
+                            
+                            if($('.met-img').length){
+                        		imageSize('.met-img .met-page-ajax');
+                        	}
+                        	if($(".met-img-showbtn").length){
+                        		$(document).on('click',".met-img-showbtn",function(){
+                        			var imglist = $(this).data("imglist"),
+                        				dyarr = new Array(),
+                        				arlt = imglist.split('|');
+                        			$.each(arlt,function(name,value) {
+                        				if(value!=''){
+                        					var st = value.split('*'),key=name;
+                        					dyarr[key] = new Array();
+                        					dyarr[key]['src'] = st[1];
+                        					dyarr[key]['thumb'] = st[1];
+                        					dyarr[key]['subHtml'] = st[0];
+                        				}
+                        			})
+                                    
+                        			$(this).galleryLoad(dyarr);
+                        		});
+                        	}
+                            
+                        }
+                    ,"json");
+                    
+        		}
+                ,end: '&nbsp;'
+        	});
+        });
+        </script>
+{php include $this->mytemplate('common/footer-base')}

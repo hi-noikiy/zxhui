@@ -1,0 +1,10 @@
+/**
+ * 玖祺企业官网
+ *
+ * @author Bowen
+ * @url www.we7pc.com
+ * <!-- phpDesigner :: Timestamp [2018/8/18 16:46:11] -->
+ */
+.must::before {content: "*"; position: absolute; right: 5px; top: 10px; color: #eb6060; font-size: 12px;}
+.layui-upload-img { width: 92px; height: 92px; margin: 0 10px 10px 0;}
+.hidden{display: none;}

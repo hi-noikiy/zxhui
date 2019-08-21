@@ -1,0 +1,84 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/mobilenav')}
+			{php include $this->mytemplate('common/topnav')}
+			{php include $this->mytemplate('common/banner2')}
+            {php include $this->mytemplate('common/mobilesearch')}
+			<div class="eco-leftnav">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-9 col-xs-12 pull-right">
+							<div class="section-title-style">
+								<h2>
+									{$class_info['title']}
+								</h2>
+							</div>
+                            
+                            <div class="met-img animsition">
+                            	<div class="container-fluid">
+                            		<div class="row">
+                            			<div class="blocks space-100 blocks-xlg-4 blocks-md-3 blocks-sm-2 met-page-ajax">
+                                            
+                                            {loop $articles $item}
+                                            {if $item['status'] == '1'}
+                                            <li class="widget ">
+                            					<div class="cover overlay overlay-hover">
+                                                    {if $item['thumb']}
+                                                        {php $item['thumb'] = tomedia($item['thumb'])}
+                                                    {else}
+                                                        {php $item['images'] = iunserializer($item['images']);}
+                                                        {php $item['thumb'] = tomedia($item['images'][0])}
+                                                    {/if}
+                            						<img class="cover-image overlay-scale" data-original="{php echo m('image')->image_crop($item['thumb'], 376, 299)}" style='height:299px;' alt="{$item['title']}"/>
+                            						<div class="overlay-panel overlay-fade overlay-background overlay-background-fixed text-center vertical-align">
+                            							<div class="vertical-align-middle">
+                            								<div class="widget-time widget-divider">
+                            									<span>
+                            										{php echo date('Y-m-d', $item['createtime'])}
+                            									</span>
+                            								</div>
+                            								<h3 class="widget-title margin-bottom-20">
+                                                                {php echo m('common')->msubstr($item['title'], 0, 5, 'utf-8')}
+                            								</h3>
+                            								<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="btn btn-outline btn-inverse" target='_self'>查看详情</a>
+                            							</div>
+                            						</div>
+                            					</div>
+                            				</li>
+                                            {/if}
+                        				    {/loop}
+                                            
+                            			</div>
+                            			
+                                            <?php
+                                            $param = array(
+                                                'html' => array(
+                                                    's' => '<div class="hidden-xs"><div class="met_pager">', 
+                                                    'e' => '</div></div>', 
+                                                    'ac' => 'Ahover', 
+                                                    'fpnl' => array(
+                                                        'f' => 'class="PreSpan first_last"', 
+                                                        'p' => 'class="PreSpan"', 
+                                                        'n' => 'class="NextA"',
+                                                        'l' => 'class="PreSpan first_last"',
+                                                    )
+                                                ),
+                                                'li' => 'null',
+                                                'always_show' => 1
+                                            );
+                                            echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                                            ?>
+                                            <!-- 最好改流加载 -->
+                                        
+                            		</div>
+                            	</div>
+                            </div>
+                            
+						</div>
+                        
+						{php include $this->mytemplate('common/leftpull')}
+                        
+					</div>
+				</div>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}

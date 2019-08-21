@@ -1,0 +1,148 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+    <div class="met-column-nav product-search-body bordernone">
+        <div class="container">
+            <div class="row">
+
+
+                <div class="col-md-3 product_search navno">
+                    <div class="row">
+                        <form method="get" action="{if $_B['core_settings']['is_rewrite'] == 1}../{$_W['uniacid']}/class_{$id}.html">{else}../app/index.php">
+                            <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                            <input type="hidden" name="c" value="entry" />
+                            <input type="hidden" name="m" value="bowen_site" />
+                            <input type="hidden" name="do" value="foreg" />
+                            <input type="hidden" name="r" value="class" />
+                            {/if}
+                            <div class="form-group">
+                                <div class="input-search">
+                                    <button type="submit" class="input-search-btn">
+                                        <i class="icon wb-search" aria-hidden="true"></i>
+                                    </button>
+                                    <input type="hidden" name="classlevel" value="1" />
+                                    <input type="hidden" name="class" value="{$all['id']}" />
+                                    <input type="text" class="form-control" name="kw" value="{$_GPC['kw']}" placeholder="Search" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="met-product animsition type-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="less-page-content">
+
+                    <ul class="blocks blocks-100 blocks-xlg-5 blocks-md-4 blocks-sm-3 met-page-ajax met-grid" id="met-grid"></ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        layui.use(['flow','myutil','php'], function() {
+            var flow = layui.flow
+                ,myutil = layui.myutil;
+            flow.load({
+                elem: '.met-page-ajax'
+                ,isLazyimg: true
+                ,isAuto: false
+                ,done: function(page, next) {
+                    var lis = [];
+                    $.post(myutil.foregUrl('class/getArticles_list', {'id':{$id}, page:page}, true)
+                        ,{psize:'{$psize}', thumb_crop:{width:'800',height:'600'}, desc_cutLength: '143', kw:'{$_GPC['kw']}'}
+                        ,function(res){
+                            layui.each(res.data, function(index, item) {
+                                var item_data = []
+                                    ,images = '';
+
+                                if(item.images.length>0){
+                                    layui.each(item.images, function(index, img){
+                                        if(images != '')images += '|';
+                                        images += item.title+'*'+img;
+                                    });
+                                }
+
+                                item_data =''+
+                                    '<li class="shown">' +
+                                        '<div class="widget widget-article widget-shadow">' +
+                                            '<figure class="widget-header cover">' +
+                                                '<a href="'+myutil.foregUrl('article',{'id':item.id}, true)+'" title="'+item.title+'" target=\'_self\'>' +
+                                                    '<img class="cover-image"' +
+                                                        'src="'+item.thumb+'"' +
+                                                        'alt="'+item.title+'">' +
+                                                '</a>' +
+                                            '</figure>' +
+                                            '<div class="widget-body">' +
+                                                '<h3 class="widget-title">'+item.title+'</h3>' +
+                                                '<div style="font-size: 20px;">'+item.content2+'</div>'+
+                                                '<p>'+item.description+'</p>'+
+                                                '<div class="widget-body-footer">' +
+                                                    '<div class="widget-actions pull-right">' +
+                                                        '<a href="'+myutil.foregUrl('article',{'id':item.id}, true)+'" title="'+item.title+'">' +
+                                                            '<i class="icon wb-eye" aria-hidden="true"></i> <span>'+item.reading+'</span>' +
+                                                        '</a>' +
+                                                    '</div>' +
+                                                    '<a href="'+myutil.foregUrl('article',{'id':item.id}, true)+'" title="'+item.title+'" target=\'_self\'' +
+                                                        'class="btn btn-outline btn-primary">查看详情</a>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</li>';
+
+                                lis.push(item_data);
+                            });
+
+                            next(lis.join(''), page < res.pages);
+
+                            $(document).ready(
+                                function(){
+                                    $(".met-img img[data-original]").lazyload({threshold:50,effect:"fadeIn"});
+                                    removeImageSize(".met-img img");
+                                    if($(".met-img-showbtn").length){
+                                        $(document).on('click',".met-img-showbtn",function(){
+                                            var imglist=$(this).data("imglist")
+                                                ,dyarr=new Array(),arlt=imglist.split('|');
+                                            $.each(arlt,function(name,value){
+                                                if(value!=''){
+                                                    var st=value.split('*'),key=name;
+                                                    dyarr[key]=new Array();
+                                                    dyarr[key]['src']=st[1];
+                                                    dyarr[key]['thumb']=st[1];
+                                                    dyarr[key]['subHtml']=st[0];
+                                                }
+                                            })
+                                            $(this).lightGallery({
+                                                autoplayControls:false
+                                                ,getCaptionFromTitleOrAlt:false
+                                                ,dynamic:true
+                                                ,dynamicEl:dyarr
+                                            })
+                                        });
+                                    }
+                                }
+                            );
+
+                            if($('.layui-flow-more').length > 0){
+                                $('.layui-flow-more').css('margin', '0');
+                                $('.layui-flow-more a').css({'height':'37px','line-height':'37px'});
+                                $('.layui-flow-more a cite').css({'width':'100%','color':'#76838f','background-color':'#e4eaec'});
+                                $('.layui-flow-more a cite').html('<i class="layui-icon layui-icon-down" style="font-size: 17px;" ></i> 查看更多');
+                            }
+
+                        }
+
+                        ,"json");
+
+                }
+                ,end: '<div></div>'
+            });
+        });
+    </script>
+{mytemplate 'common/footer'}

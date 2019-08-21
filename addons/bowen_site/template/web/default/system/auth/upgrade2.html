@@ -1,0 +1,279 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('system/auth/navs')}
+<style>
+    .label.label-primary:hover{background-color: #1ab394;}
+    .label.label-warning:hover{background-color: #f8ac59;}
+</style>
+<div class="page-heading">
+    <div class="pull-right">
+        <span>
+           <a href="" class='label usergroup'></a>
+        </span>
+        <span>
+           <a href="" class='label endtime_status'></a>
+        </span>
+    </div>
+    <h2>系统更新</h2>
+    <hr />
+</div>
+<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" >
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">当前版本</label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="input-group">
+                <div class="input-group-addon" style="background:#f2f2f2">{$version}</div>
+                <input type='text' class='form-control'  value="RELEASE {$release}" readonly style="background:#fff;"/>
+                <div class="input-group-btn">
+                    <a class='btn btn-default' href="JavaScript:;" onclick="deleteversion();" >降级版本更新</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group" >
+        <label class="col-sm-2 control-label">最新版本</label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="form-control-static" id="check">等待检测...</div>
+        </div>
+    </div>
+    
+    <div class="form-group" id="goCheck" style="display:none">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <div class='form-control-static'>
+                <input type="button" onclick="process('checkfix',callback_data.files,callback_data.db);is_button_check = 1;" value="版本校验" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group" >
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="alert alert-info error_msg" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <div class="form-group" id="upgrade" style="display:none">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <div class='form-control-static'>
+                <input type="button" id="upgradebtn" value="立即更新" class="btn btn-primary" />
+            </div>
+        </div>                
+    </div>
+    
+    <div class="form-group" >
+        <label class="col-sm-2 control-label">更新通知</label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="alert alert-info">
+                <ul class="list-unstyled">
+                    <script type="text/javascript" src="//wecenter.jiuchet.com/we7/api.php?mod=js&cid=10"></script>
+                    <p><a href="//wecenter.jiuchet.com/explore/category-10" title="更多动态" target="_blank"><span class="color-gray"><strong>更多动态 ++</strong></span></a></p>
+     			</ul>
+            </div>
+        </div>
+    </div>
+    
+</form>
+
+<script type="text/javascript">
+var oauth_status = 0;
+//var needup = 0;
+var filenum = 0;
+var dbnum = 0;
+var updtimes = 0;
+var upftimes = 0;
+var dstatus = 0;
+var fstatus = 0;
+var status = 1;
+var have_error = 0;
+//var is_first_check = 1;
+var is_button_check = 0;
+
+checkOauth('check');
+function checkOauth(action){
+    $.post("{php echo webUrl('system/auth/upgrade2')}",{action:action}
+        ,function(d){
+            if(d.errno == 0){
+                oauth_status = '1';
+                if(d.data.endtime == 0){
+                    $('.endtime_status').addClass('layui-bg-red');
+                    $('.endtime_status').html('到期时间：永久授权');
+                }else if(d.data.endtime == -1){
+                    $('.endtime_status').addClass('label-danger');
+                    $('.endtime_status').html('到期时间：已到期');
+                }else{
+                    $('.endtime_status').addClass('label-primary');
+                    $('.endtime_status').html('到期时间：'+d.data.endtime);
+                }
+                
+                if(d.data.u_title){
+                    $('.usergroup').css('background-color', d.data.u_bgcolor);
+                    $('.usergroup').html('<i class="layui-icon layui-icon-diamond" style="font-size: 13px;"></i> ' + d.data.u_title);
+                }
+                
+                if(d.data.release != '{$release}'){
+                    $('#check').html('<span style="color:blue;">最新版本为：: '+'【'+d.data.version+'】 RELEASE '+d.data.release+'</span><br/><span id="load_msg" style="color: orange;">正在进行差异对比...</span>')
+                    needup = 1;
+                    process('checkfix',d.data.files,d.data.db);                                        
+                }else{
+                    $('#check').html('<span style="color: blue;">您当前版本为最新版本，无需更新。</span>');
+                    $('#goCheck').show();
+                    callback_data = d.data;
+                }
+            }else if(d.errno){
+                util.message(d.message, "{php echo webUrl('system/auth', array('v' => '2'))}", 'error');
+            }else{
+                $('#check').html('<span style="color: blue;">与云服务器失去连接，请稍后再试</span>');
+            }
+        },"json"
+    );
+}
+
+function process(action,info,info2){
+    if(action == 'upgrade'){
+        if(dstatus == 0){
+            return process('fixdb',updtimes);
+        }
+        if(fstatus == 0 && dstatus == 1){
+            return process('dfile',upftimes);
+        }
+        if(fstatus == 1 && dstatus == 1){
+            if(have_error == 1){
+                return layer.msg('同步失败，请稍后再试', {icon: 1, time: 1500});
+            }
+            return upgradedone()
+        }
+        return false;
+    }
+    
+    $.post("{php echo webUrl('system/auth/upgrade2')}",{action:action,info:info,info2:info2}
+        ,function(d){
+            if(d.errno == 0){
+                if(action == 'checkfix'){
+                    if(d.data.dbnum > 0){
+                        //is_first_check = 0;
+                        $('#load_msg').hide();
+                        $('#check').append("<br/>共检测到有 "+d.data.dbnum+" 条数据需要更新.");
+                        dbnum = d.data.dbnum;
+                    }else{
+                        dstatus = 1;
+                    }
+                    if(d.data.filenum > 0){
+                        //is_first_check = 0;
+                        $('#load_msg').hide();
+                        $('#check').append("<br/>共检测到有 "+d.data.filenum+" 个文件需要更新.");
+                        filenum = d.data.filenum;
+                    }else{
+                        fstatus = 1;
+                    }
+                    
+                    if(filenum>0 || dbnum>0){
+                        $('#upgrade').show();
+                        $('#check').append("<br/><br/><b style='color:red'>更新前请注意数据/文件备份!</b>");
+                        $('#goCheck').hide();                        
+                    }else{
+                        if(is_button_check == 1) return layer.msg('您当前版本为最新版本，无需更新', {icon: 1, time: 1500}, function(){parent.location.reload();});
+                        //if(is_first_check == '1'){
+                            //$('#check').html('<span style="color: blue;">您当前版本为最新版本，无需更新。</span>');
+                        //}else{
+                            process('upgrade');
+                        //}
+                    }
+                    return true;
+                }
+                if(action == 'fixdb'){
+                    updtimes++;
+                    if(updtimes >= dbnum){
+                        $('#upgradebtn').val("数据库更新完成");
+                        dstatus = 1;
+                        process('upgrade');
+                        return true;
+                    }
+                    process('fixdb',updtimes);
+                    $('#upgradebtn').val("已更新 " + updtimes + " 条数据");
+                    return true;
+                }
+                if(action == 'dfile'){
+                    upftimes++;
+                    if(upftimes >= filenum){
+                        $('#upgradebtn').val("文件更新完成");
+                        fstatus = 1;
+                        process('upgrade');
+                        return true;
+                    }
+                    process('dfile',upftimes);
+                    $('#upgradebtn').val("已更新 " + upftimes + " 个文件 / 共 " + filenum + " 个文件");
+                    return true;
+                }
+            }else if(d.errno){
+                $('.error_msg').show();
+                $('.error_msg').append('['+d.message+']'+d.data.wrongfile+'<br/>');
+                have_error = 1;
+                process('dfile',upftimes);
+                $('#upgradebtn').val("已更新 " + upftimes + " 个文件 / 共 " + filenum + " 个文件");
+            }else{
+                $('#check').html('<span style="color: blue;">与云服务器失去连接，请稍后再试</span>');
+                return false;
+            }
+        },"json"
+    );
+    return true;
+}
+
+function upgradedone(){
+    $.post("{php echo webUrl('system/auth/upgrade2/upgradedone')}"
+        ,{}
+        ,function(d){
+            if(d.errno == 0){
+                layui.data('{MODULE_NAME}_cloud', {
+     			    key: 'version',
+         			value: d.data.version
+          		});
+                layui.data('{MODULE_NAME}_cloud', {
+         			key: 'release',
+         			value: d.data.release
+          		});
+
+                layer.msg(d.message, {
+                    icon: 1
+                    ,time: 1000
+                }, function(){
+                    d.data.re_url = d.data.re_url||'refresh';
+                    if(d.data.re_url == 'refresh'){
+                        parent.location.reload();
+                    }else{
+                        window.parent.location.href = d.data.re_url;
+                    }
+                });
+            }
+        },"json"
+    );
+}
+
+function deleteversion(){
+    $.post("{php echo webUrl('system/auth/upgrade2/deleteversion')}"
+        ,{}
+        ,function(d){
+            if(d.errno == 0){
+                layer.msg('操作成功', {
+                    icon: 1
+                    ,time: 1500
+                }, function(){
+                    parent.location.reload();
+                });
+            }
+        },"json"
+    );
+}
+
+$("#upgradebtn").unbind('click').click(function () {
+    if(confirm("确认已备份，并进行更新吗?")){
+        process('upgrade');
+        $('#upgrade').val('正在更新...');
+    }
+});
+</script>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/18 17:45:33] -->

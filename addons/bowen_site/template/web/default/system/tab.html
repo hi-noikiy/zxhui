@@ -1,0 +1,11 @@
+{php $r = str_replace('//', '/', trim($_GPC['r'], '/')); $routes = explode('.', $r);}
+
+<ul class="we7-page-tab">
+    <li class="{if $routes['1'] == 'domain'}active{/if}">
+        <a href="{php echo webUrl('system/domain')}">域名管理</a>
+	</li>
+    <li class="{if $routes['1'] == 'setting'}active{/if}">
+        <a href="{php echo webUrl('system/setting')}">系统设置</a>
+	</li>
+</ul>
+<!-- phpDesigner :: Timestamp [2018/8/18 17:44:58] -->

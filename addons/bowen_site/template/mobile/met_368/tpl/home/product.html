@@ -1,0 +1,92 @@
+        <section class="product_list_met_11_4  text-xs-center ulstyle" m-id="3">
+			<div class="container">
+				<div class="title-box">
+					<div class="head">
+						<h2 class="title">
+							{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}特色课程{/if}
+						</h2>
+						<p class="desc">
+							{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}个性化定制课程体系{/if}
+						</p>
+					</div>
+				</div>
+				<div class='nav-tabs-horizontal' data-plugin="nav-tabs">
+					<ul class="nav nav-tabs nav-tabs-line" role="tablist">
+                        {php $navs[$mid] = $this->getClasses('lower', array('cid'=>$settings['home']['met_368'][$k1]['class']));}
+                        {php $cn[$mid] = 0;}
+                        {loop $navs[$mid] $n}
+                        {if $n['status'] == '1'}
+                            {php $cn[$mid]++}
+                    		<li class="nav-item">
+    							<a href="#tab-{$n['id']}" title="{$n['title']}" data-toggle="tab" class="nav-link{if $cn[$mid] == 1} active{/if}">
+                                    <h3>{$n['title']}</h3>
+    							</a>
+    						</li>
+                        {/if}
+                        {/loop}
+					</ul>
+					<div class="tab-content clearfix tab-cd">
+                    {php $cn2[$mid] = 0;}
+                    {loop $navs[$mid] $n2}
+                    {if $n2['status'] == '1'}
+                        {php $cn2[$mid]++}
+						<div class="tab-pane animation-fade product-pane{if $cn2[$mid] == 1} active{/if}" id="tab-{$n2['id']}">
+							<li class="tab-banner" style="background-image:url({M_URL}template/mobile/met_368/static/images/1517896076.jpg)">
+								<div class="title">
+									{$n2['title']}
+								</div>
+								<div class="desc">
+                                    {php $n2['description'] = explode("\n", $n2['description'])}
+                                    {loop $n2['description'] $n2c}
+                                    <span>
+										.&nbsp;&nbsp;{$n2c}
+									</span>
+                                    {/loop}
+								</div>
+							</li>
+							<!-- 显示产品 -->
+                            {php $news_articles[$mid][$cn2[$mid]] = $this->getClasseArticles($n2['id'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,3));}
+                            {loop $news_articles[$mid][$cn2[$mid]] $item}
+							<li class='item'>
+								<div class="card card-product">
+									<figure class="card-header">
+                                        {if $item['thumb']}
+                                            {php $item['thumb'] = tomedia($item['thumb'])}
+                                        {else}
+                                            {php $item['images'] = iunserializer($item['images']);}
+                                            {php $item['thumb'] = tomedia($item['images'][0])}
+                                        {/if}
+										<img class="img-fluid" src="{php echo m('image')->image_crop($item['thumb'], 400, 400)}" alt="{$item['title']}">
+									</figure>
+									<h4 class="card-title">
+										<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="block text-truncate" >{$item['title']}</a>
+									</h4>
+									<p class="description">
+										{if $item['description']}
+                                            {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        {php echo m('common')->msubstr($item['description'], 0, 65)}
+									</p>
+									<strong>
+									</strong>
+									<p class="description">
+										<a href="{if $settings['home']['met_368'][$k1]['product_btn1_link']}{$settings['home']['met_368'][$k1]['product_btn1_link']}{else}JavaScript:;{/if}" class="btn btn-primary btn-squared waves-effect waves-light" target="_blank">
+                                            {if $settings['home']['met_368'][$k1]['product_btn1_text']}{php echo html_entity_decode($settings['home']['met_368'][$k1]['product_btn1_text'], ENT_QUOTES)}{else}<i class='fa fa-qq'></i> 在线交流{/if}
+                                        </a>
+										<a href="{if $settings['home']['met_368'][$k1]['product_btn2_link']}{$settings['home']['met_368'][$k1]['product_btn2_link']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" title="" class="btn btn-danger btn-squared waves-effect waves-light" target="_blank">
+                                            {if $settings['home']['met_368'][$k1]['product_btn2_text']}{php echo html_entity_decode($settings['home']['met_368'][$k1]['product_btn2_text'], ENT_QUOTES)}{else}<i class='fa fa-plus'></i> 立即报名{/if}
+                                        </a>
+									</p>
+								</div>
+							</li>
+							{/loop}
+							<!-- 显示产品 -->
+						</div>
+                    {/if}
+                    {/loop}
+						
+					</div>
+				</div>
+		</section>

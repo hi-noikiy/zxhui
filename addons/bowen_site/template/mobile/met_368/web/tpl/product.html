@@ -1,0 +1,72 @@
+    <li class="panel-group" >
+		<div class="panel panel-default">
+            <span class="mmove"><i class="fa fa-arrows"></i></span>
+            <input type="hidden" name="mtype[{$mid}]" value="product" />
+			<div class="panel-heading" {if !$is_ajax_tpl}onclick="display('product{$mid}');"{/if}>
+				<h5 class="panel-title">
+					<div>
+						{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}产品{/if}
+                        {if !$is_ajax_tpl}<span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body" id="product{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title[{$mid}]" class="form-control" value="{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}特色课程{/if}" placeholder="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >副标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en[{$mid}]" class="form-control" value="{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}个性化定制课程体系{/if}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >分类ID</label></label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('class_ngi['.$mid.']', $settings['home']['met_368'][$k1]['class'])}
+                        <div class="help-block">注：产品板块数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >产品上按钮1</label>
+                    <div class="col-sm-3 col-xs-12">
+                        <input type="text" name="product_btn1_text[{$mid}]" class="form-control" value="{if $settings['home']['met_368'][$k1]['product_btn1_text']}{$settings['home']['met_368'][$k1]['product_btn1_text']}{else}<i class='fa fa-qq'></i> 在线交流{/if}" placeholder="按钮文字内容" />
+                    </div>
+                    <div class="col-sm-5 col-xs-12">
+                        {php echo mytpl_form_field_link('product_btn1_link['.$mid.']', $settings['home']['met_368'][$k1]['product_btn1_link'])}
+                        <span class='help-block'>
+                        按钮链接
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >产品上按钮2</label>
+                    <div class="col-sm-3 col-xs-12">
+                        <input type="text" name="product_btn2_text[{$mid}]" class="form-control" value="{if $settings['home']['met_368'][$k1]['product_btn2_text']}{$settings['home']['met_368'][$k1]['product_btn2_text']}{else}<i class='fa fa-plus'></i> 立即报名{/if}" placeholder="按钮文字内容" />
+                    </div>
+                    <div class="col-sm-5 col-xs-12">
+                        {php echo mytpl_form_field_link('product_btn2_link['.$mid.']', $settings['home']['met_368'][$k1]['product_btn2_link'])}
+                        <span class='help-block'>
+                        按钮链接；留空则默认为产品链接
+                        </span>
+                    </div>
+                </div>
+                
+                <hr/>
+                <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</li>

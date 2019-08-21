@@ -1,0 +1,55 @@
+<div class="col-md-3">
+    <div class="row">
+        <div class="met-news-bar">
+            <form method="get" action="{$_W['siteroot']}app/index.php">
+                <div class="form-group">
+                    <div class="input-search">
+                        <button type="submit" class="input-search-btn">
+                            <i class="icon wb-search" aria-hidden="true"></i>
+                        </button>
+                        <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                        <input type="hidden" name="c" value="entry" />
+                        <input type="hidden" name="m" value="bowen_site" />
+                        <input type="hidden" name="do" value="foreg" />
+                        <input type="hidden" name="r" value="search" />
+                        <input type="text" class="form-control" name="kw" placeholder="Search">
+                    </div>
+                </div>
+            </form>
+            <div class="recommend news-list-md">
+                <h3>
+                    为您推荐
+                </h3>
+                <ul class="list-group list-group-bordered">
+                    {php $str_articles = $this->getArticles(array('istranslate' => 1, 'status' => 1, 'firstclass' => $article['firstclass'], 'secondclass' => $article['secondclass'], 'thirdclass' => $article['thirdclass']), array('displayorder DESC', 'createtime DESC'), array(0,6));}
+                    {if !empty($str_articles)}
+                    {loop $str_articles $item}
+                    <li class="list-group-item">
+                        <a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}" target="_self">{$item['title']}</a>
+                    </li>
+                    {/loop}
+                    {else}
+                    <div class="list-group-item">
+                        -- 暂无推荐 --
+                    </div>
+                    {/if}
+                </ul>
+            </div>
+            <ul class="column">
+                {if $class_info['level'] == '3'}
+                <li>
+                    <a href="{php echo foregUrl('class', array('id' => $topclass['id']))}" title="{$topclass['title']}">{$topclass['title']} </a>
+                </li>
+                {elseif $class_info['level'] == '2'}
+                <li>
+                    <a href="{php echo foregUrl('class', array('id' => $lastclass['id']))}" title="{$lastclass['title']}">{$lastclass['title']} </a>
+                </li>
+                {elseif $class_info['level'] == '1'}
+                <li>
+                    <a href="{php echo foregUrl('class', array('id' => $class_info['id']))}" title="{$class_info['title']}">{$class_info['title']} </a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+    </div>
+</div>

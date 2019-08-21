@@ -1,0 +1,59 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+<main class="news_list_detail_met_16_1 met-shownews animsition">
+	<div class="container">
+		<div class="row">
+            
+			<div class="col-md-12 met-shownews-body" m-id='26'>
+				<div class="row">
+					<section class="details-title border-bottom1">
+						<h1 class='m-t-10 m-b-5'>
+							{$article['title']}
+						</h1>
+						<div class="info font-weight-300">
+							<span>{php echo date('Y-m-d H:i:s', $article['createtime'])}</span>
+							{if $article['author']}
+                            <span>{$article['author']}</span>
+                            {/if}
+							<span>
+								<i class="icon wb-eye m-r-5" aria-hidden="true"></i> {if $article['reading']}{$article['reading']}{else}0{/if}
+							</span>
+						</div>
+					</section>
+					<section class="met-editor clearfix">
+						{php echo m('ui')->html_lazy($article['content'])}
+					</section>
+					{php $article['tag'] = iunserializer($article['tag'])}
+                    {if $article['tag']}
+					<div class="tag">
+                        <span><b>标签：</b></span>
+                        {loop $article['tag'] $tag}
+                        <a href="JavaScript:;" title="{$tag}">{$tag}</a>
+                        {/loop}
+                    </div>
+                    {/if}
+					<div class='met-page p-y-30 border-top1'>
+						<div class="container p-t-30 ">
+							<ul class="pagination block blocks-2">
+								<li class="page-item m-b-0 {if empty($last_article['id'])}disable{/if}">
+									<a href="{if !empty($last_article['id'])}{php echo foregUrl('article',array('id'=>$last_article['id']), true)}{else}JavaScript:;{/if}" title="{$last_article['title']}" class='page-link text-truncate '>
+									上一篇
+                                    <span aria-hidden="true" class='hidden-xs-down '>: {if $last_article['title']}{$last_article['title']}{else}没有了{/if}</span>
+									</a>
+								</li>
+								<li class="page-item m-b-0 {if empty($next_article['id'])}disable{/if}">
+									<a href="{if !empty($next_article['id'])}{php echo foregUrl('article',array('id'=>$next_article['id']), true)}{else}JavaScript:;{/if}" title="{$next_article['title']}" class='page-link pull-xs-right text-truncate '>
+									下一篇
+                                    <span aria-hidden="true" class='hidden-xs-down '>: {if $next_article['title']}{$next_article['title']}{else}没有了{/if}</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</main>
+{mytemplate 'common/footer'}

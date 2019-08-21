@@ -1,0 +1,55 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+    {php include $this->mytemplate('common/top-nav')}
+    {php include $this->mytemplate('common/banner2')}
+    <!--====================S main====================-->
+    <section class="main">
+    	<div class="page-width clearfix">
+    		<!-- S full-page-content -->
+    		<div class="full-page-content">
+    			<div id="a1portalSkin_mainArea" class="full-page-content-wrapper">
+    				<!-- Start_Module_225343 -->
+    				<a name="34199" id="34199"></a>
+    				<div class="module-default">
+    					<div class="module-inner">
+    						<div id="a1portalSkin_ctr225343225343_mainArea" class="module-content">
+    							<!-- Start_Module_225343 -->
+    							<!-- S article-detail -->
+    							<div class="article-detail">
+    								<div class="article-title">
+    									<h1>{$article['title']}</h1>
+    								</div>
+    								<div class="entry-meta">
+    									<span>
+    										<strong>所属分类：</strong>
+    										<a href="{php echo foregUrl('class',array('id'=>$article['secondclass']), true)}">{$class_info['title']}</a>
+    									</span>
+    									<span>
+    										<strong>
+    											发布时间：
+    										</strong>
+    										<strong>
+    											{php echo date('Y-m-d', $article['createtime'])}
+    										</strong>
+    									</span>
+    								</div>
+    								<div class="article-content-wrapper">
+    									<div class="article-content">
+    										<div class="qhd-content">
+    											{php echo m('ui')->html_lazy($article['content'])}
+    										</div>
+    									</div>
+    								</div>
+    							</div>
+    							<!-- article-detail -->
+    							<!-- End_Module_225343 -->
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    		<!-- E full-page-content -->
+    	</div>
+    </section>
+    <!--====================E main====================-->
+{php include $this->mytemplate('common/footer')}

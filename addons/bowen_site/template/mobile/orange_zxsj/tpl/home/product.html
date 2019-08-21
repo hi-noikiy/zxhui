@@ -1,0 +1,43 @@
+
+            <div class="met-index-product met-index-body">
+				<div class="container">
+					<h3 class="invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">
+						<a href="{php echo foregUrl('class',array('id'=>$settings['home']['orange_zxsj']['class'][$mid]))}" title="{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}热门项目{/if}" target="_self">{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}热门项目{/if}</a>
+					</h3>
+					<p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+						{$settings['home']['orange_zxsj']['title_en'][$mid]}
+					</p>
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="owl-carousel">
+								
+                                {php $product_a[$mid] = $this->getClasseArticles($settings['home']['orange_zxsj']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+                                {loop $product_a[$mid] $item}
+								<li class="project-item ">
+									<a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}" target="_self">
+    									<div class="project-img">
+                                            {if $item['thumb']}
+                                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                            {else}
+                                                {php $item['images'] = iunserializer($item['images']);}
+                                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                            {/if}
+                                            <img class="owl-lazy" data-src="{php echo m('image')->image_crop($item['thumb'], 376, 299)}" alt="{$item['title']}" />
+    									</div>
+    									<div class="project-intro">
+        									<h4 class="project-title">{$item['title']}</h4>
+                                            {if $item['description']}
+                                                {php $item['description'] = deleteRN($item['description'])}
+                                            {else}
+                                                {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                            {/if}
+        									<div class="project-descr">{php echo m('common')->msubstr($item['description'], 0, 40, 'utf-8', false)}</div>
+    									</div>
+									</a>
+								</li>
+								{/loop}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>

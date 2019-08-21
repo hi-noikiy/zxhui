@@ -1,0 +1,28 @@
+    </div>
+    <div id="footer" class="winwin-footer">
+        <hr class="met_hr" style='margin-top:0px;'>
+        <div class="container">
+            <div class="bottom">
+                <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                        <div class="bottom_left">
+                            {php $copyright = str_replace('#年#',date('Y'),$_B['setting']['global']['copyright'])}
+                            {php echo html_entity_decode($copyright, ENT_QUOTES)}
+                            {mcommon 'copyright'}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-7">
+                        <div class="bottom-right">
+                            {php $copyright2 = str_replace('#年#',date('Y'),$_B['setting']['global']['copyright2'])}
+                            {php echo html_entity_decode($copyright2, ENT_QUOTES)}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-icon btn-primary btn-squared met-scroll-top hide z999"><i class="icon wb-chevron-up" aria-hidden="true"></i></button>
+
+{mytemplate 'common/footer-base'}

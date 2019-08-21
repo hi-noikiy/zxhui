@@ -1,0 +1,7 @@
+            <footer>
+				<p>
+					{php $copyright = str_replace('#年#',date('Y'),$settings['global']['copyright'])}
+                    {php echo html_entity_decode($copyright, ENT_QUOTES)}
+				</p>
+				{mcommon 'copyright'}
+			</footer>

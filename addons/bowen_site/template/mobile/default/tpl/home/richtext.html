@@ -1,0 +1,33 @@
+
+        <!-- 富文本自定义 -->
+        {php $profile_article[$mid] = $this->getArticleInfo($settings['home']['default']['article'][$mid]);}
+        <section class="main">
+			<div class="module-full-screen" style="{if $settings['home']['default']['background_color'][$mid]}background-color: {$settings['home']['default']['background_color'][$mid]};{/if}">
+				<div class="module-inner not-animated" data-animate="fadeInDown" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['title'][$mid]}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['title_en'][$mid]}</h3>
+								<i class="mark-right"></i>
+							</div>
+							<em class="module-full-screen-title-line"></em>
+						</div>
+						<div id="a1portalSkin_ctr225312225312_mainArea" class="module-full-screen-content">
+                            
+							<div class="qhd-content">
+                                <div style="text-indent: 2rem;">
+                                    <p>
+                                    {php echo html_entity_decode($profile_article[$mid]['content'], ENT_QUOTES)}
+                                    </p>
+                                </div>
+							</div>
+                            
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- 富文本自定义 -->
+        

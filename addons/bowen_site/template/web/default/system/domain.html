@@ -1,0 +1,397 @@
+{php include $this->mytemplate('common/header')}
+<button class="layui-btn" onclick="showNewDomain();">重新唤出</button>
+<script>
+var showNewDomain = function(){
+    layui.use(['layer'], function(){
+        var iframe = layer.open({
+          type: 2,
+          title: '已迁移至新版',
+          shadeClose: true,
+          shade: false,
+          offset: 'rt',
+          content: '../web/index.php?c=site&a=entry&m=bowen_site&do=web#/set/domain'
+        });
+        layer.full(iframe);
+    });
+}
+showNewDomain();
+</script>
+<!--
+<style>
+body{background-color: #f2f2f2;}
+.layui-form-label { width: 90px;}
+.form-group * {-webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box;}
+input, textarea{-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+select { -webkit-appearance: menulist; background: white!important; }
+.layui-laypage select { height: 18px !important;}
+.layui-form-checkbox[lay-skin=primary] i { top: 5px;}
+</style>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+		<div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="font-size: 14px;">
+                 小技巧：如果填写域名为<kbd>others</kbd>。当访问域名不在域名列表时，将会执行others下的设置。如果没有设置，将会自动跳转到该访问域名下的登录地址
+            </blockquote>
+        </div>
+    </div>
+
+	<div class="layui-card">
+    
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="system-domain-search">
+			<div class="layui-form-item">
+				
+				<div class="layui-inline">
+					<label class="layui-form-label">
+						域名
+					</label>
+					<div class="layui-input-block">
+						<input type="text" name="domain" placeholder="域名" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select name="status">
+                            <option value="">不限制</option>
+                            <option value="1">生效</option>
+                            <option value="0">审核中</option>
+                        </select>
+                    </div>
+                </div>
+                
+				<div class="layui-inline">
+					<a class="layui-btn onclick" data-type="search">
+						<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+					</a>
+				</div>
+                
+			</div>
+		</div>
+        
+		<div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn onclick" data-type="batchdel">删除</button>
+                <button class="layui-btn onclick" data-type="add">添加域名</button>
+            </div>
+			<table id="system-domain-table" lay-filter="system-domain-table"></table>
+		</div>
+        
+        <script type="text/html" id="accountTpl">
+            {{#  if(d.account_name){ }}
+            {{ d.account_name }}
+            {{#  } else { }}
+            \
+            {{#  } }}
+        </script>
+        <script type="text/html" id="tourlTpl">
+            {{#  if(d.tourl){ }}
+            {{ d.tourl }}
+            {{#  } else { }}
+            \
+            {{#  } }}
+        </script>
+        <script type="text/html" id="statusTpl">
+            {{#  if(d.status == '1'){ }}
+            <span style="color: #5FB878;">生效</span>
+            {{#  } else { }}
+            <span style="color: #FFB800;">审核中</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="toolbar">
+            {{#  if(d.status == '0' || global.role == 'founder'){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">编辑</a>
+            {{#  } else { }}
+            审核通过
+            {{#  } }}
+        </script>
+        <script type="text/html" id="releaseTpl">
+             
+        </script>
+	</div>
+</div>
+<script type="text/javascript">
+    layui.use(['layer', 'form', 'table', 'myutil', 'php'], function(){
+        var $ = layui.$
+        ,form = layui.form
+        ,table = layui.table
+        ,layer = layui.layer
+        ,myutil = layui.myutil
+        ,php = layui.php;
+        
+        //渲染搜索表单，解决重载当前页面时渲染失效问题
+        form.render(null, "system-domain-search");
+        
+        table.render({
+            elem: '#system-domain-table'
+            ,cellMinWidth: 120
+            ,url: myutil.webUrl('system/domain/getDomains')
+            ,method: 'post'
+            ,page: true
+            ,request: {
+                limitName: 'psize'
+            }
+            ,cols: [[
+                {type:'checkbox', fixed: 'left'}
+                ,{type:'numbers', title: '序号', align: 'center'}
+                ,{field: 'domain', title: '域名', align: 'center'}
+                ,{field: 'account_name', title: '平台应用', align: 'center', templet: '#accountTpl'}
+                ,{field: 'tourl', title: '自定义跳转', align: 'center', templet: '#tourlTpl'}
+                ,{field: 'createtime', title: '创建时间', align: 'center'}
+                ,{field: 'status', title: '状态', align: 'center', sort: true, templet: '#statusTpl', event: 'changeStatus', style:'cursor: pointer;'}
+                ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+            ]]
+            ,done: function(){
+                
+            }
+        });
+        
+        //监听工具条
+        table.on('tool(system-domain-table)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                postForm(data);
+            } else if (obj.event === 'changeStatus') {
+                $.ajax({
+                    url: myutil.webUrl('system/domain/changeStatus')
+                    ,type: 'post'
+                    ,data: {id:data.id,status:data.status}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                status: d.data.status
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            } else if (obj.event === 'clip') {
+                
+            }
+        });
+        
+        var active = {
+            search: function() {
+                var name = $('input[name="name"]');
+                var title = $('input[name="title"]');
+                var status = $('select[name="status"]');
+                
+                //执行重载
+                table.reload('system-domain-table', {
+                    page: {
+                        curr: 1
+                    }
+                    ,where: {
+                        name: name.val()
+                        ,title: title.val()
+                        ,status: status.val()
+                    }
+                });
+            }
+            ,add:function() {
+                postForm();
+            }
+            ,batchdel: function(){
+                var checkData = table.checkStatus('system-domain-table').data;
+                
+                if(checkData.length === 0){
+                  return layer.msg('请选择数据');
+                }
+                
+                var domain_del_confirm = layer.confirm('确定勾选删除数据吗？删除后不可恢复，且可能影响到正在运营的站点', function(index) {
+                    $.ajax({
+                        url: myutil.webUrl('system/domain/delete')
+                        ,type: 'post'
+                        ,data: {checkData:checkData}
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno == 0){
+                                layer.close(domain_del_confirm);
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    table.reload('system-domain-table');
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        }
+                    });
+               	});
+            }
+        };
+        $('.onclick').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        
+        function postForm(data)
+        {
+            var founder_input = '';
+            if(global.role == 'founder'){
+                founder_input = ''+
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">兼容其他首页</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="text" name="compatible_site_welcome_module" autocomplete="off" class="layui-input" placeholder="示例：bowen_site">'+
+                                '<span class="layui-form-mid layui-word-aux">此处填写模块标识；需要开启本模块接管系统首页才能生效<br />'+
+                                '需要所属站点和自定义链接为空才能生效</span>'+
+                            '</div>'+
+                        '</div>'+
+                
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">状态</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="radio" name="status" value="1" title="生效">'+
+                                '<input type="radio" name="status" value="0" title="审核中">'+
+                            '</div>'+
+                        '</div>';
+            }
+            
+            
+            post_layer = layer.open({
+                type: 1
+                ,title: '编辑域名 - <span style="color: #FF5722;">审核通过后将不可操作该域名</span>'
+                ,id: 'system-domain-postForm'
+                ,area: '630px'
+                ,shadeClose: true
+                ,content: ''+
+                    '<style>.form-control {width: 92%;}</style>'+
+                    '<form class="layui-form" lay-filter="system-domain-postForm">'+
+                    
+                        '<input type="hidden" name="id" value="">'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">排序</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="text" name="displayorder" autocomplete="off" class="layui-input" placeholder="选填">'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label must">域名</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="text" name="domain" lay-verify="required" autocomplete="off" placeholder="不带http或者https，并且不以\'/\'结尾；如：www.jiuchet.com" class="layui-input">'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">域名协议</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="radio" name="ishttps" value="1" title="https">'+
+                                '<input type="radio" name="ishttps" value="0" title="http">'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">平台应用</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="hidden" id="uniacid" name="uniacid" autocomplete="off" >'+
+                                '<input type="text" id="account_name" name="account_name" onclick="choseAccount.open();" style="background-color: #eee;cursor: pointer;" autocomplete="off" placeholder="请点击选择" class="layui-input" readonly="true">'+
+                                '<span class="layui-form-mid layui-word-aux"> <kbd style="cursor: pointer;" onclick="$(\'#uniacid\').val(\'\');$(\'#account_name\').val(\'\');">清空选择的站点</kbd><br />'+
+                                '如果该站点是使用公众号创建的，就搜索公众号名称；如果是使用PC创建的，就搜索PC名称</span>'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<label class="layui-form-label">自定义链接</label>'+
+                            '<div class="layui-input-block">'+
+                                '<input type="text" name="tourl" autocomplete="off" class="layui-input">'+
+                                '<span style="position: absolute; top:0px; right:0;">'+
+                                    '<button class="layui-btn layui-btn-primary" type="button" onclick="LinkSelector(this);">选择链接</button>'+
+                            	'</span>'+
+                                '<span class="layui-form-mid layui-word-aux">填写后将不会打开站点而跳转至上方链接</span>'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        founder_input+
+                        
+                        '<div class="layui-form-item layui-form-text">'+
+                            '<label class="layui-form-label">备注</label>'+
+                            '<div class="layui-input-block">'+
+                                '<textarea name="remark" placeholder="选填" class="layui-textarea"></textarea>'+
+                            '</div>'+
+                        '</div>'+
+                        
+                        '<div class="layui-form-item">'+
+                            '<div class="layui-input-block" style="float: right;">'+
+                                '<a class="layui-btn layui-btn-primary" onclick="layer.close(post_layer);">关闭</a>'+
+                                '<a class="layui-btn" lay-submit lay-filter="system-domain-postForm-submit">立即提交</a>'+
+                            '</div>'+
+                        '</div>'+
+                        
+                    '</form>'
+            });
+            if(data){
+                form.val("system-domain-postForm", {
+                    "id": data.id
+                    ,"displayorder": data.displayorder
+                    ,"domain": data.domain
+                    ,"uniacid": data.uniacid
+                    ,"account_name": data.account_name
+                    ,"tourl": data.tourl
+                    ,"compatible_site_welcome_module": data.compatible_site_welcome_module
+                    ,"ishttps": (data.ishttps?data.ishttps:"0")
+                    ,"remark": data.remark
+                    ,"status": data.status
+                })
+            }else{
+                form.val("system-domain-postForm", {
+                    "id": "0"
+                    ,"ishttps": "0"
+                    ,"status": "1"
+                })
+            }
+            
+            form.on('submit(system-domain-postForm-submit)', function(data){
+                if(!data.field.uniacid && !data.field.tourl && (!data.field.compatible_site_welcome_module && global.role == 'founder')){
+                    return layer.msg('请将参数补充完整', {icon: 2});
+                }
+                
+                if(data.field.uniacid && data.field.tourl && data.field.compatible_site_welcome_module){
+                    return layer.msg('所属站点和自定义跳转只填写一个', {icon: 2});
+                }
+                
+                var post_load = layer.load(2);
+                $.ajax({
+                    url: myutil.webUrl('system/domain/post')
+                    ,type: 'post'
+                    ,data: data.field
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        layer.close(post_load);  
+                        if(d.errno == 0){
+                            table.reload('system-domain-table');
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            }, function(){
+                                layer.close(post_layer);
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+                
+                return false;
+            });
+        }
+              
+    });
+</script>
+-->
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/15 10:07:52] -->

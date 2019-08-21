@@ -1,0 +1,45 @@
+
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module007 S -->
+                        <!-- 该模块，前面两个会有标志性class -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" data-background="{if $settings['home']['metinfo_328']['background_color'][$mid]}{php echo tomedia($settings['home']['metinfo_328']['background_color'][$mid])}{else}{M_URL}template/mobile/metinfo_328/static/images/1481175422.jpg{/if}">
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="about-nav about-nav_{$mid} swiper-no-swiping">
+											<ul></ul>
+										</div>
+										<div class="about-box about-box_{$mid} swiper-container-horizontal">
+											<div class="about-cut about-cut_{$mid}">
+                                                {php $about_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+                                                {php $ca = 0}
+                                                {loop $about_articles[$mid] $item}
+												<div class="about-bin about-bin_{$mid}" title="{$item['title']}">
+													<p class="{if empty($ca)}about-sxtitle{else}about-titless{/if}">
+														{$item['description']}
+													</p>
+													{php echo html_entity_decode($item['content'])}
+												</div>
+                                                {php $ca++}
+                                                {/loop}
+											</div>
+										</div>
+                                        <!-- about-bottom -->
+										<div class="about-bottom about-bottom_{$mid} swiper-container-horizontal" style="cursor: -webkit-grab;">
+											<ul class="about-ul" style="transform: translate3d(-1920px, 0px, 0px); transition-duration: 0ms;">
+												{php $about_article[$mid] = $this->getArticleInfo($settings['home']['metinfo_328']['article'][$mid]);}
+                                                {php $about_article[$mid]['description'] = str_replace('<p>', '', html_entity_decode($about_article[$mid]['description']))}
+                                                {php $about_article_show = explode("</p>", $about_article[$mid]['description'])}
+                                                {loop $about_article_show $aai}
+												<li class="about-li about-li_{$mid}">
+													{$aai}
+												</li>
+												{/loop}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module007 E -->
+                        {/if}

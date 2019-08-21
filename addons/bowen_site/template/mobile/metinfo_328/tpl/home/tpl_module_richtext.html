@@ -1,0 +1,18 @@
+
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module009 S -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" data-background="{if $settings['home']['metinfo_328']['background_color'][$mid]}{php echo tomedia($settings['home']['metinfo_328']['background_color'][$mid])}{else}{M_URL}template/mobile/metinfo_328/static/images/1481719302.jpg{/if}">
+								<div class="table-box">
+									<div class="table-cell">
+                                        {php $richtext_article[$mid] = $this->getArticleInfo($settings['home']['metinfo_328']['article'][$mid]);}
+                                        <div class="contact-text">
+									       {php echo html_entity_decode($richtext_article[$mid]['content'], ENT_QUOTES)}
+                                        </div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module009 E -->
+                        {/if}

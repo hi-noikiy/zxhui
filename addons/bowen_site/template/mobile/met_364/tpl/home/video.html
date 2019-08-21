@@ -1,0 +1,39 @@
+<div class="lt-img-rt-tx index-video">
+    <div class="lg-container">
+        {php $settings['home']['met_364'][$k1]['bgimg'] = tomedia($settings['home']['met_364'][$k1]['bgimg'])}
+        <div class="index-video-box video_box"
+             data-original="{php echo m('image')->image_crop($settings['home']['met_364'][$k1]['bgimg'], 1440)}">
+
+            <div class="title">
+                <h2>{if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}视频{/if}</h2>
+                <h3>{php echo m('common')->msubstr($settings['home']['met_364'][$k1]['description'], 0, 45)}</h3>
+                <a href="javascript:void(0)" class="close"></a>
+            </div>
+
+            <a href="#" id="video-click" class="js_video_player" data-toggle="modal"
+               data-target="#mymodal-data"></a>
+        </div>
+    </div>
+</div>
+
+<div id="videoId" style="display:none;">
+    <p style="text-align:center">
+        <video class="metvideobox"
+               data-metvideo="1194|598||false|{php echo tomedia($settings['home']['met_364'][$k1]['video'])}"
+               style="width:1194px; height:598px; background:#000 url() no-repeat 50% 50%; background-size:contain;"/>
+        </video></p>
+</div>
+
+<div class="modal modal-tanchuang" id="mymodal-data" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg videoId-width">
+        <div class="modal-content">
+            <div class="modal-body video-modal-body">
+                <div class="modal-body-close" data-dismiss="modal"></div>
+                <div id="modal-body-id">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

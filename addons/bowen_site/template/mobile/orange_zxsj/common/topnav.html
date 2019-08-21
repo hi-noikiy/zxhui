@@ -1,0 +1,67 @@
+
+        <div id="page">
+            <nav class="navbar navbar-default met-nav navbar-fixed-top" role="navigation">
+				<div class="container">
+					<div class="row">
+						<div class="navbar-header">
+							<a href="{php echo foregUrl()}" class="navbar-logo vertical-align" title="{$settings['global']['title']}" style="{if $settings['global']['style']['logo']['margin_top']}margin-top: {$settings['global']['style']['logo']['margin_top']}px;{/if}">
+                                <div class="vertical-align-middle"><img src="{php echo tomedia($settings['global']['tn_logo'])}" alt="{$settings['global']['title']}" title="{$settings['global']['title']}"/></div>
+							</a>
+						</div>
+						<div class="pull-right econav">
+							<ul>
+								<li>
+									<button type="button" data-target="#site-navbar-search" data-toggle="modal">
+										<span class="sr-only">Toggle Search</span>
+										<i class="icon wb-search"></i>
+									</button>
+								</li>
+								<button class="mobileMenuBtn" type="button">
+									<span class="icon fa-bars"></span>
+								</button>
+							</ul>
+						</div>
+						<div class="collapse navbar-collapse navbar-collapse-toolbar" id="example-navbar-default-collapse">
+							<ul class="nav navbar-nav navbar-right navlist">
+                                
+								{php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+                              	{php $ctop_n = 0;}
+                                {loop $topnavs $tn}
+                                {if $tn['status'] == '1'}
+                              	{php $ctop_n++;}
+                                <li class="{if $ctop_n != 1}margin-left-0{/if} {if count($children[$tn['id']]) > 0}dropdown ecodropdown{/if}">
+									<a class="link{if count($children[$tn['id']]) > 0} dropdown-toggle{/if}{if $tn['sign'] && $tn['sign'] == $sign} active{/if}" href="{$tn['url']}" title="{$tn['title']}" {if count($children[$tn['id']]) > 0}data-toggle="dropdown" aria-expanded="false" role="button"{/if}>{$tn['title']}{if count($children[$tn['id']]) > 0} <span class="caret"></span>{/if}</a>
+									{if count($children[$tn['id']]) > 0}
+                                  		<ul class="dropdown-menu dropdown-menu-right bullet" role="menu">
+                                          	<li class="visible-xs-block">
+                                            	<a href="{$tn['url']}" title="{$tn['title']}" title="{$tn['title']}" target="{$tn['target']}">{$tn['title']}</a>
+                                          	</li>
+                                            {loop $children[$tn['id']] $tn_s}
+                                            {if $tn_s['status'] == '1'}
+    										<li {if count($children[$tn_s['id']]) > 0}class="dropdown-submenu"{/if}>
+    											<a href="{$tn_s['url']}" class="" target="{$tn_s['target']}" title="{$tn_s['title']}" {if count($children[$tn_s['id']]) > 0}role="button" tabindex="-1" data-hover="dropdown"{/if}>{$tn_s['title']}</a>
+    											{if count($children[$tn_s['id']]) > 0}
+                                              		<ul class="dropdown-menu animate" role="menu">
+                                                        {loop $children[$tn_s['id']] $tn_t}
+                                                        {if $tn_t['status'] == '1'}
+        												<li role="presentation">
+        													<a href="{$tn_t['url']}" class="" role="menuitem" tabindex="-1" target="{$tn_t['target']}" data-hover="dropdown">{$tn_t['title']}</a>
+        												</li>
+                                                        {/if}
+                                                        {/loop}
+    												</ul>
+                                              	{/if}
+    										</li>
+                                            {/if}
+                                            {/loop}
+										</ul>
+                                  	{/if}
+								</li>
+                                {/if}
+                                {/loop}
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>

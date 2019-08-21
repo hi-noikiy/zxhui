@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.kai8.top" versionCode="0.6">
+	<application setting="false">
+		<name><![CDATA[玖祺企业官网]]></name>
+		<identifie><![CDATA[bowen_site]]></identifie>
+		<version><![CDATA[2.0.1]]></version>
+		<type><![CDATA[enterprise]]></type>
+		<ability><![CDATA[企业官网]]></ability>
+		<description><![CDATA[响应式企业官网，不带其他功能。非后台模板]]></description>
+		<author><![CDATA[开吧源码社区]]></author>
+		<url><![CDATA[http://www.kai8.top]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports>
+			<item type="welcome" /><item type="webapp" />
+		</supports>
+	</platform>
+	<bindings>
+	    <cover>
+	        <entry title="首页" do="foreg" state="" direct="false" />
+		</cover>
+		<rule>
+		</rule>
+		<menu>
+			<entry title="管理后台" do="web" state="" direct="false" />
+		</menu>
+	</bindings>
+	<install><![CDATA[CREATE TABLE `ims_bowen_site_articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `firstclass` int(11) DEFAULT NULL,
+  `secondclass` int(11) DEFAULT NULL,
+  `thirdclass` int(11) DEFAULT NULL,
+  `themes` varchar(50) DEFAULT NULL,
+  `banner` text,
+  `sign` varchar(25) DEFAULT NULL,
+  `icon` text,
+  `title` varchar(100) DEFAULT NULL,
+  `subtitle` varchar(200) DEFAULT NULL,
+  `author` varchar(30) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `thumb` text,
+  `images` text,
+  `content` text,
+  `tag` varchar(254) DEFAULT NULL,
+  `good` int(100) DEFAULT NULL,
+  `reading` int(100) DEFAULT NULL,
+  `value` text,
+  `tourl` text,
+  `status` tinyint(1) DEFAULT NULL,
+  `istranslate` tinyint(1) DEFAULT NULL,
+  `displayorder` int(10) DEFAULT NULL,
+  `updatetime` int(10) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `content2` text,
+  `content3` text,
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`),
+  KEY `displayorder` (`displayorder`),
+  KEY `title` (`title`),
+  KEY `updatetime` (`updatetime`),
+  KEY `tag` (`tag`),
+  KEY `status` (`status`),
+  KEY `secondclass` (`secondclass`),
+  KEY `firstclass` (`firstclass`),
+  KEY `thirdclass` (`thirdclass`),
+  KEY `createtime` (`createtime`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_classes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `topid` int(11) DEFAULT NULL,
+  `parid` int(11) DEFAULT NULL,
+  `level` tinyint(1) DEFAULT NULL,
+  `title` varchar(30) DEFAULT NULL,
+  `subtitle` varchar(200) DEFAULT NULL,
+  `description` text,
+  `sign` varchar(10) DEFAULT NULL,
+  `themes` varchar(10) DEFAULT NULL,
+  `thumb` text,
+  `tourl` text,
+  `value` text,
+  `status` tinyint(1) DEFAULT NULL,
+  `displayorder` int(10) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `icon` text,
+  `images` text,
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`),
+  KEY `topid` (`topid`),
+  KEY `displayorder` (`displayorder`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_diyform_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `dfid` int(11) DEFAULT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `fields` text,
+  `data` text,
+  `status` tinyint(1) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `dfid` (`dfid`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_diyform_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `cid` int(11) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `fields` text,
+  `iscache` tinyint(1) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `updatetime` int(10) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `description` text,
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_domain` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(50) DEFAULT NULL,
+  `uniacid` int(11) DEFAULT NULL,
+  `tourl` text,
+  `endtime` int(10) DEFAULT NULL,
+  `remark` varchar(250) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `displayorder` int(3) DEFAULT NULL,
+  `ishttps` tinyint(1) DEFAULT NULL,
+  `compatible_site_welcome_module` varchar(50) DEFAULT NULL,
+  `type` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `domain` (`domain`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_msg_sign` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `type` tinyint(3) unsigned DEFAULT NULL,
+  `taskid` int(11) unsigned DEFAULT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `nickname` varchar(100) DEFAULT NULL,
+  `param` text,
+  `status` tinyint(1) DEFAULT NULL,
+  `donetime` int(10) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `log` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`),
+  KEY `taskid` (`taskid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_navs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `topid` int(11) DEFAULT NULL,
+  `parid` int(11) DEFAULT NULL,
+  `level` tinyint(1) DEFAULT NULL,
+  `type` varchar(10) DEFAULT NULL,
+  `title` varchar(10) DEFAULT NULL,
+  `sign` varchar(10) DEFAULT NULL,
+  `url` text,
+  `value` text,
+  `status` tinyint(1) DEFAULT NULL,
+  `displayorder` int(10) DEFAULT NULL,
+  `target` varchar(7) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `topid` (`topid`),
+  KEY `displayorder` (`displayorder`),
+  KEY `info` (`type`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_notice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) unsigned DEFAULT NULL,
+  `sign` varchar(30) DEFAULT NULL,
+  `template_id` varchar(50) DEFAULT NULL,
+  `status` tinyint(3) unsigned DEFAULT NULL,
+  `updatetime` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`),
+  KEY `sign` (`sign`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_notice_set` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `taskid` int(11) unsigned DEFAULT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `nickname` varchar(50) DEFAULT NULL,
+  `param` text,
+  `createtime` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `taskid` (`taskid`),
+  KEY `uniacid` (`uniacid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_pcsite_domain` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(50) DEFAULT NULL,
+  `owner_uid` int(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  `displayorder` int(3) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `domain` (`domain`),
+  KEY `status` (`status`),
+  KEY `displayorder` (`displayorder`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_plugin` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(255) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` text,
+  `author` varchar(20) DEFAULT NULL,
+  `desc` varchar(255) DEFAULT NULL,
+  `version` varchar(10) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `rolelevel` tinyint(1) DEFAULT NULL,
+  `displayorder` int(11) DEFAULT NULL,
+  `createtime` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_displayorder` (`displayorder`),
+  KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+CREATE TABLE `ims_bowen_site_sys_copyright` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `content` text,
+  `param` text,
+  `updatetime` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+]]></install>
+	<uninstall><![CDATA[DROP TABLE IF EXISTS `ims_bowen_site_articles`;
+DROP TABLE IF EXISTS `ims_bowen_site_classes`;
+DROP TABLE IF EXISTS `ims_bowen_site_diyform_data`;
+DROP TABLE IF EXISTS `ims_bowen_site_diyform_template`;
+DROP TABLE IF EXISTS `ims_bowen_site_domain`;
+DROP TABLE IF EXISTS `ims_bowen_site_msg_sign`;
+DROP TABLE IF EXISTS `ims_bowen_site_navs`;
+DROP TABLE IF EXISTS `ims_bowen_site_notice`;
+DROP TABLE IF EXISTS `ims_bowen_site_notice_set`;
+DROP TABLE IF EXISTS `ims_bowen_site_pcsite_domain`;
+DROP TABLE IF EXISTS `ims_bowen_site_plugin`;
+DROP TABLE IF EXISTS `ims_bowen_site_sys_copyright`;
+]]></uninstall>
+	<upgrade><![CDATA[m_upgrade.php]]></upgrade>
+</manifest>

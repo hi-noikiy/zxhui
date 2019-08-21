@@ -1,0 +1,16 @@
+{mytemplate 'common/header'}
+
+<?php
+$mid = 0;
+$_B['setting']['home']['met_356'] = !empty($_B['setting']['home']['met_356'])?$_B['setting']['home']['met_356']:array(
+    array('mtype' => 'banner'),array('mtype' => 'product'),array('mtype' => 'richtext'),array('mtype' => 'news'),array('mtype' => 'joint')
+);
+foreach($_B['setting']['home']['met_356'] as $k1 => $v1){
+$mtype = $v1['mtype'];
+if(empty($mtype))continue;
+include $this->mytemplate("tpl/index/".$mtype, 'mobile');
+$mid++;
+}
+?>
+
+{mytemplate 'common/footer'}

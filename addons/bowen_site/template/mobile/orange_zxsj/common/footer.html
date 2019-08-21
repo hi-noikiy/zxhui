@@ -1,0 +1,149 @@
+
+			<div class="ecofootbg">
+				<div class="met-footnav-eco">
+					<div class="container">
+						<div class="row mob-masonry">
+                            
+                            {php $about_us_article = $this->getArticleInfo($settings['home']['orange_zxsj']['about_us_article']);}
+							<div class="col-md-3 col-sm-6 col-xs-12 list text-left masonry-item">
+								<h4>
+									{if $settings['home']['orange_zxsj']['about_us_title']}{$settings['home']['orange_zxsj']['about_us_title']}{else}底部简介{/if}
+								</h4>
+								<p>
+								</p>
+                                    <script>document.write(cutcontent("{if $about_us_article['description']}{php echo replaceRN($about_us_article['description'])}{else}{php echo m('ui')->html_to_text($about_us_article['content'])}{/if}","120"));</script>
+								<p>
+								</p>
+								<a href="{if $settings['home']['orange_zxsj']['about_us_link']}{$settings['home']['orange_zxsj']['about_us_link']}{else}{php echo foregUrl('article',array('id'=>$settings['home']['orange_zxsj']['about_us_article']))}{/if}" title="{if $settings['home']['orange_zxsj']['about_us_title']}{$settings['home']['orange_zxsj']['about_us_title']}{else}底部简介{/if}" target="_self" class="read-more">查看更多<i class="fa fa-arrow-circle-right"></i></a>
+								<ul class="social">
+                                    
+                                    {if !empty($settings['global']['contact']['qq'])}
+									<li>
+										<a href="http://wpa.qq.com/msgrd?v=3&uin={$settings['global']['contact']['qq']}&site=qq&menu=yes" rel="nofollow" target="_blank" class="hvr-radial-out"><i class="fa fa-qq"></i></a>
+									</li>
+                                    {/if}
+                                    
+                                    {if !empty($settings['global']['contact']['weibo'])}
+									<li>
+										<a href="{$settings['global']['contact']['weibo']}" rel="nofollow" target="_blank" class="hvr-radial-out"><i class="fa fa-weibo"></i></a>
+									</li>
+                                    {/if}
+                                    <!--
+									<li>
+										<a href="" rel="nofollow" target="_blank" class="hvr-radial-out"><i class="icon fa-twitter"></i></a>
+									</li>
+                                    -->
+                                    {if !empty($settings['global']['contact']['email'])}
+									<li>
+										<a href="mailto:{$settings['global']['contact']['email']}" rel="nofollow" target="_blank" class="hvr-radial-out"><i class="fa fa-envelope-open"></i></a>
+									</li>
+                                    {/if}
+                                    
+                                    {if !empty($settings['global']['contact']['wechat'])}
+									<li>
+										<a id="met-weixin"><i class="fa fa-weixin "></i></a>
+										<div id="met-weixin-content" class="hide">
+											<div class="text-center met-weixin-img">
+												<img src="{php echo tomedia($settings['global']['contact']['wechat'])}">
+											</div>
+										</div>
+									</li>
+                                    {/if}
+								</ul>
+							</div>
+                            
+                            {php $the_news = $this->getClasseArticles($settings['home']['orange_zxsj']['the_news_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,5));}
+							<div class="col-md-3 col-sm-6 col-xs-12 list ecoinfo text-left masonry-item">
+								<h4>
+									{if $settings['home']['orange_zxsj']['the_news_title']}{$settings['home']['orange_zxsj']['the_news_title']}{else}底部新闻{/if} 
+								</h4>
+								<ul>
+                                    {loop $the_news $tni}
+									<li>
+										<a href="{php echo foregUrl('article',array('id'=>$tni['id']))}" target="_self" title="{$tni['title']}">{$tni['title']}</a>
+									</li>
+                                    {/loop}
+								</ul>
+							</div>
+                            
+                            {php $img_news = $this->getClasseArticles($settings['home']['orange_zxsj']['img_news_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,9));}
+							<div class="col-md-3 col-sm-6  list col-xs-12 masonry-item">
+								<h4>
+									{if $settings['home']['orange_zxsj']['img_news_title']}{$settings['home']['orange_zxsj']['img_news_title']}{else}底部图文{/if}
+								</h4>
+								<div class="gallery">
+                                    {loop $img_news $ini}
+									<a href="{php echo foregUrl('article',array('id'=>$ini['id']))}" title="{$ini['title']}" target="_self">
+                                        {if $ini['thumb']}
+                                            {php $ini['thumb'] = tomedia($ini['thumb'])}
+                                        {else}
+                                            {php $ini['images'] = iunserializer($ini['images']);}
+                                            {php $ini['thumb'] = tomedia($ini['images'][0])}
+                                        {/if}
+                                        <img data-original="{php echo m('image')->image_crop($ini['thumb'], 64, 54)}" alt="{$ini['title']}" title="{$ini['title']}" />
+                                    </a>
+									{/loop}
+                                </div>
+							</div>
+                            
+							<div class="col-md-3 col-sm-6 col-xs-12 list  text-left masonry-item">
+								<h4>
+									联系我们
+								</h4>
+								<ul class="contact-info">
+									{loop $settings['global']['bt_contact'] $bc}
+                                    {if !empty($bc['url'])}
+									<li><a href="{$bc['url']}">{php echo html_entity_decode($bc['title'], ENT_QUOTES)}</a></li>
+                                    {else}
+                                    <li>{php echo html_entity_decode($bc['title'], ENT_QUOTES)}</li>
+                                    {/if}
+                                    {/loop}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+                <footer>
+					<div class="container text-center">
+						{php $copyright = str_replace('#年#',date('Y'),$settings['global']['copyright'])}
+                        {php echo html_entity_decode($copyright, ENT_QUOTES)}
+						{mcommon 'copyright'}
+					</div>
+				</footer>
+			</div>
+            
+			<div class="modal fade modal-3d-flip-vertical" id="site-navbar-search" aria-hidden="true" role="dialog" tabindex="-1">
+				<div class="modal-dialog modal-center modal-lg">
+					<div class="modal-content">
+						<div class="modal-body">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+							<div class="container">
+								<div class="row">
+									<div class="search">
+										<form role="search" action="{$_W['siteroot']}app/index.php">
+                                            <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                                            <input type="hidden" name="c" value="entry" />
+                                            <input type="hidden" name="m" value="bowen_site" />
+                                            <input type="hidden" name="do" value="foreg" />
+                                            <input type="hidden" name="r" value="search" />
+											<div class="form-group ">
+												<div class="input-search">
+													<input type="text" class="form-control" name="kw" placeholder="搜索">
+													<button type="submit" class="input-search-btn">
+														<i class="icon wb-search" aria-hidden="true"></i>
+													</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+            
+		</div>
+		

@@ -1,0 +1,52 @@
+        <section class="team_list_met_11_3" m-id="4">
+			<div class="container">
+				<div class="title-box">
+					<div class="head">
+						<h2 class="title">
+							{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}名师风采{/if}
+						</h2>
+						<p class="desc">
+							{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}名校毕业，平均五年以上教龄，教学生动有趣{/if}
+						</p>
+					</div>
+				</div>
+				<ul class="list ulstyle" data-resize="4|4|2|1">
+                    {php $team_a[$mid] = $this->getClasseArticles($settings['home']['met_368'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+					{loop $team_a[$mid] $item}
+                    <li class="item">
+						<a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" class="head">
+                            {if $item['thumb']}
+                                {php $item['thumb'] = tomedia($item['thumb'])}
+                            {else}
+                                {php $item['images'] = iunserializer($item['images']);}
+                                {php $item['thumb'] = tomedia($item['images'][0])}
+                            {/if}
+                            <img src="{php echo m('image')->image_crop($item['thumb'], 320, 320)}" alt="{$item['title']}"/>
+						</a>
+						<div class="content">
+							<h3>
+								{$item['title']}
+								<span>
+									{php $item['tag'] = iunserializer($item['tag'])}
+                                    {if $item['tag']}
+                					{php echo implode("、", $item['tag']);}
+                                    {/if}
+								</span>
+							</h3>
+							<p class="desc">
+								{if $item['description']}
+                                    {php $item['description'] = deleteRN($item['description'])}
+                                {else}
+                                    {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                {/if}
+                                {php echo m('common')->msubstr($item['description'], 0, 45)}
+							</p>
+							<p class="hot-phone">
+								{php echo html_entity_decode($profile_article[$mid]['content'], ENT_QUOTES)}
+							</p>
+						</div>
+					</li>
+					{/loop}
+				</ul>
+			</div>
+		</section>

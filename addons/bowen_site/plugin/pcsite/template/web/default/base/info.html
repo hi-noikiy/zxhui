@@ -1,0 +1,78 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+body{background-color: #f2f2f2;}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					独立后台 应用说明
+				</div>
+				<div class="layui-card-body">
+                    
+					<blockquote class="layui-elem-quote" style="font-size: 14px;">
+						“<a class="onclick" data-type="clip" data-href="独立后台">独立后台</a>”应用，是模块独立后台设置插件。站长可以在这里：设置登录后动作；根据注册时的域名绑定相应的副站长；设置站点后台版权根据域名的变化而变化
+					</blockquote>
+                    
+				</div>
+			</div>
+        </div>
+        
+        <div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					独立后台 入口链接
+				</div>
+				<div class="layui-card-body">
+                    <blockquote class="layui-elem-quote" style="font-size: 14px;">
+						温馨提醒：点击链接可直接复制。
+					</blockquote>
+                    
+					<table class="layui-table" lay-filter="cover_list" id="cover_list"></table>
+                    
+				</div>
+			</div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+<script>
+layui.use('table', function(){
+    var table = layui.table;
+    
+    table.render({
+        elem: '#cover_list'
+        ,url: "{php echo webUrl('pcsite/base/cover')}"
+        ,method: 'post'
+        ,cols: [[
+            {field: 'id', title: 'ID', width:'5%', align: 'center'}
+            ,{field: 'title', title: '名称', width:'20%'}
+            ,{field: 'url', title: '链接', width:'75%', event: 'view_url', style:'cursor: pointer;'}
+        ]]
+        ,done: function(){
+            $("td").each(function() {
+                var td_data = $(this).context.innerText;
+                
+                if($(this).attr('lay-event') == 'view_url' && td_data.length > 2){
+                    //console.log(td_data)
+                    util.clip(this, td_data)
+                }
+           	})
+        }
+    });
+    
+    table.on('tool(cover_list)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'view_url'){
+            util.clip(this, data.url);
+        }
+    });
+});
+</script>
+{php include $this->mytemplate('common/footer', 'web')}

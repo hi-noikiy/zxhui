@@ -1,0 +1,138 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('setting/tab')}
+
+<div class="alert we7-page-alert">
+	<p><i class="wi wi-info-sign"></i> 功能描述：这里是对站点顶部导航进行单独设置，可以先把这里设置好，想好自己需要做些什么东西到官网上，链接等分类和文章已经填充完毕，再到这儿来补充链接。</p>
+    <p><strong class="text-danger"><i class="wi wi-info-sign"></i> 功能说明：站点导航是支持二级的。一级导航创建，直接点击 【+ 新建导航】按钮即可；二级导航创建，在对应一级导航那儿点击【+】进行创建。</strong></p>
+    <p><i class="wi wi-info-sign"></i> 补充说明：本处的显示状态，支持直接点击切换</p>
+</div>
+
+	<div class="we7-padding-bottom clearfix">
+        折叠/展开：
+        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="display($('.lower_level'))">全部</a>
+        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="display($('.level_3'))">三级</a>
+		<div class="pull-right">
+            <a class="layui-btn layui-btn-warm" href="{php echo webUrl('setting/navs/upgradeNavs')}">导航修复</a>
+            <a class="layui-btn" href="{php echo webUrl('setting/navs', array('op' => 'add'))}">+ 新建导航</a>
+		</div>
+	</div>
+	<table class="table we7-table table-hover article-list">
+        <col width="50" />
+		<col width="150"/>
+		<col width="380"/>
+		<col width="90"/>
+		<col width="280"/>
+		<tr>
+            <th>折/展</th>
+			<th class="text-left">排序</th>
+			<th class="text-left">导航名称</th>
+			<th>显示</th>
+			<th class="text-right">操作</th>
+		</tr>
+        {loop $topnavs $tn}
+        <!-- 1 -->
+		<tr class="">
+            <td onclick="display($('.top_is_{$tn['id']}'))">
+                <i class="layui-icon hands">{if count($children[$tn['id']]) > 0}&#xe643;{else}&#xe63f;{/if}</i>   
+            </td>
+            <td class="text-left">
+                {$tn['displayorder']}
+            </td>
+            <td class="text-left"> 
+                <span>{$tn['title']}</span>
+            </td>
+            <td>
+                <label>
+                    <label data="{$tn['status']}" class="label label-default {if !empty($tn['status'])}label-success{/if}" onclick="changeStatus(this,'{$tn['id']}');">{if !empty($tn['status'])}显示{else}隐藏{/if}</label>
+                </label>
+            </td>
+            <td class="text-right we7-padding-right">
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'add','id'=>$tn['id']))}" title="添加" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'edit','id'=>$tn['id']))}" title="编辑" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'delete','id'=>$tn['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+            </td>
+		</tr>
+        <!-- 1 -->
+        {if count($children[$tn['id']]) > 0}
+            {loop $children[$tn['id']] $tn_s}
+            <!-- 2 -->
+    		<tr class="bg-light-gray lower_level level_2 lower_of_{$tn['id']} top_is_{$tn['id']}">
+                <td onclick="display($('.lower_of_{$tn_s['id']}'))">
+                    <i class="layui-icon hands">{if count($children[$tn_s['id']]) > 0}&#xe643;{else}&#xe63f;{/if}</i>   
+                </td>
+                <td class="text-left">
+                    <span class="pad-bottom "></span>{$tn_s['displayorder']}
+                </td>
+                <td class="text-left"> 
+                    <span style="margin-left: 25px;">{$tn_s['title']}</span>
+                </td>
+                <td>
+                    <label style="margin-left: 25px;">
+                        <label data="{$tn_s['status']}" class="label label-default {if !empty($tn_s['status'])}label-success{/if}" onclick="changeStatus(this,'{$tn_s['id']}');">{if !empty($tn_s['status'])}显示{else}隐藏{/if}</label>
+                    </label>
+                </td>
+                <td class="text-right we7-padding-right">
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'add','id'=>$tn_s['id']))}" title="添加" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'edit','id'=>$tn_s['id']))}" title="编辑"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'delete','id'=>$tn_s['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+                </td>
+    		</tr>
+    		<!-- 2 -->
+            {if count($children[$tn_s['id']]) > 0}
+                {loop $children[$tn_s['id']] $tn_t}
+                <!-- 3 -->
+                <tr class="bg-light-gray2 lower_level level_3 lower_of_{$tn_s['id']} top_is_{$tn['id']}">
+                    <td>
+                        <i class="layui-icon">&#xe63f;</i>   
+                    </td>
+                    <td class="text-left">
+                        <span class="pad-bottom " style="margin-left: 25px;"></span>{$tn_t['displayorder']}
+                    </td>
+                    <td class="text-left"> 
+                        <span style="margin-left: 50px;">{$tn_t['title']}</span>
+                    </td>
+                    <td>
+                        <label style="margin-left: 50px;">
+                            <label data="{$tn_t['status']}" class="label label-default {if !empty($tn_t['status'])}label-success{/if}" onclick="changeStatus(this,'{$tn_t['id']}');">{if !empty($tn_t['status'])}显示{else}隐藏{/if}</label>
+                        </label>
+                    </td>
+                    <td class="text-right we7-padding-right">
+                        <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'edit','id'=>$tn_t['id']))}" title="编辑"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-default btn-sm" href="{php echo webUrl('setting/navs', array('op'=>'delete','id'=>$tn_t['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+                    </td>
+        		</tr>
+                <!-- 3 -->
+                {/loop}
+            {/if}
+            {/loop}
+        {/if}
+        {/loop}
+        
+	</table>
+    
+    <script type="text/javascript">
+        function changeStatus(obj,id){
+            $(obj).html($(obj).html() + "...");
+            $.post('{php echo webUrl("setting/navs/changeStatus")}',
+                {id:id, data:obj.getAttribute("data")},
+                function(d){
+                    $(obj).html($(obj).html().replace("...",""));
+                    $(obj).attr("data",d.data.status);
+                    var status_name = '显示';
+                    if(d.data.status==0){
+                        var status_name = '隐藏';
+                    }
+                    if(d.errno==0){
+                        $(obj).toggleClass("label-success");
+                        $(obj).html(status_name);
+                    }else{
+                        layer.msg(d.message, {icon:2});
+                    }
+                },"json"
+            );
+        }
+    </script>
+    
+    
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/18 17:41:57] -->

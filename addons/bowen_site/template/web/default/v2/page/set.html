@@ -1,0 +1,18 @@
+<title>主题参数</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>页面</cite></a>
+		<a><cite>主题参数</cite></a>
+	</div>
+</div>
+<div id="BOWEN_app-page-set"></div>
+<script type="text/javascript">
+layui.use(['jquery', 'myutil'], function(){
+    var $ = layui.jquery
+    ,myutil = layui.myutil;
+    var iframe = '<iframe src="'+myutil.webUrl('setting/home',{'s':'iframe', 'f':'v2'})+'" frameborder="0" class="layadmin-iframe"></iframe>';
+    $('#BOWEN_app-page-set').html(iframe);
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/18 18:06:13] -->

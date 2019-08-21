@@ -1,0 +1,15 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+    <section class="met-show animsition">
+        <div class="container">
+            <div class="row">
+                <div class="met-editor lazyload clearfix">
+                    <div>
+                        {php echo m('ui')->html_lazy($article['content'])}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{mytemplate 'common/footer'}

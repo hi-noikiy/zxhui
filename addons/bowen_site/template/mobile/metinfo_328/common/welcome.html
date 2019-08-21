@@ -1,0 +1,89 @@
+<style type="text/css">
+    div.welcome {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: url({if $settings['global']['loading']['bg1']}{php echo tomedia($settings['global']['loading']['bg1'])}{else}../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome.jpg{/if}) 30% 80%;
+	background-color: White;
+	-moz-background-size: cover;
+	background-size: cover;
+	-webkit-transition: all .3s ease-in-out .5s;
+	-moz-transition: all .3s ease-in-out .5s;
+	-ms-transition: all .3s ease-in-out .5s;
+	-o-transition: all .3s ease-in-out .5s;
+	transition: all .3s ease-in-out .5s;
+	z-index: 9999;
+}
+
+div.welcome p {
+	display: block;
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+	width: 370px;
+	height: 50px;
+	padding-top: 240px;
+	top: 50%;
+	left: 50%;
+	margin-top: -135px;
+	margin-left: -185px;
+	color: {if $settings['home']['metinfo_328']['info']['color']['1']}{$settings['home']['metinfo_328']['info']['color']['1']}{else}#00dfb9{/if};
+	font-size: 30px;
+	text-align: center;
+    {if !empty($settings['global']['loading']['logo'])}
+    background: url({php echo tomedia($settings['global']['loading']['logo'])}) no-repeat;
+    {/if}
+	overflow: hidden;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+div.welcome p u {
+	text-decoration: none;
+}
+
+@media (max-width:1280px) and (max-height:800px) {
+	div.welcome {
+		background: url({if $settings['global']['loading']['bg2']}{php echo tomedia($settings['global']['loading']['bg2'])}{else}../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome_h800.jpg{/if}) 30% 80%;
+	}
+}
+
+@media (max-width:960px) and (max-height:600px) {
+	div.welcome {
+		background: url({if $settings['global']['loading']['bg3']}{php echo tomedia($settings['global']['loading']['bg3'])}{else}../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome_h600.jpg{/if}) 30% 80%;
+	}
+}
+
+@media (max-width:800px),(max-height:480px) {
+	div.welcome p {
+		width: 218px;
+		padding-top: 190px;
+		top: 40%;
+		left: 50%;
+		margin-top: -110px;
+		margin-left: -109px;
+		background: no-repeat;
+	}
+}
+
+@media (max-height:260px) {
+	div.welcome p {
+		height: 158px;
+		padding: 0px;
+		margin-top: -79px;
+	}
+
+	div.welcome p u {
+		display: none;
+	}
+}
+</style>
+<div class="welcome"><p><u>{if !empty($settings['global']['loading']['text'])}{$settings['global']['loading']['text']}{else}Loading . . .{/if}</u></p></div>
+<script>
+    window.onload=function(){
+        $(".welcome").fadeOut();
+        //醒目首页菜单按钮
+        setTimeout("layer.tips('更多内容，点这里', '.head-rights ol', {tips: [3,'#FF5722'],time:7000,anim: 3});", 500);
+    }
+</script>

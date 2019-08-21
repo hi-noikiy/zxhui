@@ -1,0 +1,52 @@
+
+        <!-- S 产品中心 -->
+        {php $cases_articles[$mid] = $this->getClasseArticles($settings['home']['default']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+        <section class="main">
+			<div class="module-full-screen" style="{if $settings['home']['default']['background_color'][$mid]}background-color: {$settings['home']['default']['background_color'][$mid]};{/if}">
+				<div class="module-inner not-animated" data-animate="fadeInUp" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['title'][$mid]}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['title_en'][$mid]}</h3>
+								<i class="mark-right"></i>
+							</div>
+							<em class="module-full-screen-title-line">
+							</em>
+						</div>
+						<div id="a1portalSkin_ctr225313225313_mainArea" class="module-full-screen-content">
+							<div class="portfolio-list product-list">
+								<ul class="column clearfix">
+                                    
+                                    {php $c_cases = 0;}
+                                    {loop $cases_articles[$mid] $c_i}
+                                    {php $c_cases++}
+									<li class='col-4-1 {if $c_cases%4 == 0}last{/if} not-animated' data-animate='fadeInUp'>
+										<div class="product-item">
+											<div class="portfolio-img">
+												<a href="{php echo foregUrl('article',array('id'=>$c_i['id'], '', true))}" target="_blank">
+                                                    <img class="lazyload" src="{M_URL}/template/mobile/default/static/img/lazy.png" data-src="{php echo tomedia($c_i['thumb'])}" alt="{$c_i['title']}" width="273" />
+                                                </a>
+											</div>
+											<div class="portfolio-title">
+												<h2>
+													<a href="{php echo foregUrl('article',array('id'=>$c_i['id'], '', true))}" target="_blank">{$c_i['title']}</a>
+												</h2>
+											</div>
+										</div>
+									</li>
+                                    {/loop}
+                                    
+								</ul>
+							</div>
+						</div>
+						<div class="module-full-screen-more">
+							<a href="{php echo foregUrl('class',array('id'=>$settings['home']['default']['class'][$mid], '', true))}" target="_blank">查看更多 ></a>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- E产品中心 -->
+            

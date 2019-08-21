@@ -1,0 +1,146 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('system/auth/navs')}
+<div class="" style="margin-top: 50px;">
+    <form action="" method="post" class="form-horizontal form" id="setting-form">
+        <div class="panel panel-default">
+            <div class="panel-heading">系统授权</div>
+            <div class="panel-body">
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">域名</label>
+    				<div class="col-sm-8">
+    				    <input type="text" name="oauth_url" class="form-control" value="{$oauth['domain']}" readonly="" />
+                        <div class="help-block">服务器域名</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">站点IP</label>
+    				<div class="col-sm-8">
+    				    <input type="text" name="oauth_ip" class="form-control" value="{$oauth['ip']}" readonly="" />
+                        <div class="help-block">站点IP</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">站点ID</label>
+    				<div class="col-sm-8">
+    				    <input type="text" name="id" class="form-control" value="{$oauth['id']}" readonly="" />
+                        <div class="help-block">站点ID,如果为空，请到 <a href="{php echo url('cloud/profile')}" target="_blank" style="color: #8080FF;">站点注册</a> 绑定您的服务器</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">授权码</label>
+    				<div class="col-sm-8">
+    				    <input type="text" name="oauth_code" class="form-control" value="{$oauth['oauth_code']}" />
+                        <div class="help-block">请联系客服将域名、IP及站点ID提交给客服, 索取授权码，保护好您的授权码，避免泄漏<br /><code>客服QQ：1242194803</code></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">授权状态</label>
+    				<div class="col-sm-8">
+                        <div class='form-control-static'>
+                            <label class="label label-default oauth_status">校验中...</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group endtime_group" style="display: none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">更新服务到期时间</label>
+    				<div class="col-sm-8">
+                        <div class='form-control-static'>
+                            <label class="label endtime_status"></label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">官方论坛</label>
+    				<div class="col-sm-8">
+    				    <div class='form-control-static'>
+                            <a href='https://wecenter.jiuchet.com/' style="color: blue;" target='_blank'>https://wecenter.jiuchet.com/</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group alert_info" style="display: none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+    				<div class="col-sm-8">
+                        <div class="help-block">如果您正在使用非正版授权，请您尊重我们的劳动成果，谢谢您~</div>
+                        <div class="help-block">盗版有风险，请谨慎使用!</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <input type="submit" name="check" value="更新授权" class="btn btn-warning" />
+            <a class="btn btn-success btn_upgrade" onclick="sys_upgrade()" >系统升级</a>
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    oauth_status = '0';
+    checkOauth();
+    function checkOauth(){
+        $.post("{php echo webUrl('system/auth/upgrade'.$_GPC['v'].'/check')}"
+            ,{}
+            ,function(d){
+                if(d.errno == 0){
+                    $('.oauth_status').addClass("label-success");
+                    $('.oauth_status').html('已授权');
+                    $('.endtime_group').show();
+                    oauth_status = '1';
+                    if(d.data.endtime == 0){
+                        $('.endtime_status').addClass('label-warning');
+                        $('.endtime_status').html('不限制');
+                    }else if(d.data.endtime == -1){
+                        $('.endtime_status').addClass('label-danger');
+                        $('.endtime_status').html('已到期');
+                        $('.btn_upgrade').hide();
+                        oauth_status = '0';
+                    }else{
+                        $('.endtime_status').addClass('label-warning');
+                        $('.endtime_status').html(d.data.endtime);
+                    }
+                    if(d.data.cip){
+                        $('input[name="oauth_ip"]').val(d.data.cip);
+                    }
+                }else if(d.errno){
+                    console.log(d)
+                    console.log(d.data)
+                    $('.oauth_status').addClass("label-danger");
+                    if(d.errno == '1'){
+                        $('.oauth_status').html(d.message);
+                    }else{
+                        //$('.oauth_status').html('未授权');
+                        $('.oauth_status').html(d.message);
+                        if(d.data.code != 0){
+                            $('.alert_info').show();
+                        }
+                        if(d.data.cip){
+                            $('input[name="oauth_ip"]').val(d.data.cip);
+                        }
+                    }
+                    $('.btn_upgrade').hide();
+                    oauth_status = '0';
+                }else{
+                    alert('与云服务失去连接，请稍后再试');
+                }
+            },"json"
+        );
+    }
+    function sys_upgrade(){
+        if(oauth_status==0){
+            alert('不在更新服务期，请联系客服');
+            return false;
+        }
+        window.location.href="{php echo webUrl('system/auth/upgrade'.$_GPC['v'])}";
+    }
+</script>
+
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/18 17:45:15] -->

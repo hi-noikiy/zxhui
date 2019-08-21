@@ -1,0 +1,23 @@
+<div class="partner_list_met_16_2 met-index-body bgpic" m-id='5'>
+    <div class="container text-xs-center">
+        <h2 class="title invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">{if $settings['home']['met_356'][$k1]['title']}{$settings['home']['met_356'][$k1]['title']}{else}我们的合作伙伴{/if}</h2>
+        <div class="title-icon"></div>
+        <p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">{if $settings['home']['met_356'][$k1]['subtitle']}{$settings['home']['met_356'][$k1]['subtitle']}{else}our business partner{/if}</p>
+        <ul class="no-space imglist p-l-0 invisible" data-plugin="appear" data-animate="slide-bottom" data-repeat="false" data-scale='$ui[img_y]x$ui[img_x]' row="4|4|2|2">
+            {php $joint_a[$mid] = $this->getClasseArticles($settings['home']['met_356'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+            {loop $joint_a[$mid] $item}
+            <li class="">
+                <div class="overlay overlay-hover">
+                    {if $item['thumb']}
+                        {php $item['thumb'] = tomedia($item['thumb'])}
+                    {else}
+                        {php $item['images'] = iunserializer($item['images']);}
+                        {php $item['thumb'] = tomedia($item['images'][0])}
+                    {/if}
+                    <img src="{php echo m('image')->image_crop($item['thumb'], 314, 130)}" class="overlay-scale gray" alt="{$item['title']}" >
+                </div>
+            </li>
+            {/loop}
+        </ul>
+    </div>
+</div>

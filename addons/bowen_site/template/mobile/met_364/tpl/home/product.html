@@ -1,0 +1,38 @@
+<div class="lg-container met-index-product bowen_card_list">
+
+    <div class="row">
+
+        {php $settings['home']['met_364'][$k1]['psize'] = $settings['home']['met_364'][$k1]['psize']?$settings['home']['met_364'][$k1]['psize']:6;}
+        {php $product_a[$mid] = $this->getClasseArticles($settings['home']['met_364'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,$settings['home']['met_364'][$k1]['psize']));}
+        {loop $product_a[$mid] $item}
+        <div class="col-sm-6">
+            <div class="met_multi_img animate-item">
+                <div class="met_img">
+                    <a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']))}{/if}" title="{$item['title']}" target='_blank'>
+                        {if $item['thumb']}
+                        {php $item['thumb'] = tomedia($item['thumb'])}
+                        {else}
+                        {php $item['images'] = iunserializer($item['images']);}
+                        {php $item['thumb'] = tomedia($item['images'][0])}
+                        {/if}
+                        <img data-original="{php echo m('image')->image_crop($item['thumb'], 840)}"
+                             alt="{$item['title']}" class="img-responsive" width="840" height="550"/>
+                    </a>
+                </div>
+
+                <div class="met_img_subinfo">
+                    <a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']))}{/if}" title="{$item['title']}" target='_blank'>
+                        <div class="met_img_wrap">
+                            <h3>{$item['title']}</h3>
+                            {php echo html_entity_decode($item['content3'], ENT_QUOTES)}
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {/loop}
+
+    </div>
+
+</div>

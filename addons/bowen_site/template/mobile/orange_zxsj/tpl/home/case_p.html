@@ -1,0 +1,45 @@
+
+            <div class="met-index-cases met-index-body" data-bg="{if $settings['home']['orange_zxsj']['background_color'][$mid]}{php echo tomedia($settings['home']['orange_zxsj']['background_color'][$mid])}{else}{M_URL}template/mobile/orange_zxsj/static/images/cases_bg.jpg{/if}" bg-repeat="false">
+				<div class="container">
+					<div class="owl-carousel invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+						
+                        {php $case_a[$mid] = $this->getClasseArticles($settings['home']['orange_zxsj']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+                        {loop $case_a[$mid] $item}
+						<div class="item">
+							<div class="testimonials">
+								<div class="testimonials-content">
+									<h3>
+                                        {php $item['tag'] = iunserializer($item['tag'])}
+										{$item['tag'][0]}
+									</h3>
+									<p>
+                                        {if $item['description']}
+                                            {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        {php echo m('common')->msubstr($item['description'], 0, 80)}
+									</p>
+								</div>
+								<div class="testimonials-author">
+                                    {if $item['thumb']}
+                                        {php $item['thumb'] = tomedia($item['thumb'])}
+                                    {else}
+                                        {php $item['images'] = iunserializer($item['images']);}
+                                        {php $item['thumb'] = tomedia($item['images'][0])}
+                                    {/if}
+                                    {if empty($item['thumb'])}
+                                        {php $item['thumb'] = "../addons/bowen_site/template/mobile/orange_zxsj/static/images/1474450852.jpg"}
+                                    {/if}
+									<img class="owl-lazy" data-src="{php echo m('image')->image_crop($item['thumb'], 80, 80)}" title="{$item['title']}" alt="{$item['title']}" />
+									<span class="t-mgr30">
+                                        {$item['title']}
+									</span>
+								</div>
+							</div>
+						</div>
+						{/loop}
+                        
+					</div>
+				</div>
+			</div>

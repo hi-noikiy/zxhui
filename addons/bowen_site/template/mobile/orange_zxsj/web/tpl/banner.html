@@ -1,0 +1,94 @@
+    <li class="panel-group" >
+		<div class="panel panel-default">
+            <span class="mmove"><i class="fa fa-arrows"></i></span>
+            <input type="hidden" name="mtype[]" value="banner" />
+			<div class="panel-heading" {if !$is_ajax_tpl}onclick="display('banner{$mid}');"{/if}>
+				<h5 class="panel-title">
+					<div>
+						{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}轮播图{/if}
+                        {if !$is_ajax_tpl}<span class="color-green" style="font-size: 13px;">支持拖动排序</span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="banner{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >中文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title[]" class="form-control" value="{$settings['home']['orange_zxsj']['title'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >英文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en[]" class="form-control" value="{$settings['home']['orange_zxsj']['title_en'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >中文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title2[]" class="form-control" value="{$settings['home']['orange_zxsj']['title2'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >英文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en2[]" class="form-control" value="{$settings['home']['orange_zxsj']['title_en2'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label must" >板块背景图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('background_color[]', $settings['home']['orange_zxsj']['background_color'][$mid], '../addons/bowen_site/template/mobile/orange_zxsj/static/images/cases_bg.jpg');}
+                        <span class='help-block'>注：1572*922</span>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >分类id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('class_ngi[]', $settings['home']['orange_zxsj']['class'][$mid])}
+                        <div class="help-block">注：banner中的新闻轮播，如果为0则不显示新闻轮播</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >文章id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('article_ngi[]', $settings['home']['orange_zxsj']['article'][$mid])}
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >留言id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('diyform_ngi[]', $settings['home']['orange_zxsj']['diyform'][$mid])}
+                    </div>
+                </div>
+                
+				<ol class='banner'>
+					{loop $settings['home']['banner'] $item}
+                    {php include $this->mytemplate('web/tpl/banner-s', 'mobile')}
+                    {/loop}
+				</ol>
+                
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+                        {if !$is_ajax_tpl}
+						<a class="btn btn-default btn-add-banner" href="javascript:;" onclick="addBanner();"><i class="fa fa-plus" title=""></i> 增加一张轮播图</a>
+                        {else}
+                        <a class="btn btn-default layui-btn-disabled" href="javascript:;" >请提交保存后，再添加轮播图</a>
+                        {/if}
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</li>

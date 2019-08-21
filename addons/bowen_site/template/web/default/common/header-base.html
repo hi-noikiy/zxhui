@@ -1,0 +1,143 @@
+<?php
+//当旧版为iframe子窗口时，符合条件的跳转到新版
+if(empty($_B))global $_B;
+if($_GET['s'] == 'iframe'){
+    $isN = 0;
+    $webURl = webUrl();
+    $c = '<script type="text/javascript">';
+    if($_B['routes'] == 'content.articles' && empty($_GET['op'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/content/article/"';
+        $isN = 1;
+    }elseif($_B['routes'] == 'content.classes' && empty($_GET['op'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/content/category/"';
+        $isN = 1;
+    }elseif($_B['routes'] == 'setting.navs' && empty($_GET['op'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/content/nav/"';
+        $isN = 1;
+    }elseif($_B['routes'] == 'setting.global' && empty($_GET['f'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/page/global"';
+        $isN = 1;
+    }elseif($_B['routes'] == 'setting.home' && empty($_GET['f'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/page/set"';
+        $isN = 1;
+    }elseif($_B['routes'] == 'setting.themes' && empty($_GET['f'])){
+        $c .= 'window.parent.location.href = "'.$webURl.'#/page/themes"';
+        $isN = 1;
+    }
+    $c .= '</script>';
+    echo $c;
+    if($isN == 1)die;
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+    <meta name="author" content="Bowen" />
+    <meta name="release" content="{RELEASE}" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<title>{if $_W['page']['copyright']['title']}{$_W['page']['copyright']['title']}{else}企业官网{/if}</title>
+	<meta name="keywords" content="{$_W['page']['copyright']['keywords']}" />
+	<meta name="description" content="{$_W['page']['copyright']['description']}" />
+	<link rel="shortcut icon" href="{if !empty($_W['setting']['copyright']['icon'])}{$_W['attachurl']}{$_W['setting']['copyright']['icon']}{/if}" />
+	{if $_W['need_we7res']}
+    <link href="./resource/css/bootstrap.min.css?v=20180322" rel="stylesheet">
+	<link href="./resource/css/common.css?v=20180322" rel="stylesheet">
+    <link href="{M_LOCAL}template/web/default/static/css/global.css?v={RELEASE}" rel="stylesheet" />
+    <script type="text/javascript">
+	if(navigator.appName == 'Microsoft Internet Explorer'){
+		if(navigator.userAgent.indexOf("MSIE 5.0")>0 || navigator.userAgent.indexOf("MSIE 6.0")>0 || navigator.userAgent.indexOf("MSIE 7.0")>0) {
+			alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
+		}
+	}
+	window.sysinfo = {
+		{if !empty($_W['uniacid'])}'uniacid': '{$_W['uniacid']}',{/if}
+		{if !empty($_W['acid'])}'acid': '{$_W['acid']}',{/if}
+		{if !empty($_W['openid'])}'openid': '{$_W['openid']}',{/if}
+		{if !empty($_W['uid'])}'uid': '{$_W['uid']}',{/if}
+		'isfounder': {if !empty($_W['isfounder'])}1{else}0{/if},
+        'role': "{$_W['role']}",
+		'family': '{IMS_FAMILY}',
+		'siteroot': '{$_W['siteroot']}',
+		'siteurl': '{$_W['siteurl']}',
+		'attachurl': '{$_W['attachurl']}',
+		'attachurl_local': '{$_W['attachurl_local']}',
+		'attachurl_remote': '{$_W['attachurl_remote']}',
+		'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'},
+		'cookie' : {'pre': '{$_W['config']['cookie']['pre']}'},
+		'account' : {php echo json_encode($_W['account'])},
+		'server' : {'php' : '{php echo phpversion()}'},
+        'isrewrite' : {if !empty($settings['global']['isrewrite'])}1{else}0{/if},
+        'route': "{if !empty($_GET['r'])}{php echo trim($_GET['r'])}{else}null{/if}",
+        'op': "{if !empty($_GET['op'])}{php echo trim($_GET['op'])}{else}null{/if}",
+        version: "{VERSION}",
+        release: "{RELEASE}",
+        upgrade_url: "{php echo webUrl('system/auth/upgrade2')}",
+        bowen_site:{
+            apptheme: "{$_B['setting']['global']['mobilethemes']}",
+            version: "{VERSION}",
+            release: "{RELEASE}",
+            upgrade_url: "{php echo webUrl('system/auth/upgrade2')}",
+        }
+	};
+	</script>
+	<script>var require = { urlArgs: 'v=20180322' };</script>
+	<script type="text/javascript" src="./resource/js/lib/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="./resource/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./resource/js/app/util.js?v=20180703"></script>
+	<script type="text/javascript" src="./resource/js/app/common.min.js?v=20180322"></script>
+	<script type="text/javascript" src="./resource/js/require.js?v=20180322"></script>
+    {/if}
+    <script src="{M_STATIC}js/common.js?v={RELEASE}"></script>
+    <!-- layui -->
+    <link rel="stylesheet" href="{M_STATIC}layui/css/layui.css?v={RELEASE}" />
+    <script src="{M_STATIC}layui/layui.js?v={RELEASE}"></script>
+    <!--[if lt IE 9]>
+        <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+    window.global = {
+        'uniacid': '{php echo intval($_W['uniacid'])}',
+		{if !empty($_W['acid'])}'acid': '{$_W['acid']}',{/if}
+		{if !empty($_W['openid'])}'openid': '{$_W['openid']}',{/if}
+		{if !empty($_W['uid'])}'uid': '{$_W['uid']}',{/if}
+		'isfounder': {if !empty($_W['isfounder'])}1{else}0{/if},
+        'role': "{$_W['role']}",
+		'ims_family': '{IMS_FAMILY}',
+		'siteroot': '{if $_B['siteroot']}{$_B['siteroot']}{else}{$_W['siteroot']}{/if}',
+		'siteurl': '{$_W['siteurl']}',
+		'attachurl': '{$_W['attachurl']}',
+		'attachurl_local': '{$_W['attachurl_local']}',
+		'attachurl_remote': '{$_W['attachurl_remote']}',
+		'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'},
+		'account_type' : "{$_W['account']['type']}",
+        'uni_is_multi_acid': {if uni_is_multi_acid()}true{else}false{/if},
+        'isrewrite' : "{if !empty($settings['global']['isrewrite'])}1{else}0{/if}",
+        'route': "{if !empty($_GET['r'])}{php echo trim($_GET['r'])}{else}null{/if}",
+        'op': "{if !empty($_GET['op'])}{php echo trim($_GET['op'])}{else}null{/if}",
+        upgrade_url: "{php echo webUrl('system/auth/upgrade2')}",
+        apptheme: "{$_B['setting']['global']['mobilethemes']}",
+        webtheme: "{$_B['core_settings']['webtheme']}",
+        version: "{VERSION}",
+        release: "{RELEASE}",
+        family: "{FAMILY}"
+        ,isiframe: "{if $_GET['s'] == 'iframe'}1{else}0{/if}"
+    }
+    layui.config({
+        base: '{M_URL}static/layui/lay/mymodules/'
+        ,version: global.release
+        //,version: true
+    });
+    
+    layui.extend({
+        global: '{/}{M_URL}template/web/default/static/js/global'
+    }).use('global');
+    </script>
+<style>.form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline {padding-top: 0 !important;}</style>
+<!-- phpDesigner :: Timestamp [2018/8/17 23:34:16] -->

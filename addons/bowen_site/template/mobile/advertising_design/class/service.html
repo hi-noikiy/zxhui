@@ -1,0 +1,48 @@
+{php include $this->mytemplate('common/header-base')}
+<body class="inner-box-body">
+	<!-- 顶部导航 begin-->
+	{php include $this->mytemplate('common/top-nav')}
+	<!-- 顶部导航 end-->
+	<!-- 轮播图片 begin-->
+	{php include $this->mytemplate('common/banner2')}
+	<!-- 轮播图片 end-->
+	<!-- 内容展示 begin-->
+	<div class="layout  padding-large-top" id="fh5co-content_show">
+		<div class="content-boxs channel-box">
+			<div class="detail">
+				<div class="service-boxs">
+                    <!-- S articles -->
+                    {loop $articles $ai}
+                    {if $ai['status'] == '1'}
+					<div class="contents lines">
+						<div class="container">
+							<div class="line">
+								<div class="xl12 xs6 xm6 margin-large-bottom not-animated" data-animate="fadeInLeft" data-delay="200">
+									<div class="media-img">
+										<img src="{php echo tomedia($ai['thumb'])}" alt="{$ai['title']}" />
+									</div>
+								</div>
+								<div class="xl12 xs6 xm6 margin-large-bottom not-animated" data-animate="fadeInRight" data-delay="200">
+									<div class="desc">
+										<h5>{$ai['title']}</h5>
+										<div class="brief" style="box-sizing: border-box; margin: 30px 0px 25px; padding: 0px; border: 0px; font-variant-numeric: inherit; font-stretch: inherit; font-size: 14px; line-height: inherit; font-family: 微软雅黑, arail, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Microsoft Yahei&quot;, &quot;Hiragino Sans GB&quot;, &quot;Heiti SC&quot;, &quot;WenQuanYi Micro Hei&quot;, sans-serif; vertical-align: baseline; color: rgb(153, 153, 153);">
+                                            {if $ai['description']}{php echo replaceRN($ai['description'])}{else}{php echo m('ui')->html_to_text($ai['content'])}{/if}
+										</div>
+										<div class="info" style="box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant-numeric: inherit; font-stretch: inherit; font-size: 14px; line-height: inherit; font-family: 微软雅黑, arail, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Microsoft Yahei&quot;, &quot;Hiragino Sans GB&quot;, &quot;Heiti SC&quot;, &quot;WenQuanYi Micro Hei&quot;, sans-serif; vertical-align: baseline; color: rgb(102, 102, 102);">
+											{php echo html_entity_decode($ai['content'])}
+										</div>
+										<br />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                    {/if}
+					{/loop}
+					<!-- E articles -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 内容展示 end-->
+	{php include $this->mytemplate('common/footer')}

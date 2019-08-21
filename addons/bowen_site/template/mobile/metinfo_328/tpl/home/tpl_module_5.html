@@ -1,0 +1,51 @@
+                        {php $mid = 4;}
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module005 S -->
+                        <!-- 该模块，最少要四个内容才会显示 -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" style="background-image: url('{M_URL}template/mobile/metinfo_328/static/images/1481169859.jpg');">
+								<div class="worth-ctrl">
+									<div class="ctrl-box ctrl-left">
+										<i class="fa fa-angle-left"></i>
+									</div>
+									<div class="ctrl-box ctrl-right">
+										<i class="fa fa-angle-right"></i>
+									</div>
+								</div>
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												<font color="#fff">
+													{$settings['home']['metinfo_328']['title'][$mid]}
+												</font>
+											</h2>
+										</div>
+										<div class="worth-box swiper-container-horizontal" style="cursor: -webkit-grab;">
+											<div class="worth-cut" style="transform: translate3d(-1120px, 0px, 0px); transition-duration: 0ms;">
+                                                {php $worth_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+                                                {loop $worth_articles[$mid] $item}
+												<div class="worth-bin">
+													<p class="em-fa ef-32">
+                                                        {php $item['thumb'] = explode("|", $item['thumb'])}
+                                                        {loop $item['thumb'] $t}
+														<em class="fa fa-{$t}"></em>
+                                                        {/loop}
+													</p>
+													{php echo html_entity_decode($item['content'])}
+												</div>
+												{/loop}
+											</div>
+										</div>
+										<div class="worth-text">
+											<a href="{$settings['home']['metinfo_328']['bottom_url'][$mid]}" title="{$settings['home']['metinfo_328']['bottom_title'][$mid]}">{$settings['home']['metinfo_328']['bottom_title'][$mid]}</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module005 E -->
+                        {/if}

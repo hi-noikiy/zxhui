@@ -1,0 +1,76 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+<div class="subcolumn_nav_met_16_1 border-bottom1" m-id='17' m-type='nocontent'>
+	<div class="">
+		<div class="subcolumn-nav text-xs-center">
+			<ul class="subcolumn_nav_met_16_1-ul m-b-0 p-y-10 p-x-0 ulstyle">
+				{loop $navs $n} {if $n['status'] == '1'}
+				<li>
+					<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}" class="{if $class_info['id'] == $n['id']}active{/if}">{$n['title']}</a>
+				</li>
+				{/if} {/loop}
+			</ul>
+		</div>
+	</div>
+</div>
+
+<main class="img_list_page_met_16_1">
+	<div class="    container">
+		<div class="row">
+			<ul class="blocks-100 blocks-md-2 blocks-lg-4 blocks-xxl-4  no-space met-pager-ajax imagesize met-img-list" data-scale='180x320' m-id='18'>
+				
+                {loop $articles $item}
+                {if $item['status'] == '1'}
+                    <li class="card">
+    					<div class="cover overlay overlay-hover">
+                            {if empty($item['thumb'])}
+                                {php $item['images'] = iunserializer($item['images']);}
+                                {php $item['thumb'] = $item['images'][0]}
+                            {/if}
+                            {php $item['thumb'] = tomedia($item['thumb'])}
+    						<img class="cover-image overlay-scale" src="{php echo m('image')->image_crop($item['thumb'], 320, 180)}" alt="{$item['title']}" height='100' />
+    						<div class="overlay-panel overlay-fade overlay-background overlay-background-fixed text-xs-center vertical-align" met-imgmask>
+    							<div class="vertical-align-middle">
+    								<h3 class="card-title m-b-20">
+    									{$item['title']}
+    								</h3>
+    								<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="btn btn-outline btn-squared btn-inverse" target="_blank">浏览</a>
+    							</div>
+    						</div>
+    					</div>
+    				</li>
+                {/if}
+                {/loop}
+                
+			</ul>
+			             <?php
+                        $param = array(
+                            'html' => array(
+                                's' => '<div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">', 
+                                'e' => '</div></div>', 
+                                'ac' => 'Ahover', 
+                                'fpnl' => array(
+                                    'fl' => 'null', 
+                                    'p' => 'class="PreSpan"', 
+                                    'n' => 'class="NextSpan"'
+                                )
+                            ),
+                            'li' => 'null',
+                            'always_show' => 1,
+                            'nopages' => '
+                                <div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">
+                                    <span class="PreSpan">
+    									上一页
+    								</span>
+    								<a href="'.$_W['siteurl'].'" class="Ahover">1</a>
+    								<span class="NextSpan">
+    									下一页
+    								</span>
+                                </div></div>'
+                        );
+                        echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                        ?>
+		</div>
+	</div>
+</main>
+{mytemplate 'common/footer'}

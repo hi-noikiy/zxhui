@@ -1,0 +1,113 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+	{php include $this->mytemplate('common/top-nav')}
+	{php include $this->mytemplate('common/banner2')}
+	<!--====================S main====================-->
+	<section class="main">
+    	<div class="page-width clearfix">
+    		<!-- S content -->
+    		<section class="content float-right">
+    			<div id="a1portalSkin_mainArea" class="content-wrapper">
+    				<!-- Start_Module_225327 -->
+    				<a name="34201" id="34201"></a>
+    				<div class="module-default">
+    					<div class="module-inner">
+    						<div id="a1portalSkin_ctr225327225327_mainArea" class="module-content">
+    							<!-- Start_Module_225327 -->
+    							<!-- S portfolio-list -->
+    							<div class="portfolio-list product-list">
+    								<ul class="column clearfix">
+    									{php $ca = 0;}
+                                        {loop $articles $ai}
+                                        {php $ca++;}
+                                        {if $ai['status'] == '1'}
+    									<li class='col-4-1 {if $ca%4 == 0}last{/if} not-animated' data-animate='fadeInUp'>
+    										<div class="product-item">
+    											<div class="portfolio-img">
+    												<a href="{php echo foregUrl('article',array('id'=>$ai['id']), true)}" target="_blank">
+                                                        {if $ai['thumb']}
+                                                            {php $ai['thumb'] = tomedia($ai['thumb'])}
+                                                        {else}
+                                                            {php $ai['images'] = iunserializer($ai['images']);}
+                                                            {php $ai['thumb'] = tomedia($ai['images'][0])}
+                                                        {/if}
+                                                        <img lay-src="{php echo m('image')->image_crop($ai['thumb'], 456, 456)}" alt="{$ai['title']}" />
+                                                    </a>
+    											</div>
+    											<div class="portfolio-title">
+    												<h2>
+    													<a href="{php echo foregUrl('article',array('id'=>$ai['id']), true)}" target="_blank">{$ai['title']}</a>
+    												</h2>
+    											</div>
+    										</div>
+    									</li>
+                                        {/if}
+    									{/loop}
+    								</ul>
+    							</div>
+    							<!-- E portfolio-list -->
+    							<!-- S pagination -->
+    							{php echo pagination_foreg($count, $pindex, $psize);}
+    							<!-- /pages -->
+    							<!-- E pagination -->
+    							<!-- End_Module_225327 -->
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</section>
+    		<!-- S content -->
+    		<!-- S sidebar -->
+    		<section class="sidebar float-left">
+    			<div id="a1portalSkin_sidebarAreaA" class="sidebar-content">
+    				<!-- Start_Module_225326 -->
+    				<a name="34200" id="34200"></a>
+    				<div class="module module-hlbg">
+    					<div class="module-inner">
+    						<div class="module-hlbg-title clearfix">
+    							<h3 class="" style="">
+    								{$lastclass['title']}
+    							</h3>
+    						</div>
+    						<div id="a1portalSkin_ctr225326225326_mainArea" class="module-hlbg-content">
+    							<!-- Start_Module_225326 -->
+    							<!-- S product-category -->
+    							<div class="category category-225326 product-category">
+    								<ul>
+    									{loop $navs $n}
+                                        {if $n['status'] == '1'}
+    									<li class="{if $id == $n['id']}current{/if}">
+    										<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+    									</li>
+                                        {/if}
+    									{/loop}
+    								</ul>
+    							</div>
+    							<script type="text/javascript">
+    									
+                                        $(document).ready(function() {
+                                        	$('.category-225326 ul').find('li:last').addClass('last');
+                                        	$('.category-225326 > ul > li > a, .category-225326 > ul > li > i').click(function() {
+                                        		if ($(this).parent('li').find('ul')) {
+                                        			$(this).parent('li').find('ul').slideDown('fast');
+                                        			$(this).parent('li').siblings('li').find('ul').slideUp('fast');
+                                        			$(this).parent('li').addClass('current').siblings('li').removeClass('current');
+                                        		}
+                                        	});
+                                        
+                                        });
+    									
+    							</script>
+    							<!-- E product-category -->
+    							<!-- End_Module_225326 -->
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</section>
+    		<!-- E sidebar -->
+    	</div>
+    </section>
+    <!--====================E main====================-->
+
+{php include $this->mytemplate('common/footer')}

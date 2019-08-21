@@ -1,0 +1,139 @@
+{mytemplate 'common/header', 'web'}
+<style>
+body{background-color: #f2f2f2;}
+* {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					登录设置
+				</div>
+				<div class="layui-card-body" >
+					
+                    <form class="layui-form" action="">
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		标题
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<input type="text" name="title" value="{$login_setting['title']}" placeholder="请输入标题（选填，默认为系统登录）" autocomplete="off" class="layui-input">
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		副标题
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<input type="text" name="title_vice" value="{$login_setting['title_vice']}" placeholder="请输入副标题（选填，默认不显示）" autocomplete="off" class="layui-input" />
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		第三方登录
+                        	</label>
+                        	<div class="layui-input-inline">
+                        		<input type="checkbox" name="isthirdlogin" {if !empty($login_setting['isthirdlogin'])}checked="true"{/if} lay-skin="switch" lay-filter="isthirdlogin" lay-text="开|关" />
+                        	</div>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: -130px; cursor: help;" onclick="
+                                layer.alert('1.开启前，请先到 <a href=\'../web/index.php?c=system&a=thirdlogin&\' style=\'color: #1E9FFF;\' target=\'_blank\'>第三方登录配置</a> 中，配置好，并开启；<br/>2.请在QQ互联中增加一条回调域名：<br>{$_W['siteroot']}addons/bowen_site/plugin/pcsite/auth2.php', {
+                                    skin: 'layui-layer-molv'
+                                    ,shadeClose: true
+                                });">
+                                <i class="layui-icon" >&#xe607;</i> 帮助
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item redirect_uri" style="{if empty($login_setting['isthirdlogin'])}display: none;{/if}">
+                        	<label class="layui-form-label">
+                        		回调域名
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<input type="text" name="redirect_uri" value="{$login_setting['redirect_uri']}" placeholder="请输入能使用第三方登录的域名，其他域名将会自动隐藏按钮。需以http://或者https://开头，并以/结尾" autocomplete="off" class="layui-input">
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		登录后跳转
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<input type="radio" name="aft_action" value="0" title="模块后台" {if empty($login_setting['aft_action'])}checked="true"{/if} />
+                        		<input type="radio" name="aft_action" value="1" title="系统后台" {if !empty($login_setting['aft_action'])}checked="true"{/if} />
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		返回系统
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<input type="radio" name="allow_to_we7" value="0" title="不允许" {if empty($login_setting['allow_to_we7'])}checked="true"{/if} />
+                        		<input type="radio" name="allow_to_we7" value="1" title="允许" {if !empty($login_setting['allow_to_we7'])}checked="true"{/if} />
+                        	</div>
+                        </div>
+                    
+                        <div class="layui-form-item">
+                        	<div class="layui-input-block">
+                        		<button class="layui-btn" lay-submit lay-filter="formSubmit">
+                        			立即提交
+                        		</button>
+                        		<button type="reset" class="layui-btn layui-btn-primary">
+                        			重置
+                        		</button>
+                        	</div>
+                        </div>
+                    </form>
+                    <script>
+                    layui.use(['layer', 'form'], function(){
+                        var form = layui.form;
+                        layer = layui.layer;
+                      
+                        form.on('switch(isthirdlogin)', function(data){
+                            if(data.elem.checked == false){
+                                $('.redirect_uri').hide();
+                            }else{
+                                $('.redirect_uri').show();
+                            }
+                        });
+                      
+                        form.on('submit(formSubmit)', function(data){
+                            $.post(""
+                                ,data.field
+                                ,function(d){
+                                    if(d.errno == '0'){
+                                        layer.msg(d.message, {
+                                            icon: 1
+                                            ,time: 1500
+                                        }, function(){
+                                            window.location.reload();
+                                        });
+                                    }else{
+                                        layer.msg(d.message, {icon: 2});
+                                        return false;
+                                    }
+                                }
+                                ,'json'
+                            );
+                            return false;
+                        });
+                    });
+                    </script>
+				</div>
+			</div>
+		</div>
+        
+	</div>
+</div>
+
+{mytemplate 'common/footer', 'web'}
+<!-- phpDesigner :: Timestamp [2018/7/3 17:19:15] -->

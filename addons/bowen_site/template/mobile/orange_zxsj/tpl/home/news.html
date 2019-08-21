@@ -1,0 +1,65 @@
+
+            <div class="met-index-news met-index-body">
+				<div class="container">
+					<h3 class="invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">
+						<a href="{php echo foregUrl('class',array('id'=>$settings['home']['orange_zxsj']['class'][$mid]))}" title="{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}新闻中心{/if}" target="_self">{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}新闻中心{/if}</a>
+					</h3>
+					<p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+						{$settings['home']['orange_zxsj']['title_en'][$mid]}
+					</p>
+					<div class="row">
+                        
+                        {php $news_a[$mid] = $this->getClasseArticles($settings['home']['orange_zxsj']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,3));}
+                        {loop $news_a[$mid] $item}
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 single-blog-post invisible" data-plugin="appear" data-animate="slide-bottom" data-repeat="false">
+							<div class="img-holder">
+                                {if empty($item['thumb'])}
+                                    {php $item['thumb'] = "../addons/bowen_site/template/mobile/orange_zxsj/static/images/1474096450.jpg"}
+                                {/if}
+								{if $item['thumb']}
+                                    {php $item['thumb'] = tomedia($item['thumb'])}
+                                {else}
+                                    {php $item['images'] = iunserializer($item['images']);}
+                                    {php $item['thumb'] = tomedia($item['images'][0])}
+                                {/if}
+                                <img class="cover-image" data-original="{php echo m('image')->image_crop($item['thumb'], 360, 360)}"  alt="{$item['title']}" title="{$item['title']}" />
+                                <div class="overlay">
+									<a href="{php echo foregUrl('article',array('id'=>$item['id']),true)}" title="{$item['title']}" target="_self">
+									   <div class="overlays"></div>
+									</a>
+								</div>
+								<div class="date">
+									<b>{php echo date('d', $item['createtime']);}</b>
+                                    <br />
+                                    {php echo month_en(date('m', $item['createtime']));}
+								</div>
+							</div>
+							<ul>
+								<li>
+									<span>
+										{$item['author']}
+									</span>
+								</li>
+                                {if $item['reading']}
+								<li>
+									<p>
+										<i class="icon wb-eye margin-right-5" aria-hidden="true"></i> {$item['reading']}
+									</p>
+								</li>
+                                {/if}
+							</ul>
+							<a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}" target="_self"><h2>{$item['title']}</h2></a>
+							<p>
+                                {if $item['description']}
+                                    {php $item['description'] = deleteRN($item['description'])}
+                                {else}
+                                    {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                {/if}
+                                {php echo m('common')->msubstr($item['description'], 0, 80)}
+							</p>
+						</div>
+                        {/loop}
+                        
+					</div>
+				</div>
+			</div>

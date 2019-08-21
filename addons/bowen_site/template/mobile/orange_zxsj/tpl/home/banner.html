@@ -1,0 +1,88 @@
+
+            <div class="main-slider met-banner" style="background: url({media $settings['home']['banner'][0]['bannerimg']}) 50% 50% no-repeat; background-size: cover;transition: all 0.3s;">
+            	<div class="rev_slider_wrapper">
+            		<div class="tp-banner rev_slider tp-overflow-hidden" 
+                        data-alias="showcase-carousel" 
+                        eco_arrows_open="true" 
+                        eco_arrows="hermes" 
+                        eco_arrows_margin="20" 
+                        eco_bullets_open="true" 
+                        eco_bullets="uranus" 
+                        eco_bullets_direction="horizontal" 
+                        eco_bullets_align_hor="center" 
+                        eco_bullets_align_vert="bottom" 
+                        eco_bullets_offset_hor="0" 
+                        eco_bullets_offset_vert="20" 
+                        data-version="5.2.5.4">
+            			<ul>
+                            
+                            {loop $settings['home']['banner'] $item}
+                            {php $item['bannercontent'] = explode("\n", $item['bannercontent'])}
+                            <li data-transition="boxslide"
+                                data-slotamount="random" 
+                                data-masterspeed="1000" 
+                                data-thumb="{media $item['bannerimg']}"
+                                data-link="#" 
+                                data-slideindex="back" 
+                                data-saveperformance="off" 
+                                data-title="{$item['bannercontent'][0]}">
+            					<img src="{media $item['bannerimg']}" alt="{$item['bannercontent'][0]}"
+                                    data-bgposition="center center" 
+                                    data-bgfit="cover" 
+                                    data-bgrepeat="no-repeat">
+            					<div class="tp-caption lfb tp-resizeme ecoslidert" 
+                                    data-x="{$item['bannerstyle']}"
+									data-hoffset="{if $item['bannerstyle'] == 'center'}['0','0','0','0']{else}['0','100','100','100']{/if}"
+                                    data-y="center" data-voffset="['-80','-80','-80','-60']"
+                                    data-fontsize="['46','46','46','28']" 
+                                    data-lineheight="['46','46','46','28']" 
+                                    data-start="1000" 
+                                    data-transform_idle="o:1;"
+                                    data-transform_in="y:top;s:1500;e:Power3.easeOut;"
+                                    data-transform_out="y:top;s:1000;e:Power2.easeIn;"
+                                    data-splitin="none"
+                                    data-splitout="none" style="color:; background:transparent;padding:0px;">
+            						{$item['bannercontent'][0]}
+            					</div>
+            					<div class="tp-caption lfb tp-resizeme ecodesc" 
+                                    data-x="{$item['bannerstyle']}" 
+                                    data-hoffset="{if $item['bannerstyle'] == 'center'}['0','0','0','0']{else}['0','100','100','100']{/if}"
+                                    data-y="center" 
+                                    data-voffset="['10','10','10','15']" 
+                                    data-fontsize="['32','32','32','24']" 
+                                    data-lineheight="['46','46','46','38']" 
+                                    data-start="1500" 
+                                    data-transform_idle="o:1;"
+                                    data-transform_in="x:left;s:1500;e:Power3.easeOut;"
+                                    data-transform_out="x:left;s:1000;e:Power2.easeIn;"
+                                    data-splitin="none"
+                                    data-splitout="none" style="color:;">
+                                    {php $item['bannercontent'] = array_slice($item['bannercontent'], 1);}
+                                    {php echo implode("<br />",$item['bannercontent']);}
+            					</div>
+                                {if $item['bannerurl']}
+            					<div class="tp-caption sfb tp-resizeme" 
+                                    data-x="{$item['bannerstyle']}" 
+                                    data-hoffset="{if $item['bannerstyle'] == 'center'}['0','0','0','0']{else}['0','100','100','100']{/if}"
+                                    data-y="center" 
+                                    data-voffset="['100','100','100','80']" 
+                                    data-fontsize="['16','16','16','14']" 
+                                    data-lineheight="['16','16','16','14']" 
+                                    data-start="2000" 
+                                    data-transform_idle="o:1;"
+                                    data-transform_in="x:right;s:1500;e:Power3.easeOut;"
+                                    data-transform_out="x:right;s:1000;e:Power2.easeIn;"
+                                    data-splitin="none"
+                                    data-splitout="none">
+            						<a href="{$item['bannerurl']}" style="color:; border-color:;" class="banner-btn">查看更多<i class="fa fa-arrow-circle-right"></i></a>
+            					</div>
+                                {/if}
+            				</li>
+                            {/loop}
+                            
+            			</ul>
+            			<div class="tp-bannertimer" style="height: 6px; background-color: rgba(0, 0, 0, 0.14902);top:0px;"></div>
+            		</div>
+            	</div>
+            </div>
+			<!-- phpDesigner :: Timestamp [2018/9/27 14:41:25] -->

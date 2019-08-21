@@ -1,0 +1,43 @@
+        <section class="banner_met_11_4-warrper">
+            {if !empty($settings['home']['met_368'][$k1]['class'])}
+			<div class="banner-news container">
+				<div class="banner-tips" data-hex="#ffffff|0.75">
+					<div class="banner-box">
+						<div class="title">
+							<span>
+								{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}XX公告{/if}
+							</span>
+							<a href="{php echo foregUrl('class',array('id'=>$settings['home']['met_368'][$k1]['class']), true)}" title="{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}XX公告{/if}"><i class="fa fa-plus"></i></a>
+						</div>
+						<ul class="list ulstyle">
+                            {php $team_a[$mid] = $this->getClasseArticles($settings['home']['met_368'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+                            {loop $team_a[$mid] $item}
+							<li class="clearfix">
+								<a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" title="{$item['title']}" class="">
+								    <i class="fa fa-caret-right"></i> {$item['title']}
+                                </a>
+								<span class="time">
+									{php echo date('m-d', $item['createtime'])}
+								</span>
+							</li>
+							{/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+            {/if}
+			<div class="banner_met_11_4 page-bg" m-id='2' m-type="banner">
+                {loop $settings['home']['met_368'][$k1]['banner'] $item}
+				<div class="slick-slide" {if !empty($item['blink'])}onclick="window.open('{$item['blink']}')"{/if}>
+                    {php $item['bimg'] = tomedia($item['bimg'])}
+					<img class="cover-image"
+                    src="{php echo m('image')->image_crop($item['bimg'], 1920, 430)}"
+                    srcset='{php echo m('image')->image_crop($item['bimg'], 767, 171)} 767w,{php echo m('image')->image_crop($item['bimg'], 1920, 430)}'
+					sizes="(max-width: 767px) 767px" alt=""
+                    data-height='0|0|0' 
+                    data-fade="true" 
+                    data-autoplayspeed=4000 data-speed="1000">
+				</div>
+                {/loop}
+			</div>
+		</section>

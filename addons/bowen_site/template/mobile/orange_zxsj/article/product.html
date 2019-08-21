@@ -1,0 +1,167 @@
+{php include $this->mytemplate('common/header-base')}
+{php include $this->mytemplate('common/mobilenav')}
+{php include $this->mytemplate('common/topnav')}
+<div class="met-position  pattern-show">
+	<div class="container">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li>
+					<a href="{php echo foregUrl()}" title="首页">
+					   <i class="icon wb-home" aria-hidden="true"></i>首页
+					</a>
+				</li>
+				{if $class_info['level'] == '3'}
+				<li class="dropdown">
+					<a href="{php echo foregUrl('class', array('id' => $topclass['id']), true)}" title="{$topclass['title']}">{$topclass['title']} </a>
+				</li>
+				{/if}
+                {if $class_info['level'] >= '2'}
+				<li class="dropdown">
+					<a href="{php echo foregUrl('class', array('id' => $lastclass['id']), true)}" title="{$lastclass['title']}">{$lastclass['title']} </a>
+				</li>
+				{/if}
+				<li class="dropdown">
+					<a href="{php echo foregUrl('class', array('id' => $class_info['id']), true)}" title="{$class_info['title']}">{$class_info['title']} </a>
+				</li>
+                <!--
+				<li class="dropdown">
+					<a href="#" title="{$article['title']}">
+					   {$article['title']}
+					</a>
+				</li>
+                -->
+			</ol>
+		</div>
+	</div>
+</div>
+<div class="page met-showproduct pagetype1 animsition">
+	<div class="met-showproduct-head">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-7">
+					<div id="gallery" class="ad-gallery" data-x="400" data-y="300">
+						<div class="ad-image-wrapper">
+						</div>
+						<div class="ad-controls">
+						</div>
+						<div class="ad-nav">
+							<div class="ad-thumbs">
+								<ul class="ad-thumb-list" id="lightgallery">
+                                    {php $article['images'] = iunserializer($article['images'])}
+                                    {if count($article['images']) == 0}
+                                    {php $article['images'][0] = $article['thumb']}
+                                    {/if}
+                                    {loop $article['images'] $a_img}
+                                    {php $a_img = tomedia($a_img)}
+									<li data-src="{$a_img}" data-exthumbimage="{php echo m('image')->image_crop($a_img, 96, 76)}">
+										<a href="{php echo m('image')->image_crop($a_img, 400, 300)}"> 
+										  <img src="{php echo m('image')->image_crop($a_img, 64, 64)}" class="img-responsive" alt="{$article['title']}" />
+										</a>
+									</li>
+                                    {/loop}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="visible-xs-block visible-sm-block height-20">
+				</div>
+				<div class="col-md-5 product-intro">
+					<h1>
+						{$article['title']}
+					</h1>
+					<p class="description">
+						{php echo replaceRN($article['description'])}
+					</p>
+                    {if $article['content2']}
+                        <div class="para">
+                            {php echo m('ui')->html_lazy($article['content2'])}
+                        </div>
+                    {else}
+                    {php $article['tag'] = iunserializer($article['tag'])}
+                        {if $article['tag']}
+    					<div class="para">
+    						<div class="row">
+                            {loop $article['tag'] $tag}
+                            <div class="col-md-6 col-sm-6 col-xs-6 margin-bottom-15 blue-grey-500">
+  								{$tag}
+   							</div>
+                            {/loop}
+    					   </div>
+    					</div>
+                        {/if}
+                    {/if}
+					<div class="tools"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="met-showproduct-body">
+		<div class="container">
+			<div class="row no-space">
+				<div class="col-md-9 product-content-body">
+					<div class="row">
+						<div class="panel product-detail">
+							<div class="panel-body">
+								<ul class="nav nav-tabs nav-tabs-line met-showproduct-navtabs affix-nav">
+									<li class="active">
+										<a data-toggle="tab" href="{$_W['siteurl']}#product-details" data-get="product-details">详细信息</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane met-editor lazyload clearfix animation-fade active" id="product-details">
+										<div>
+											{php echo m('ui')->html_lazy($article['content'])}
+											<div id="metinfo_additional"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--右侧开始-->
+				<div class="col-md-3">
+					<div class="row">
+						<div class="panel product-hot">
+							<div class="panel-body">
+								<h4 class="example-title">
+									热门推荐
+								</h4>
+								<div class="row">
+                                    
+                                    {php $tr_articles = $this->getArticles(array('istranslate' => 1, 'status' => 1, 'firstclass' => $article['firstclass'], 'secondclass' => $article['secondclass'], 'thirdclass' => $article['thirdclass']), array('displayorder DESC', 'createtime DESC'), array(0,6));}
+                                    {if !empty($tr_articles)}
+                                    {loop $tr_articles $item}
+                                    <div class="product-hot-list col-md-12 col-sm-4 col-xs-4 text-center margin-bottom-10">
+										<a href="{php echo foregUrl('article',array('id'=>$item['id']))}"
+										   target="_blank" class="img" title="{$item['title']}">
+                                            {if $item['thumb']}
+                                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                            {else}
+                                                {php $item['images'] = iunserializer($item['images']);}
+                                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                            {/if} 
+										  <img data-original="{php echo m('image')->image_crop($item['thumb'], 250, 250)}" class="img-responsive" style='height:250px' alt="{$item['title']}">
+										</a>
+										<a href="{php echo foregUrl('article',array('id'=>$item['id']))}" target="_blank" class="txt" title="{$item['title']}">{$item['title']}</a>
+									</div>
+                                    {/loop}
+                                    {else}
+                                    <div class="product-hot-list col-md-12 col-sm-4 col-xs-4 text-center margin-bottom-10">
+                                    -- 暂无推荐 --
+                                    </div>
+                                    {/if}
+                                    
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--右侧结束-->
+			</div>
+		</div>
+	</div>
+</div>
+{php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}

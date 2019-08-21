@@ -1,0 +1,303 @@
+<title>域名管理</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>设置</cite></a>
+        <a><cite>消息推送</cite></a>
+        <a><cite>消息提醒</cite></a>
+    </div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-tab" lay-filter="BOWEN_app-set-notice-msg">
+
+        <div class="layui-card">
+            <div class="layui-card-header layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li lay-id="set" class="layui-this">消息提醒</li>
+                    <li lay-id="sign">发送记录</li>
+                </ul>
+            </div>
+            <div class="layui-card-body">
+
+            </div>
+        </div>
+
+        <div class="layui-tab-content">
+
+            <!-- 消息提醒 Begin -->
+            <div class="layui-tab-item layui-show">
+
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="font-size: 14px;">
+                            如果站点不是在认证服务号下创建的，请先进行<a class="layui-badge layui-bg-green" lay-href="/set/base">借权设置</a>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div id="BOWEN_app_set_notice_msg_form"></div>
+
+                <script type="text/html" id="BOWEN_app_set_notice_msg_formTpl">
+                    {{#  layui.each(d.data, function(index, item){ }}
+                    <form class="layui-card layui-form">
+
+                        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{{ item.title }}</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tplid" placeholder="请填写模板ID" autocomplete="off" class="layui-input" value="{{# if(item.param.template_id){ }}{{ item.param.template_id }}{{# } }}">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">{{ item.tpl_title }} {{ item.template_id_short }}</div>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{{ item.title }}-选择通知人</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input layui-input-group" readonly="true" style="background-color: #f8f8f8;">
+                                    <span>
+                                        <button class="layui-btn layui-btn-primary selector" data-type="fans" data-inputname="openid[]" type="button">选择通知人</button>
+                                    </span>
+                                    <div class="multi-img-details">
+                                        {{# if(item.param.sets){ }}
+                                            {{#  layui.each(item.param.sets, function(index2, fan){ }}
+                                            <div class="multi-item fans-selector" data-openid="{{ fan.openid }}">
+                                                <img class="img-responsive img-thumbnail" onerror="this.src='../web/resource/images/nopic.jpg'; this.title='图片未找到.';" src="{{ fan.fans_info.tag.avatar }}" title="{{ fan.fans_info.tag.nickname }}">
+                                                <div class="img-nickname">{{ fan.fans_info.tag.nickname }}</div>
+                                                <input type="hidden" name="openid[]" value="{{ fan.openid }}">
+                                                <em class="close delSelect" title="删除这张图片" data-delclass="multi_item">×</em>
+                                            </div>
+                                            {{#  }); }}
+                                        {{# } }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" data-to="{{ item.sign }}" lay-submit lay-filter="BOWEN_app-set-notice-msg-form-submit">提交</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                    {{#  }); }}
+                </script>
+            </div>
+            <!-- 消息提醒 End -->
+
+            <div class="layui-tab-item">
+
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <blockquote class="layui-elem-quote">
+                            消息提醒采用触发式消息队列执行任务，可能会存在延迟。
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        发送记录
+                    </div>
+                    <div class="layui-card-body">
+                        <table id="BOWEN_app_set_notice_msg_sign-table" lay-filter="BOWEN_app_set_notice_msg_sign_table"></table>
+                    </div>
+                </div>
+                <script type="text/html" id="toolbarTop">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="reload">刷新发送记录</button>
+                    </div>
+                </script>
+                <script type="text/html" id="statusTpl">
+                    {{#  if(d.status == '0'){ }}
+                    <span style="color: #c2c2c2;">待处理</span>
+                    {{#  } else if(d.status == '1'){ }}
+                    <span style="color: #5FB878;">已发送</span>
+                    {{#  } else if(d.status == '2'){ }}
+                    <span style="color: #FF5722;">发送失败</span>
+                    {{#  } else { }}
+                    <span style="color: #FFB800;">未知状态</span>
+                    {{#  } }}
+                </script>
+                <script type="text/html" id="toolbar">
+                    {{# if(d.status != '0'){ }}
+                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="resetStatus" lay-tips="重置发送状态">重置</a>
+                    {{#  } }}
+                    {{# if(d.log && d.status == '2'){ }}
+                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-tips="{{ d.log }}">日志</a>
+                    {{#  } }}
+                    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="sendSingle" lay-tips="直接/重新发送">发送</a>
+                </script>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'form', 'myutil', 'selector', 'laytpl', 'table', 'element'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,form = layui.form
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,selector = layui.selector
+            ,laytpl = layui.laytpl
+            ,table = layui.table
+            ,element = layui.element
+            ,is_showSignYet = 0;
+
+        element.on('tab(BOWEN_app-set-notice-msg)', function(data){
+            var a = $(this).attr('lay-id');
+            if(a == 'sign' && is_showSignYet == 0){
+                show_sign();
+                is_showSignYet = 1;
+            }else if(a == 'sign'){
+                table.resize('BOWEN_app_set_notice_msg_sign-table');
+            }
+        });
+
+        /** 消息提醒-设置 Begin */
+        admin.req({
+            url: myutil.webUrl('set/notice/msg')
+            ,type: 'post'
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno==0){
+                    var getTpl = BOWEN_app_set_notice_msg_formTpl.innerHTML
+                        ,noticeForm_view = document.getElementById('BOWEN_app_set_notice_msg_form');
+                    laytpl(getTpl).render(d, function(html){
+                        noticeForm_view.innerHTML = html;
+                        selector.render();
+                    });
+                }
+            }
+        });
+
+        form.on('submit(BOWEN_app-set-notice-msg-form-submit)', function(data){
+            var to = $(data.elem).data('to');
+            if(!to)layer.msg('none');
+            data.field.to = to;
+            admin.req({
+                url: myutil.webUrl('set/notice/msg/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        });
+                    }else{
+                        console.log(d);
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+        /** 消息提醒-设置 End */
+
+        /** 消息提醒-发送记录 Begin */
+        var show_sign = function(){
+            var tableIns = table.render({
+                elem: '#BOWEN_app_set_notice_msg_sign-table'
+                ,url: myutil.webUrl('set/notice/msg/getMsgSign')
+                ,method: 'post'
+                ,page: true
+                ,request: {
+                    limitName: 'psize'
+                }
+                ,toolbar: '#toolbarTop'             
+                ,cellMinWidth: 175
+                ,cols: [[
+                    {field: 'id', title: 'ID', sort: true, align: 'center', fixed: 'left'}
+                    ,{field: 'type', align: 'center', title: '消息类型'}
+                    ,{field: 'sign', align: 'center', title: '消息标记'}
+                    ,{field: 'nickname', align: 'center', title: '发送对象', event: 'showFans', style:'cursor: pointer;'}
+                    ,{field: 'status', align: 'center', title: '发送状态', sort: true, templet: '#statusTpl'}
+                    ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+                ]]
+            });
+            
+            table.on('toolbar(BOWEN_app_set_notice_msg_sign_table)', function(obj){
+                if(obj.event === 'reload'){
+                    tableIns.reload();   
+                }
+            });
+            
+            table.on('tool(BOWEN_app_set_notice_msg_sign_table)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'showFans'){
+                    layer.alert(''+
+                    '<p>昵称：'+data.nickname+'</p>'+
+                    '<p>openid：'+data.openid+'</p>');    
+                }else if(obj.event === 'resetStatus'){
+                    admin.req({
+                        url: myutil.webUrl('set/notice/msg/resetStatus')
+                        ,type: 'post'
+                        ,data: data
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno==0){
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    tableIns.reload();
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {
+                                    icon: 2
+                                    ,time: 1500
+                                });
+                            }
+                        }
+                    });
+                }else if(obj.event === 'sendSingle'){
+                    admin.req({
+                        url: myutil.webUrl('set/notice/msg/sendSingle')
+                        ,type: 'post'
+                        ,data: data
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno==0){
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    tableIns.reload();
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {
+                                    icon: 2
+                                    ,time: 1500
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            
+        }
+        /** 消息提醒-发送记录 End */
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/12 12:33:10] -->

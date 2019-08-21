@@ -1,0 +1,85 @@
+                        <div class="col-md-3">
+            				<div class="row">
+            					<div class="met-news-bar">
+            						<form method="get" action="{$_W['siteroot']}app/index.php">
+										<div class="form-group">
+											<div class="input-search">
+												<button type="submit" class="input-search-btn">
+													<i class="icon wb-search" aria-hidden="true"></i>
+												</button>
+                                                <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                                                <input type="hidden" name="c" value="entry" />
+                                                <input type="hidden" name="m" value="bowen_site" />
+                                                <input type="hidden" name="do" value="foreg" />
+                                                <input type="hidden" name="r" value="search" />
+												<input type="text" class="form-control" name="kw" placeholder="Search">
+											</div>
+										</div>
+									</form>
+            						<div class="recommend news-list-md">
+            							<h3>
+            								为您推荐
+            							</h3>
+            							<ul class="list-group list-group-bordered">
+											{if isset($article)}
+												{php $where = array('istranslate' => 1, 'status' => 1, 'firstclass' => $article['firstclass'], 'secondclass' => $article['secondclass'])}
+											{else}
+												{if $class_info['level'] == '3'}
+													{php $class_level = 'thirdclass'}
+												{elseif $class['level'] == '2'}
+													{php $class_level = 'secondclass'}
+												{else}
+													{php $class_level = 'firstclass'}
+												{/if}
+												{php $where = ' AND istranslate = 1 AND status = 1 AND ' . $class_level . ' = ' . $class_info['id']}
+											{/if}
+            								{php $str_articles = $this->getArticles($where, array('displayorder DESC', 'createtime DESC'), array(0,6));}
+											{php unset($where, $class_level)}
+                                            {if !empty($str_articles)}
+												{loop $str_articles $item}
+												<li class="list-group-item">
+													<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target="_self">{$item['title']}</a>
+												</li>
+												{/loop}
+                                            {else}
+												<div class="list-group-item">
+												-- 暂无推荐 --
+												</div>
+                                            {/if}
+            							</ul>
+            						</div>
+            						<ul class="column">
+            							{if $class_info['level'] == '3'}
+                        				<li>
+                        					<a href="{php echo foregUrl('class', array('id' => $topclass['id']), true)}" title="{$topclass['title']}">{$topclass['title']} </a>
+                        				</li>
+                        				{/if}
+										{if $class_info['level'] == '2'}
+                        				<li>
+                        					<a href="{php echo foregUrl('class', array('id' => $lastclass['id']), true)}" title="{$lastclass['title']}">{$lastclass['title']} </a>
+                        				</li>
+                        				{/if}
+                                        
+                                        {loop $navs $n}
+                                        {if $n['status'] == '1'}
+                                            <li>
+                            					<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" class="{if $class_info['id'] == $n['id'] || $lastclass['id'] == $n['id']}active{/if}" title="{$n['title']}" target='_self'><i class="fa fa-angle-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;{$n['title']}</a>
+                                            </li>
+                                            {if !empty($n['t'])}
+                                                {loop $n['t'] $n_t}
+                                                    {if $n_t['status'] == '1'}
+                                                    <li style="margin-left: 10px;">
+                                         			    <a href="{php echo foregUrl('class',array('id'=>$n_t['id']), true)}" title="{$n_t['title']}" class="{if $class_info['id'] == $n_t['id']}active{/if}" target='_self'>-&nbsp;&nbsp;&nbsp;&nbsp;{$n_t['title']}</a>
+                                              		</li>
+                                                    {/if}
+                                                {/loop}
+                                            {/if}
+                                        {/if}
+                                        {/loop}
+                                        
+                                        
+            						</ul>
+            					</div>
+            				</div>
+            			</div>
+						<!-- phpDesigner :: Timestamp [2018/9/26 22:04:16] -->

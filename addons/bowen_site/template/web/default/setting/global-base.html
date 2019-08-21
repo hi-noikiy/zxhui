@@ -1,0 +1,16 @@
+{php $bowen_themes = file_get_contents(M_ROOT.'/bowen_themes.txt')}
+{php $bowen_themes = explode("\r\n",$bowen_themes)}
+{if in_array($_B['setting']['global']['mobilethemes'], $bowen_themes)}
+	{mytemplate 'common/header'}
+	{mytemplate 'setting/tab'}
+
+	<div class="alert we7-page-alert">
+		<p><i class="wi wi-info-sign"></i> 功能描述：这里是官网的全局设置，其他设置已细化到各个步骤。</p>
+	</div>
+
+	{php include $this->mytemplate('setting/global', 'mobile')}
+	{mytemplate 'common/footer'}
+{else}
+	{php include $this->mytemplate('setting/global', 'mobile')}
+{/if}
+<!-- phpDesigner :: Timestamp [2018/9/28 10:57:30] -->

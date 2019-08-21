@@ -1,0 +1,85 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+    {php include $this->mytemplate('common/top-nav')}
+    {php include $this->mytemplate('common/banner2')}
+		<!--====================S main====================-->
+		<section class="main">
+			<!--section class="full-page-title-wrap clearfix" skinobjectzone="menu_2532">
+				<h2>{$article['title']}</h2>
+				<em class="full-page-title-line"></em>
+			</section-->
+            <!-- S page-menu -->
+			<section class="full-page-menu" skinobjectzone="menu_2617">
+				<div class="full-page-menu-content">
+					<div class="page-width">
+						<ul class="clearfix">
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+							<li class="{if $article['secondclass'] == $n['id']}current{/if}">
+								<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+							</li>
+                            {/if}
+                            {/loop}
+						</ul>
+						<!-- 没有子菜单时输出 -->
+					</div>
+				</div>
+			</section>
+			<!-- S page-menu -->
+			<div class="page-width clearfix">
+				<!-- S full-page-content -->
+				<div class="full-page-content">
+					<div id="a1portalSkin_mainArea" class="full-page-content-wrapper">
+						<!-- Start_Module_225321 -->
+						<a name="34185" id="34185"></a>
+						<div class="module-default">
+							<div class="module-inner">
+								<div id="a1portalSkin_ctr225321225321_mainArea" class="module-content">
+									<!-- Start_Module_225321 -->
+									<div class="qhd-content">
+										{php echo m('ui')->html_lazy($article['content'])}
+									</div>
+									<!-- End_Module_225321 -->
+								</div>
+							</div>
+						</div>
+                        
+                        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+                        <!-- Start_Module_225341 -->
+                        <a name="34195" id="34195"></a>
+                        <div class="module-default">
+                        	<div class="module-inner">
+                        		<div id="a1portalSkin_ctr225341225341_mainArea" class="module-content">
+                        			<!-- Start_Module_225341 -->
+                        			<div class="qhd-content">
+                        				<div id="dituContent" style="width:100%;height:420px;">
+                        					&nbsp;
+                        				</div>
+                        				<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=qen1OGw9ddzoDQrTX35gote2"></script>
+                        				<script type="text/javascript">	
+                                        // 百度地图API功能
+                                        var map = new BMap.Map("dituContent");
+                                    	var point = new BMap.Point({$article['value']['baidumap']['lng']},{$article['value']['baidumap']['lat']});
+                                    	map.centerAndZoom(point, 20);
+                                    	var marker = new BMap.Marker(point);  // 创建标注
+                                    	map.addOverlay(marker);               // 将标注添加到地图中
+                                    	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                                        
+                                        map.addControl(top_left_control);        
+                                		map.addControl(top_left_navigation);     
+                                		map.addControl(top_right_navigation);
+                        				</script>
+                        			</div>
+                        			<!-- End_Module_225341 -->
+                        		</div>
+                        	</div>
+                        </div> 
+                        
+					</div>
+				</div>
+				<!-- E full-page-content -->
+			</div>
+		</section>
+		<!--====================E main====================-->
+{php include $this->mytemplate('common/footer')}

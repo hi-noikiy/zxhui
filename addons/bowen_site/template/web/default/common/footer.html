@@ -1,0 +1,16 @@
+
+            </div>
+            {if $_GET['s'] != 'iframe' && ($_W['setting']['copyright']['footerright'] || $_W['setting']['copyright']['footerleft'])}
+            <div class="layui-footer footer" style="color: #333; height: auto; line-height: normal; padding: 10px 15px; z-index: 998;">
+                <div class="layui-main text-center">
+          		    <span class="friend-link">
+                        {$_W['setting']['copyright']['footerright']}
+                    </span>
+              		<span>{$_W['setting']['copyright']['footerleft']}</span>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </body >
+{php include $this->mytemplate('common/footer-base')}
+<!-- phpDesigner :: Timestamp [2018/8/24 11:03:02] -->

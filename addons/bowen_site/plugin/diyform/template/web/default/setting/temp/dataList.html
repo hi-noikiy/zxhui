@@ -1,0 +1,215 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+* {-webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box;}
+input, textarea{-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+select { height: 38px!important; -webkit-appearance: menulist; background: white!important; }
+.layui-laypage select { height: 18px !important;}
+.layui-form-checkbox[lay-skin=primary] i { top: 5px;}
+</style>
+
+
+        <div class="tab-pane">
+            <div class="layui-form">
+                条件筛选：
+            	<div class="layui-inline">
+            		<input class="layui-input" name="id" placeholder="ID"/>
+            	</div>
+            	<div class="layui-inline">
+                    <input class="layui-input" name="kw" placeholder="全局关键词匹配" />
+                </div>
+                <div class="layui-input-inline" style="display: none;">
+                  <select name="filed" lay-filter="s_filed">
+                    <option value="">字段搜索</option>
+                    {loop $fields $k1 $v1}
+                    {if !in_array($v1['data_type'], $default_searchType_config)}
+                    {php continue;}
+                    {/if}
+                    <option value="{$k1}">{$v1['tp_name']}</option>
+                    {/loop}
+                  </select>
+                </div>
+                <div class="layui-inline fvalue" style="margin-left: -5px;display: none;">
+                    <input class="layui-input" name="fvalue" placeholder="该字段的关键词值" />
+                </div>
+                
+            	<button class="layui-btn onclick" id="search" data-type="search" style="margin-left: 10px;">搜索</button>
+                <button class="layui-btn onclick layui-btn-primary" data-type="reload">重置</button>
+                <button class="layui-btn layui-btn-primary pull-right onclick"  data-type="back-to-temp" ><i class="layui-icon">&#xe65c;</i> 返回模板</button>
+            </div>
+            
+            <table id="diyform_dataList" lay-data="{id:'diyform_dataList'}" lay-filter="diyform_dataList"></table>
+            <button class="layui-btn onclick" id="search" data-type="MassDelete">批量删除</button>
+            
+            <script type="text/html" id="toolbar">
+                <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <script type="text/html" id="isCacheTpl">
+                {{#  if(d.iscache === '1'){ }}
+                <span style="color: #FFB800;">关闭</span>
+                {{#  } else { }}
+                <span style="color: #5FB878;">开启</span>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="statusTpl">
+                {{#  if(d.status === '1'){ }}
+                <span style="color: #5FB878;">启用</span>
+                {{#  } else { }}
+                <span style="color: #FFB800;">关闭</span>
+                {{#  } }}
+            </script>
+        </div>
+
+
+<script>
+    layui.use(['layer', 'form', 'table', 'myutil'], function(){
+        var form = layui.form
+        ,table = layui.table
+        ,myutil = layui.myutil
+        ,layer = layui.layer;
+        
+        table.render({
+            elem: '#diyform_dataList'
+            ,height: 656
+            ,cellMinWidth: 80
+            ,url: "{php echo webUrl('diyform/setting/temp/dataList', array('dfid' => $dfid))}"
+            ,method: 'post'
+            ,page: true
+            ,request: {
+                limitName: 'psize'
+            }
+            ,cols: [[
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'id', width:80, title: 'ID', sort: true, align: 'center'}
+                ,{field: 'data', title: '记录', align: 'center'}
+                ,{fixed: 'right', width:120, title: '操作', align:'center', toolbar: '#toolbar'}
+            ]]
+        });
+        
+        //监听工具条
+        table.on('tool(diyform_dataList)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.open({
+                    type: 2 
+                    ,title: '记录详情'
+                    ,content: ["{php echo webUrl('diyform/setting/temp/detail')}&id=" + data.id, 'no']
+                    ,area: ['90%', '95%']
+                    ,shadeClose: true
+                    ,moveOut: true
+                }); 
+            } else if (obj.event === 'del') {
+                layer.confirm('确定删除吗？删除后不可恢复', function(index) {
+                    $.post("{php echo webUrl('diyform/setting/temp/deleteData')}"
+                        ,{id:data.id}
+                        ,function(d){
+                            if(d.errno == 0){
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1000
+                                }, function(){
+                                    obj.del();
+                                    layer.close(layer.index);
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        },'json'
+                    );
+               	});
+            } else if (obj.event === 'changeStatus') {
+                /**
+                $.post("{php echo webUrl('diyform/setting/temp/changeStatus')}"
+                    ,{id:data.id,status:data.status}
+                    ,function(d){
+                        if(d.errno == 0){
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1000
+                            }, function(){
+                                table.reload('diyform_dataList');
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    },'json'
+                );
+                */
+            }
+        });
+        
+        form.on('select(s_filed)', function(data){
+            if(data.value != ''){
+                return $('.fvalue').show();
+            }
+            $('input[name="fvalue"]').val('');
+            return $('.fvalue').hide();
+        });
+        
+        var active = {
+            search: function() {
+                var id = $('input[name="id"]')
+                ,kw = $('input[name="kw"]')
+                ,filed = $('select[name="filed"]')
+                ,fvalue = $('input[name="fvalue"]');
+                //var status = $('select[name="status"]');
+                
+                table.reload('diyform_dataList', {
+                    page: {
+                        curr: 1
+                    }
+                    ,where: {
+                        id: id.val()
+                        ,kw: kw.val()
+                        ,filed: filed.val()
+                        ,fvalue: fvalue.val()
+                        //,status: status.val()
+                    }
+                });
+            }
+            ,'back-to-temp': function(){
+                window.location.href=myutil.webUrl('diyform/setting/temp');
+            }
+            ,reload: function() {
+                $('input[name="id"]').val('');
+                $('input[name="kw"]').val('');
+                $('select[name="filed"]').val('');
+                $('input[name="fvalue"]').val('');
+                $('input[name="fvalue"]').hide();
+                //$('select[name="status"]').val('');
+                form.render('select');
+                $("#search").click();
+            },MassDelete: function(){
+                var checkData = table.checkStatus('diyform_dataList').data;
+                layer.confirm('确定批量删除数据吗？删除后不可恢复', function(index) {
+                    $.post("{php echo webUrl('diyform/setting/temp/deleteData')}"
+                        ,{checkData:checkData}
+                        ,function(d){
+                            if(d.errno == 0){
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1000
+                                }, function(){
+                                    layer.close(layer.index);
+                                });
+                                table.reload('diyform_dataList');
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        },'json'
+                    );
+                    
+               	});
+            }
+        };
+        $('.onclick').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });      
+    });
+</script>
+
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/7/20 11:30:45] -->

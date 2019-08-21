@@ -1,0 +1,133 @@
+{mytemplate 'common/header'}
+<section class="banner_met_11_4-warrper">
+	<div class="banner_met_11_4-ny vertical-align text-xs-center" m-id='2' m-type='banner'>
+		<h1 class="vertical-align-middle">
+			{$class_info['title']}
+		</h1>
+	</div>
+</section>
+<!-- 标准模式 -->
+<main class="product_list_detail_met_16_1 page met-showproduct pagetype1" m-id='28'>
+	<div class="met-showproduct-head page-content block-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class='met-showproduct-list fngallery cover text-xs-center' id='met-imgs-slick' m-id='noset' m-type="displayimgs">
+                    
+                        {php $article['images'] = iunserializer($article['images'])}
+                        {if count($article['images']) == 0}
+                            {php $article['images'][0] = $article['thumb']}
+                        {/if}
+                        {loop $article['images'] $a_img}
+                        {php $a_img = tomedia($a_img)}
+                        <div class='slick-slide'>
+							<a href='{media $a_img}' class='lg-item-box' data-src='{media $a_img}'
+                            data-size='640x480'
+                            data-med='{media $a_img}'
+                            data-med-size='640x480'
+                            data-exthumbimage="{php echo m('image')->image_crop($a_img, 60, 60)}"
+							data-sub-html="{$article['title']}">
+    							<img src="{php echo m('image')->image_crop($a_img, 400, 300)}" class='img-fluid' alt="{$article['title']}" />
+							</a>
+						</div>
+                        {/loop}
+						
+					</div>
+				</div>
+				<div class="col-lg-5">
+					<div class="product-intro">
+						<h1 class='m-t-0 font-size-24'>
+							{$article['title']}
+						</h1>
+						<p class='description'>
+                            {if !empty($article['description']) && count($article['description'])>7}
+                                {php $article['description'] = replaceRN($article['description'])}
+                            {else}
+                                {php $article['description'] = m('ui')->html_to_text($article['content'])}
+                            {/if}
+                            {php echo m('common')->msubstr($article['description'], 0, 200)}
+						</p>
+						<ul class="product-para">
+                            {php echo m('ui')->html_lazy($article['content2'])}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="met-showproduct-body page-content">
+		<div class="container">
+			<div class="row">
+				<!-- 内容选项卡 -->
+				<div class="col-lg-9 pull-lg-right">
+					<div class="row">
+						<div class="panel panel-body m-b-0 product-detail" boxmh-mh>
+							<ul class="nav nav-tabs nav-tabs-line m-b-20 met-showproduct-navtabs">
+								<li class="nav-item">
+									<a class='nav-link active' data-toggle="tab" href="#product-content0" data-get="product-details">详细信息</a>
+								</li>
+							</ul>
+							<article class="tab-content">
+								<section class="tab-pane met-editor clearfix animation-fade active" id="product-content0">
+									{php echo m('ui')->html_lazy($article['content'])}
+								</section>
+                                {php $article['tag'] = iunserializer($article['tag'])}
+                                {if $article['tag']}
+            					<div class="tag">
+									<span><b>标签：</b></span>
+                                    {loop $article['tag'] $tag}
+                                    <a href="JavaScript:;" title="{$tag}">{$tag}</a>
+                                    {/loop}
+								</div>
+                                {/if}
+							</article>
+						</div>
+					</div>
+				</div>
+				<!-- 内容选项卡 -->
+				<!-- 产品侧栏 -->
+				<div class="col-lg-3">
+					<div class="row">
+						<aside class="panel panel-body m-b-0 product-hot met-sidebar leftsidebar" boxmh-h>
+							<div class='sidebar-piclist'>
+								<h3 class='m-0 font-size-16 font-weight-300'>
+									为您推荐
+								</h3>
+								<ul class='blocks-2 blocks-md-3 blocks-lg-100 m-t-20 text-xs-center imagesize sidebar-piclist-ul' data-scale='400x400'>
+                                    {php $tr_articles = $this->getArticles(array('istranslate' => 1, 'status' => 1, 'firstclass' => $article['firstclass'], 'secondclass' => $article['secondclass'], 'thirdclass' => $article['thirdclass']), array('displayorder DESC', 'createtime DESC'), array(0,5));}
+									{if !empty($tr_articles)}
+                                    {loop $tr_articles $item}
+                                    <li class='masonry-child'>
+										<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class='block m-b-0' target='_blank'>
+                                            {if $item['thumb']}
+                                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                            {else}
+                                                {php $item['images'] = iunserializer($item['images']);}
+                                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                            {/if}
+                                            <img src="{php echo m('image')->image_crop($item['thumb'], 400, 300)}" class='cover-image' alt="{$item['title']}" height='100' />
+                                        </a>
+										<h4 class='m-t-10 m-b-0 font-size-14 text-md-center'>
+											<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target='_blank'>{$item['title']}</a>
+										</h4>
+									</li>
+                                    {/loop}
+                                    {else}
+                                    <li class='masonry-child'>
+                                        <h4 class='m-t-10 m-b-0 font-size-14 text-md-center'>
+                                            -- 暂无推荐 --
+                                        </h4>
+                                    </li>
+                                    {/if}
+								</ul>
+							</div>
+						</aside>
+					</div>
+				</div>
+				<!-- 产品侧栏 -->
+			</div>
+		</div>
+	</div>
+</main>
+<!-- 标准模式 -->
+{mytemplate 'common/footer'}

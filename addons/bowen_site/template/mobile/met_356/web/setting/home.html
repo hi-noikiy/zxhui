@@ -1,0 +1,99 @@
+<form action="" method="post" class="form-horizontal form">
+
+    <ol class="contents">
+        <?php
+        $mid = 0;
+        $_B['setting']['home']['met_356'] = !empty($_B['setting']['home']['met_356'])?$_B['setting']['home']['met_356']:array(
+            array('mtype' => 'banner'),array('mtype' => 'product'),array('mtype' => 'richtext'),array('mtype' => 'news'),array('mtype' => 'joint')
+        );
+        foreach($_B['setting']['home']['met_356'] as $k1 => $v1){
+            $mtype = $v1['mtype'];
+            if(empty($mtype))continue;
+            include $this->mytemplate("web/tpl/index/".$mtype, 'mobile');
+            $mid++;
+        }
+        ?>
+    </ol>
+
+    <div class="form-group">
+        <div class="col-sm-9 col-xs-12">
+            <div class="help-block">
+                <input type="hidden" name="token" value="{$_W['token']}" />
+                <input id="submit" type="submit" name="submit" value="提  交" class="layui-btn col-lg-2" />
+                <a class="layui-btn layui-btn-primary" onclick="module_selector();">唤出板块选择器</a>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function addBanner() {
+        $(".btn-add-banner").button("loading");
+        $.ajax({
+            url: "{php echo webUrl('tpl/tpl_app_index')}"
+            ,cache: false
+            ,type :'post'
+            ,data :{fname:'banner-s'}
+        }).done(function(html) {
+            $(".btn-add-banner").button("reset");
+            $(".banner").append(html);
+        });
+    }
+
+    function delete_item(obj) {
+        $(obj).closest('.item').remove();
+    }
+
+    function delete_module(obj) {
+        $(obj).closest('.panel-group').remove();
+    }
+
+    function module_selector(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title: '板块选择器'
+                ,offset: 'r'
+                ,area: '300px'
+                ,shade: 0
+                ,content: '' +
+                    '<div class="panel-body tm">'+
+                    '<a href="JavaScript:;" data="banner" class="btn btn-default btn-sm">轮播图</a>'+
+                    '<a href="JavaScript:;" data="product" class="btn btn-default btn-sm">产品展示</a>'+
+                    '<a href="JavaScript:;" data="richtext" class="btn btn-default btn-sm">富文本</a>'+
+                    '<a href="JavaScript:;" data="news" class="btn btn-default btn-sm">新闻资讯</a>'+
+                    '<a href="JavaScript:;" data="joint" class="btn btn-default btn-sm">合作伙伴</a>'+
+                    '</div>'+
+                    '<!--div class="panel-body">'+
+                    ''+
+                    '<div class="text text-danger"></div>'+
+                    '</div-->'
+                ,btn: '关闭'
+            });
+        });
+
+        $(function () {
+            require(['jquery.caret'],function(){
+                $("a[href='JavaScript:;']").click(function () {
+                    var fthemes = this.getAttribute("data");
+                    addModules(fthemes);
+                })
+            })
+        })
+        var mid = "{$mid}";
+        function addModules(fname){
+            $(".tm .btn").button("loading");
+            $.ajax({
+                url: "{php echo webUrl('tpl/tpl_app_index')}"
+                ,cache: false
+                ,type :'post'
+                ,data :{fname:fname, mid:mid}
+            }).done(function(html) {
+                $(".tm .btn").button("reset");
+                $(".contents").append(html);
+            });
+            mid++;
+        }
+    }
+
+</script>

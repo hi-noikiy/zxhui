@@ -1,0 +1,16 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/mobilenav')}
+		{php include $this->mytemplate('common/topnav')}
+			
+            <?php
+            if(empty($settings['home']['orange_zxsj']['mtype'])){$settings['home']['orange_zxsj']['mtype'] = array('banner', 'ourservices', 'about', 'product', 'case', 'news', 'case_p', 'bottomcontact');}
+            if(!empty($settings['home']['orange_zxsj']['mtype'])){
+                $num = count($settings['home']['orange_zxsj']['mtype']);
+                for($mid = 0; $mid < $num; $mid++){
+                    include $this->mytemplate("tpl/home/".$settings['home']['orange_zxsj']['mtype'][$mid], 'mobile');             
+                }
+            }
+            ?>
+            
+			{php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}

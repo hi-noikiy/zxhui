@@ -1,0 +1,62 @@
+/**
+ * 玖祺企业官网
+ *
+ * @author Bowen
+ * @url www.we7pc.com
+ * <!-- phpDesigner :: Timestamp [2018/8/18 17:43:22] -->
+ */
+    body{
+        background-color: white;
+        position: static;
+    }
+    dt, dd {
+        line-height: 36px;
+    }
+    .modal-backdrop.in { opacity: 0;}
+    .modal-backdrop { z-index: 1;}
+    
+    .we7-page-tab li.active, .we7-page-tab .head .navbar-left>li:hover, .head .we7-page-tab .navbar-left>li:hover, .we7-page-tab .panel-menu li.list-group-item:not(.list-group-more):hover, .panel-menu .we7-page-tab li.list-group-item:not(.list-group-more):hover {
+        border-bottom: 3px solid #009688;
+    }
+    .we7-page-tab li:hover {
+        border-bottom: 3px solid #009688;
+    }
+    .we7-page-alert .wi-info-sign {
+        color: #009688;
+    }
+    .bg-light-gray2{
+        background-color: #ececec!important;
+    }
+    .pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+        background-color: #009688;
+        border-color: #009688;
+    }
+    .pagination>li>a, .pagination>li>span {
+        color: #009688;
+    }
+    .hands{ cursor: pointer;}
+
+    .dragged { position: absolute; opacity: 0.5; z-index: 2000;}
+    ol.contents .input-group-addon{ cursor: move;}
+    .mmove{ cursor: move;}
+    
+    ol li.placeholder { position: relative !important;}
+    ol li.placeholder:before { position: absolute;}
+    .tm .btn { margin-bottom:5px; margin-right: 5px;}
+    .must::before {content: "*"; position: absolute; right: 0px; top: 10px; color: #eb6060; font-size: 12px;}
+    legend{width: auto; margin-bottom: 0; border-bottom: 0;}
+    .layui-upload-img { width: 92px; height: 92px; margin: 0 10px 10px 0;}
+    .hidden{display: none;}
+    
+    /** 来自于admin的样式 */
+    .layui-card-header.layuiadmin-card-header-auto{padding-top: 15px; padding-bottom: 15px; height: auto;}
+    .layuiadmin-card-header-auto i.layuiadmin-button-btn{position: relative; right: 0; top: 0; vertical-align: middle;}
+    .layuiadmin-card-header-auto .layui-form-item:last-child{margin-bottom: 0;}
+    .layui-layer-content { padding: 20px; line-height: 22px;}
+    .layadmin-iframe { position: absolute; width: 100%; height: 100%; left: 0; top: 0; right: 0; bottom: 0;}
+    
+    /** 目录弹窗 */
+    body .layui-layer-dir { box-shadow: none; border: 1px solid #d2d2d2;}
+    .site-dir li {line-height: 26px; margin-left: 20px; overflow: visible; list-style-type: disc;}
+    .site-dir div {margin: 5px 0;}
+    .site-dir div .layui-btn.full-btn{ width: 100%;}

@@ -1,0 +1,300 @@
+{php include $this->mytemplate('common/header')}
+<style>
+.layui-layout-admin .layui-body { top: 30px;}
+</style>
+<form class="form-horizontal form layui-form" action="" method="post" enctype="multipart/form-data" id="form">
+    <div class="layui-tab layui-tab-brief" lay-filter="content-classes-post-tab">
+    	<ul class="layui-tab-title">
+    		<li lay-id="base" class="layui-this">基础设置</li>
+            <li lay-id="seo">SEO优化</li>
+    	</ul>
+    	<div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="alert we7-page-alert" style="margin-top: 0px !important;">
+                    <p><i class="wi wi-info-sign"></i> 快捷导航： <a class="layui-btn layui-btn-primary layui-btn-sm" href="{php echo webUrl('content/classes', array('op' => 'add'))}" target="_self">新建分类</a> <a class="layui-btn layui-btn-primary layui-btn-sm" href="{php echo webUrl('content/classes')}" target="_self">分类列表</a></p>
+                </div>
+                <div class="panel panel-default">
+            		<div class="panel-heading">
+            			编辑分类
+            		</div>
+            		<div class="panel-body">
+                        {if $lastclass}
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+                                上级分类
+                            </label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="text" class="form-control" readonly="" value="{if $topclass}{$topclass['title']} - {/if}{$lastclass['title']}"/>
+            				</div>
+            			</div>
+                        {/if}
+<!--
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类模板
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								<select class="form-control" name="themes">
+									<option value="">请选择分类模板</option>
+									{loop $class_themes $t}
+									<option value="{$t['name']}" {if $class['themes'] == $t['name']}selected="true"{/if}>{$t['title']}</option>
+									{/loop}
+								</select>
+								<span class="help-block">
+            						注：需要显示为列表页的分类才需要选择模板
+            					</span>
+							</div>
+						</div>
+-->
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类名称
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								<input type="text" name="title" class="form-control" value="{$class['title']}" required="required" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">选择分类模板</label>
+							<div class="col-sm-8 col-xs-12">
+								{loop $class_themes $t}
+								<input type="radio" name="themes" value="{$t['name']}"
+									   title="<span lay-tips='theme_thumb' data-thumb='../addons/bowen_site/template/mobile/{if $_B['setting']['global']['mobilethemes'] == 'advertising_design'}t2static{else}{$_B['setting']['global']['mobilethemes']}{/if}/c_{$t['name']}.jpg' lay-area='430px|245px'>{$t['title']}</span>"
+									   lay-filter="themes"{if $class['themes'] == $t['name']} checked="true"{/if}>
+								{/loop}
+							</div>
+						</div>
+
+						<div class="form-group" id="sign_group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类标识
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								<input type="text" name="sign" class="form-control" value="{$class['sign']}" />
+								<span class="help-block">
+            						注：用于导航的选中状态；当分类设置的标识与导航的标识一致时，则为选中状态；<br />
+            						<code>一般情况下，只需设置一级分类的标识</code>
+            					</span>
+							</div>
+						</div>
+
+                        <div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					副标题
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="text" name="subtitle" class="form-control" value="{$class['subtitle']}" />
+            				</div>
+            			</div>
+                        
+                        <div class="form-group">
+                			<label class="col-xs-12 col-sm-3 col-md-2 control-label">图标</label>
+                			<div class="col-sm-8 col-xs-12">
+                				<input type="text" class="form-control" name="icon" value="{$class['icon']}" />
+                				<span class="help-block">
+                                    如需图标：<a href="https://9iphp.com/fa-icons" target="_blank">点这里</a>；找到想要的图标，直接把名称复制过来即可;<br />
+                                    需要的情况下才填这里
+                                </span>
+                			</div>
+                		</div>
+                        
+                        <div class="form-group">
+                			<label class="col-xs-12 col-sm-3 col-md-2 control-label">图片</label>
+                			<div class="col-sm-8 col-xs-12">
+                				{php echo tpl_form_field_multi_image('images', $class['images'])}
+                                <span class="help-block"></span>
+                			</div>
+                		</div>
+
+						<div class="form-group" id="thumb">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类顶部图
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								{php echo tpl_form_field_image('thumb', $class['thumb'], '')}
+								<span class="help-block"></span>
+							</div>
+						</div>
+
+						<div class="form-group" style="{if $settings['global']['mobilethemes'] != 'default'}display: none;{/if}" >
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类顶部图(手机端)
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								{php echo tpl_form_field_image('mobilethumb', $class['value']['mobilethumb'])}
+								<span class="help-block">
+										注：<code>一般情况下不填</code><br />
+										不习惯使用响应式官网的亲，在此处填写后，手机端将会被替换为此处的设置<br />
+										只对当前分类有效，不读取上级分类；要生效，还得保证上方的分类顶部图存在内容
+									</span>
+							</div>
+						</div>
+
+                        <div class="form-group">
+                			<label class="col-xs-12 col-sm-3 col-md-2 control-label">分类描述</label>
+                			<div class="col-sm-8 col-xs-12">
+                				<textarea class="form-control" name="description" rows="5" >{$class['description']}</textarea>
+                                <span class="help-block"></span>
+                			</div>
+                		</div>
+                            
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					直接链接
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+                                {php echo mytpl_form_field_link('tourl', $class['tourl'])}
+            					<span class="help-block">
+            						注：<code>一般情况下无需填写,填写后将不能打开分类页</code><br />
+                                    填写后，打开分类时将直接跳转到该链接<br />
+                                    支持相对链接。绝对链接请填写以http或https开头的完整链接
+            					</span>
+            				</div>
+            			</div>
+
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					每页文章数量
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="number" name="psize" class="form-control" value="{if $class['value']['psize']}{$class['value']['psize']}{else}12{/if}" />
+            					<span class="help-block">
+            						注：每页默认显示12篇文章（为空或者为0则为默认数量）
+            					</span>
+            				</div>
+            			</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+								分类排序
+							</label>
+							<div class="col-sm-8 col-xs-12">
+								<input type="number" name="displayorder" class="form-control" value="{if $class['displayorder']}{$class['displayorder']}{else}0{/if}" />
+							</div>
+						</div>
+
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					状态
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<div class="form-control" style="border: 0px; box-shadow: 0px 0px 0px #fff;" lay-ignore>
+            						<label class="radio-inline">
+            							<input type="radio" name="status" lay-ignore value="1" {if $class['status'] == '1'}checked="checked"{/if} /> 显示
+            						</label>
+            						<label class="radio-inline">
+            							<input type="radio" name="status" lay-ignore value="0" {if empty($class['status'])}checked="checked"{/if} /> 隐藏
+            						</label>
+            					</div>
+            				</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            
+            <div class="layui-tab-item">
+                <div class="alert we7-page-alert" style="margin-top: 0px !important;">
+                	<p><i class="wi wi-info-sign"></i> SEO优化，是对当前分类代表的列表页单独设置SEO</p>
+                </div>
+                <div class="panel panel-default">
+            		<div class="panel-heading">
+            			分类页SEO
+            		</div>
+            		<div class="panel-body">
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					title
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="text" name="seo[title]" class="form-control" value="{$class['value']['seo']['title']}" placeholder="请输入title" />
+            					<span class="help-block">
+            						不填则是默认，默认为：分类标题 - 站点名称
+            						<br />
+            						支持变量：<code>#分类标题#</code> <code>#上级分类标题#</code> <code>#站点名称#</code>
+            					</span>
+            				</div>
+            			</div>
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					keyword
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="text" name="seo[keyword]" class="form-control" value="{$class['value']['seo']['keyword']}" placeholder="请输入keyword" />
+            					<span class="help-block">
+            						不填则是全局设置，当前全局设置为：{$settings['global']['keyword']}
+                                    <br />
+            						支持变量：<code>#分类标题#</code> <code>#上级分类标题#</code> <code>#站点名称#</code>
+            					</span>
+            				</div>
+            			</div>
+            			<div class="form-group">
+            				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+            					description
+            				</label>
+            				<div class="col-sm-8 col-xs-12">
+            					<input type="text" name="seo[description]" class="form-control" value="{$class['value']['seo']['description']}" placeholder="请输入description" />
+            					<span class="help-block">
+            						不填则是全局设置，当前全局设置为：{$settings['global']['description']}
+                                    <br />
+            						支持变量：<code>#分类标题#</code> <code>#上级分类标题#</code> <code>#站点名称#</code>
+            					</span>
+            				</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            
+            
+    	</div>
+    </div>
+	
+    <div class="form-group">
+		<div class="col-sm-8 col-xs-12">
+            快速操作：
+			<span class="layui-breadcrumb" lay-separator=">">
+                <a class="hands tabChange" data-go="base">基础设置</a>
+                <a class="hands tabChange" data-go="seo">SEO优化</li>
+            </span>
+		</div>
+	</div>
+    
+    <div class="form-group">
+        <div class="col-sm-9 col-xs-12">
+            <input type="hidden" name="id" value="{$id}" />
+            <input type="hidden" name="token" value="{$_W['token']}"/>
+            <input type="submit" name="submit" value="发  布" class="layui-btn col-lg-2" />
+            <a class="layui-btn layui-btn-primary" style="margin-left: 10px;" href="{php echo webUrl('content/classes')}">返回列表</a>
+		</div>
+	</div>
+
+</form>
+
+<script>
+layui.use(['form', 'element'], function(){
+    var form = layui.form
+    ,element= layui.element;
+    
+    //渲染面包屑
+    element.render('breadcrumb');
+    
+    /** 按钮切换tab */
+    $(".tabChange").on('click', function() {
+        var goId = $(this).data("go");
+        if(goId){
+            element.tabChange('content-classes-post-tab', goId);
+            $('.right-content').animate({ scrollTop: 0 }, 500);
+        }
+	});
+    
+    //Hash地址的定位
+    var layid = location.hash.replace(/^#cap=/, '');
+    element.tabChange('content-classes-post-tab', layid);
+  
+    element.on('tab(content-classes-post-tab)', function(elem){
+        location.hash = 'cap='+ $(this).attr('lay-id');
+    });
+});  
+</script>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/17 11:43:49] -->

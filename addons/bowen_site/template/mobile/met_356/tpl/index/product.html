@@ -1,0 +1,70 @@
+<div class="product_list_met_16_6 met-index-body     left     bgcolor" m-id='3'>
+    <div class="container">
+        <div class="title">
+            <h2 class="invisible" data-plugin="appear" data-animate="slide-bottom50" data-repeat="false">{if $settings['home']['met_356'][$k1]['title']}{$settings['home']['met_356'][$k1]['title']}{else}金牌服务{/if}</h2>
+            <p class="desc invisible animation-delay-200" data-plugin="appear" data-animate="slide-bottom50" data-repeat="false">{if $settings['home']['met_356'][$k1]['subtitle']}{$settings['home']['met_356'][$k1]['subtitle']}{else}公司秉持“诚信、专业、效率、共赢”的原则，以最专业的财税团队，无微不至的贴心服务{/if}</p>
+        </div>
+        <div class="product-tabs blocks-4 slick">
+            {php $lowerClass[$mid] = $this->getClasses('lower', array('cid'=>$settings['home']['met_356'][$k1]['class']));}
+            {php $countClass[$mid] = 0;}
+            {loop $lowerClass[$mid] $lc}
+            <div class="pd-card{if $countClass[$mid] == 0} card-active{/if}">
+                <div class="product-box">
+                    <div class="pd-overview">
+                        <div class="title">
+                            {php $lc['images'] = iunserializer($lc['images'])}
+                            <span><img src="{media $lc['images'][0]}" alt="{$lc['title']}"></span>
+                            <h3>{$lc['title']}</h3>
+                        </div>
+                        <div class="pd-overview-menu">
+                            {php $lcA[$mid] = $this->getClasseArticles($lc['id'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+                            <ul class="menu-list">
+                                {loop $lcA[$mid] $item}
+                                <li>
+                                    <div>
+                                        {$item['title']} <span class="tip">{if $item['istranslate'] == 1}热{/if}</span>
+                                    </div>
+                                </li>
+                                {/loop}
+                                <li><div>...</div></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pd-detail">
+                        <div class="title">
+                            <span>
+                                <img src="{media $lc['images'][0]}" alt="{$lc['title']}">
+                            </span>
+                            <h3>{$lc['title']}</h3>
+                        </div>
+                        <div class="pd-detail-menu">
+                            <ul class="menu-list">
+                                {loop $lcA[$mid] $item}
+                                <li>
+                                    <div class="name">{$item['title']}</div>
+                                    <div class="des">
+                                        <div class="shop">
+                                            <a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" class="btn-buy">查看详情</a>
+                                        </div>
+                                        {if $item['description']}
+                                        {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                        {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        <p>{php echo m('common')->msubstr($item['description'], 0, 200)}</p>
+                                    </div>
+                                </li>
+                                {/loop}
+                            </ul>
+                            <a href="{php echo foregUrl('class',array('id'=>$lc['id']), true)}" target='_self' title="{$lc['title']}" class="btn-more">查看更多</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {php $countClass[$mid]++;}
+            {/loop}
+
+        </div>
+    </div>
+</div>

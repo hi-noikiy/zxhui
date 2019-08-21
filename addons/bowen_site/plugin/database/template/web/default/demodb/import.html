@@ -1,0 +1,91 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+body{background-color: #f2f2f2;}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					主题演示数据导入 说明
+				</div>
+				<div class="layui-card-body">
+                    
+					<blockquote class="layui-elem-quote" style="font-size: 14px;">
+                        <span style="color: #FF5722;">
+						1.为哪个站点导入演示数据，就请通过哪个站点进入本应用进行操作；<br />
+                        2.导入数据前，请先为该站点选择主题；<br /><br />
+                        </span>
+                        
+                        <strong>
+                        当前站点公众号/PC：{$_W['uniaccount']['name']}<br />
+                        当前主题：{$setting['global']['mobilethemes']}<br />
+                        数据状态：{if !file_exists(MODULE_ROOT.'/data/plugin/database/'.$setting['global']['mobilethemes']."/config.txt")}
+                            <span style="color: #FF5722;">当前主题数据不存在，请联系管理员存入</span>
+                            {else}
+                            <span style="color: #5FB878;">正常</span>
+                            {/if}
+                        </strong>
+                        
+                        {if $_W['role'] == ACCOUNT_MANAGE_NAME_FOUNDER}
+                        <br /><br />
+                        <kbd>以下信息仅站长可见：</kbd><br />
+                        下载数据：无论当前是否存在演示数据，都会下载最新演示数据（如已经存在，则覆盖）；<br />
+                        开始导入：如果不存在演示数据，则会从云服务拉取演示数据。再次点击才会开始导入数据。
+                        {/if}
+					</blockquote>
+                    <br />
+                    {if $_W['role'] == ACCOUNT_MANAGE_NAME_FOUNDER}
+                    <a class="layui-btn layui-btn-primary" onclick="run('download')">下载数据</a>
+                    {/if}
+                    <a class="layui-btn" onclick="run()">开始导入</a>
+                    <p>&nbsp;</p>
+                    
+				</div>
+			</div>
+        </div>
+        
+    </div>
+</div>
+<script>
+function run(op){
+    op = op?op:'run';
+
+    layui.use('layer', function(){
+        var layer = layui.layer
+            ,msg = '确定要导入数据吗？如果已经存在数据，可能导致数据重复';
+
+        if(op == 'download'){
+            msg = '确定要下载数据吗？确认后将会从云服务拉取最新演示数据进行覆盖';
+        };
+
+        var this_confirm = layer.confirm(msg, {icon: 3, title:'提示'}, function(index){
+            var load = layer.load();
+            $.post("{php echo webUrl('database/demodb/import/run')}"
+                ,{'op':op}
+                ,function(d){
+                    layer.close(load);
+                    if(d.errno == 0){
+                        layer.msg(d.message, {
+                            icon: 1
+                        });
+                        setTimeout("location.reload();", 1000)
+                    }else{
+                        console.log(d);
+                        layer.msg(d.message, {
+                            icon: 2
+                        });
+                    }
+                }
+                ,'json'
+            );
+
+            layer.close(this_confirm);
+        });
+    });
+
+}
+</script>
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/10/12 11:04:50] -->

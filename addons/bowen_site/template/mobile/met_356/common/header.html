@@ -1,0 +1,72 @@
+{mytemplate 'common/header-base'}
+<header class='met-head navbar-fixed-top' m-id='1' m-type='head_nav'>
+    <nav class="navbar navbar-default box-shadow-none head_nav_met_16_5">
+        <div class="nav-top">
+            <div class="container">
+                <div class="row">
+                    <div class="clearfix">
+                        <h3 hidden>{$_B['setting']['global']['title']}</h3>
+                        <h1 hidden>{$page_title}</h1>
+                        <!-- logo -->
+                        <div class="navbar-header pull-xs-left">
+                            <a href="{foregUrl ''}" class="met-logo vertical-align block pull-xs-left" title="{$_B['setting']['global']['title']}">
+                                <div class="vertical-align-middle">
+                                    <img src="{if $_B['setting']['global']['tn_logo']}{media $_B['setting']['global']['tn_logo']}{else}{M_URL}template/mobile/met_356/static/images/1529374002.png{/if}" alt="{$_B['setting']['global']['title']}">
+                                </div>
+                            </a>
+                        </div>
+                        <!-- logo -->
+                        <button type="button" class="navbar-toggler hamburger hamburger-close collapsed p-x-5 head_nav_met_16_5-toggler" data-target="#head_nav_met_16_5-collapse" data-toggle="collapse">
+                            <span class="sr-only"></span>
+                            <span class="hamburger-bar"></span>
+                        </button>
+                        <!-- 会员注册登录 -->
+                        <!-- icon -->
+                        <div class="eco_header pull-right hidden-xs hidden-sm">
+
+                            {loop $_B['setting']['global']['bt_contact'] $bc}
+                            <div class="top-info">
+                                {if !empty($bc['title'])}
+                                <div class="icon-box">
+                                    <span class="fa fa-{$bc['title']}"></span>
+                                </div>
+                                {/if}
+                                <div class="content-box">
+                                    <p>{php echo html_entity_decode($bc['url'], ENT_QUOTES)}</p>
+                                </div>
+                            </div>
+                            {/loop}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 会员注册登录 -->
+
+        <!-- 导航 -->
+        <div class="fullnav collapse navbar-collapse navbar-collapse-toolbar p-0" id="head_nav_met_16_5-collapse">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navlist clearfix     ">
+
+                        {php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+                        {php $bowen_topnav_i = 0}
+                        {loop $topnavs $tn}
+                        {if $tn['status'] == '1'}
+                        <!-- 1 -->
+                        <li class="nav-item{if $bowen_topnav_i > 0} m-l-40{/if}">
+                            <a href="{$tn['url']}" target="{$tn['target']}" title="{$tn['title']}" class="nav-link{if $tn['sign'] && $tn['sign'] == $sign} active{/if}">{$tn['title']}</a>
+                        </li>
+                        <!-- 1 -->
+                        {php $bowen_topnav_i++}
+                        {/if}
+                        {/loop}
+
+                    </ul>
+                </div>
+                <!-- 导航 -->
+            </div>
+        </div>
+    </nav>
+</header>

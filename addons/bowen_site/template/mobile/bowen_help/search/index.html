@@ -1,0 +1,40 @@
+{php include $this->mytemplate('common/header')}
+            
+			<div class="site-content">
+				<h1 class="site-h1">
+					搜索结果
+				</h1>
+                
+                {if empty($articles)}
+                    <fieldset class="layui-elem-field layui-field-title site-title">
+				        <legend><a>没有含有 "<strong>{$keywords}</strong>" 的信息内容</a></legend>
+                    </fieldset>
+                {else}
+                    <div style="padding: 20px; background-color: #F2F2F2;">
+                        {loop $articles $item}
+                        {if empty($item['thirdclass'])}
+                            {php $item['thirdclass'] = $item['secondclass']}
+                        {/if}
+                        {if empty($item['thirdclass'])}
+                            {php $item['thirdclass'] = $item['firstclass']}
+                        {/if}
+                        <div class="layui-card" onclick="window.location.href='{php echo foregUrl('class',array('id'=>$item['thirdclass']), true)}#article_{$item['id']}'">
+                            <div class="layui-card-header">{$item['title']}</div>
+                            <div class="layui-card-body">
+                                {if $item['description']}
+                                    {php $item['description'] = deleteRN($item['description'])}
+                                {else}
+                                    {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                {/if}
+                                {php echo m('common')->msubstr($item['description'], 0, 120)}
+                            </div>
+                        </div>
+                        {/loop}
+                    </div>
+				    {php echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), array('html' => array('s' => '<div class="hidden-xs"><div class="met_pager">', 'e' => '</div></div>', 'ac' => 'Ahover'), 'li' => 'null'));}
+                {/if}
+                
+			</div>
+        </div>
+        
+{php include $this->mytemplate('common/footer')}

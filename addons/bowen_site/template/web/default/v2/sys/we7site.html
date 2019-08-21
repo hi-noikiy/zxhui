@@ -1,0 +1,18 @@
+<title>系统设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+        <a><cite>系统设置</cite></a>
+    </div>
+</div>
+<div id="BOWEN_app-sys-we7site"></div>
+<script type="text/javascript">
+layui.use(['jquery', 'myutil'], function(){
+    var $ = layui.jquery
+    ,myutil = layui.myutil;
+    var iframe = '<iframe src="'+myutil.webUrl('system/we7/site',{'s':'iframe'})+'" frameborder="0" class="layadmin-iframe"></iframe>';
+    $('#BOWEN_app-sys-we7site').html(iframe);
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/22 10:43:22] -->

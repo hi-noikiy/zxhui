@@ -1,0 +1,73 @@
+{php include $this->mytemplate('common/header-base')}
+<body class="inner-box-body" id="article-box-id">
+	<!-- 顶部导航 begin-->
+	{php include $this->mytemplate('common/top-nav')}
+	<!-- 顶部导航 end-->
+	<!-- 轮播图片 begin-->
+	{php include $this->mytemplate('common/banner2')}
+	<!-- 轮播图片 end-->
+	<!-- 内容展示 begin-->
+	<div class="layout" id="fh5co-content_show">
+		<div class="layout inner-nav margin-big-bottom">
+			<div class="container">
+				<h2 class="text-center">
+					{$lastclass['title']}
+				</h2>
+				<ul class="nav submenu" id="subnav">
+                    {loop $navs $n}
+                    {if $n['status'] == '1'}
+					<li class="{if $id == $n['id']}active{/if}">
+						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}">{$n['title']}</a>
+					</li>
+					{/if}
+                    {/loop}
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<div class="content-boxs">
+				<div class="show_content padding-large-bottom">
+					<div class="show_list">
+						<ul class="list-media article-media">
+							<!-- S articles -->
+                            {loop $articles $ai}
+                            {if $ai['status'] == '1'}
+                            <li>
+								<div class="media media-x">
+									<div class="caldata float-left">
+										<div class="content text-center">
+											<p class="day">
+												{php echo date('d', $ai['createtime'])}
+											</p>
+											<p class="mon-year">
+												{php echo date('Y-m', $ai['createtime'])}
+											</p>
+										</div>
+									</div>
+									<div class="media-body">
+										<h3>
+											<a href="{php echo foregUrl('article',array('id'=>$ai['id']))}" title="{$ai['title']}">{$ai['title']}</a>
+										</h3>
+										<p class="desc">
+											<script>document.write(cutcontent("{php echo deleteRN($ai['description'])}","110"));</script>
+										</p>
+									</div>
+								</div>
+							</li>
+							{/if}
+							{/loop}
+							<!-- E articles -->
+						</ul>
+					</div>
+                    <style type="text/css">
+                        .thisclass a{ color: white;}
+                    </style>
+					<div class="text-center padding-big-top padding-big-bottom">
+						{php echo pagination_foreg($count, $pindex, $psize);}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 内容展示 end-->
+	{php include $this->mytemplate('common/footer')}

@@ -1,0 +1,60 @@
+
+    <script src="{M_URL}template/mobile/met_364/static/js/style.js?v={RELEASE}"></script>
+    <script type="text/javascript">
+        {if !empty($settings['global']['isrewrite']) && $_W['core_settings']['is_rewrite'] == 1}
+        var siteurl = window.location.href;
+        if(siteurl.indexOf(".php") >= 0){
+            if(siteurl.indexOf("r=article") >= 0){
+                window.location.href="{php echo foregUrl('article', array('id' => $id))}";
+            }else if(siteurl.indexOf("r=class") >= 0){
+                window.location.href="{php echo foregUrl('class', array('id' => $id, 'page' => $pindex))}";
+            }else if(siteurl.indexOf("r=search") >= 0){
+
+            }else{
+                window.location.href="{php echo foregUrl()}";
+            }
+        }
+        {/if}
+
+            window.global = {
+                uniacid: "{$_W['uniacid']}"
+                ,os : "{$_W['os']}"
+                ,qr_wechat: "{media $_B['setting']['global']['qr']}"
+            {if !empty($_W['openid'])},'openid': '{$_W['openid']}'{/if}
+            {if !empty($id)},'id': '{$id}'{/if}
+                ,'family': '{FAMILY}'
+                ,'siteroot': '{$_W['siteroot']}'
+                ,'siteurl': '{$_W['siteurl']}'
+                ,'attachurl': '{$_W['attachurl']}'
+                ,'attachurl_local': '{$_W['attachurl_local']}'
+                ,'attachurl_remote': '{$_W['attachurl_remote']}'
+                ,'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'}
+            ,'account_type' : "{$_W['account']['type']}"
+                    ,'uni_is_multi_acid': {if uni_is_multi_acid()}true{else}false{/if}
+                    ,'isrewrite' : {if !empty($_B['setting']['global']['isrewrite'])}1{else}0{/if}
+                    ,'route': "{if !empty($_GET['r'])}{php echo trim($_GET['r'])}{else}null{/if}"
+                    ,'op': "{if !empty($_GET['op'])}{php echo trim($_GET['op'])}{else}null{/if}"
+                    ,apptheme: "{$_B['setting']['global']['mobilethemes']}"
+                    ,version: "{VERSION}"
+                    ,release: "{RELEASE}"
+                };
+
+                    layui.config({
+                        base: '{M_URL}static/layui/lay/mymodules/',
+                        version: global.release
+                    });
+
+                    layui.extend({
+                        global: '{/}{M_URL}template/mobile/met_364/static/js/global'
+                    }).use('global');
+
+    </script>
+    <!-- S 全局统计 -->
+    <div style="display: none;">
+        {php echo html_entity_decode(base64_decode($_B['setting']['global']['diycode']), ENT_QUOTES)}
+    </div>
+    <!-- E 全局统计 -->
+</body>
+{mcommon 'share'}
+{mcommon 'baidu_js_push'}
+</html>

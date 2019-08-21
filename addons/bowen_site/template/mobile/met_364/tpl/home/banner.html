@@ -1,0 +1,52 @@
+<!-- Banner BEGIN -->
+<div class="met-banner" style="margin-bottom: 1.5%;">
+    <div class="carousel slide" id="bowen-banner-slide-{$mid}" data-ride="carousel">
+        <!-- banner 小白点 -->
+        <ol class="carousel-indicators carousel-indicators-fall">
+            {php $count2[$mid] = 0;}
+            {loop $settings['home']['met_364'][$k1]['banner'] $item}
+            <li class="{if $count2[$mid] == 0}active{/if}" data-slide-to="{$count2[$mid]}" data-target="#bowen-banner-slide-{$mid}"></li>
+            {php $count2[$mid]++}
+            {/loop}
+        </ol>
+
+        <!-- banner 主体 -->
+        <div class="carousel-inner carousel-height" role="listbox">
+            {php $count[$mid] = 0;}
+            {loop $settings['home']['met_364'][$k1]['banner'] $item}
+            <div class="item {if $count[$mid] == 0}active{/if}">
+                <a href="{$item['blink']}" title="" target='_blank'>
+                    {php $item['bimg'] = tomedia($item['bimg'])}
+                    <picture>
+                        <source srcset="{php echo m('image')->image_crop($item['bimg'], 1920, 700)}"
+                                media="(min-width: 768px)"/>
+                        <img
+                                class="cover-image overlay-scale"
+                                srcset="{$item['bimg']}"
+                                alt=""
+                        />
+                    </picture>
+                    <div class="carousel-caption p-2">
+                        <h3 class="animation-slide-top animation-delay-300" style="color: #dd0011;"></h3>
+                        <p class="animation-slide-bottom animation-delay-600" style="color: #dd0011;"></p>
+                    </div>
+                </a>
+            </div>
+            {php $count[$mid]++}
+            {/loop}
+        </div>
+
+        <!-- banner左右两个切换箭头 -->
+        <a class="left carousel-control" href="#bowen-banner-slide-{$mid}" role="button" data-slide="prev">
+            <span class="icon wb-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#bowen-banner-slide-{$mid}" role="button"
+           data-slide="next">
+            <span class="icon wb-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+
+    </div>
+</div>
+<!-- Banner END -->

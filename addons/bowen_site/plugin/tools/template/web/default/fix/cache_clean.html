@@ -1,0 +1,12 @@
+{php include $this->mytemplate('common/header', 'web')}
+<script type="text/javascript">
+{if $_GET['s'] != 'iframe'}
+//layui.data('bowen_site', null);
+{else}
+layui.data('bowen_site_cloud', null);
+{/if}
+util.message("清理成功", '', 'success');
+setTimeout("location.href = history.back(-1);", 1000);
+</script>
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/8/22 11:39:14] -->

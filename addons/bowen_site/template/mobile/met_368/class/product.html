@@ -1,0 +1,161 @@
+{mytemplate 'common/header'}
+<section class="banner_met_11_4-warrper">
+	<div class="banner_met_11_4-ny vertical-align text-xs-center" m-id='2' m-type='banner'>
+		<h1 class="vertical-align-middle">
+			{$category_parent['title']}
+		</h1>
+	</div>
+</section>
+<div class="subcolumn_nav_met_16_1 border-bottom1" m-id='16' m-type='nocontent'>
+	<div class="">
+		<div class="subcolumn-nav text-xs-center">
+			<ul class="subcolumn_nav_met_16_1-ul m-b-0 p-y-10 p-x-0 ulstyle">
+				
+                <li>
+					<a href="{php echo foregUrl('class',array('id'=>$all['id']), true)}" class="{if $id == $all['id']}active{/if}" title="{$lastclass['title']}">全部</a>
+				</li>
+                
+				{loop $navs $n}
+                {if $n['status'] == '1'}
+				<li {if $n['t']}class="dropdown"{/if}>
+					<a href="{if !$n['t']}{php echo foregUrl('class',array('id'=>$n['id']), true)}{else}JavaScript:;{/if}" title="{$n['title']}" class="{if $category_parent['id'] == $n['id'] || $id == $n['id']}active{/if}{if $n['t']} dropdown-toggle" data-toggle="dropdown"{else}"{/if}>{$n['title']}</a>
+
+                    {if $n['t']}
+                        <div class="dropdown-menu animate">
+    						<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}" class="dropdown-item {if $category_parent['id'] == $n['id'] || $id == $n['id']}active{/if}">全部</a>
+                            {loop $n['t'] $n_t}
+                            {if $n_t['status'] == '1'}
+                            <a href="{php echo foregUrl('class',array('id'=>$n_t['id']), true)}" title="{$n_t['title']}" class="dropdown-item {if $id == $n_t['id']}active{/if}">{$n_t['title']}</a>
+                            {/if}
+                            {/loop}
+    					</div>
+                    {/if}
+                
+                </li>
+				{/if}
+                {/loop}
+                
+			</ul>
+		</div>
+		<div class="product-search">
+			<form method="get" action="{if $_B['core_settings']['is_rewrite'] == 1}../{$_W['uniacid']}/class_{$id}.html">{else}../app/index.php">
+                <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                <input type="hidden" name="c" value="entry" />
+                <input type="hidden" name="m" value="bowen_site" />
+                <input type="hidden" name="do" value="foreg" />
+                <input type="hidden" name="r" value="class" />
+                {/if}
+				<div class="form-group">
+					<div class="input-search">
+						<button type="submit" class="input-search-btn">
+							<i class="icon wb-search" aria-hidden="true"></i>
+						</button>
+                        <input type="hidden" name="classlevel" value="1" />
+                        <input type="hidden" name="class" value="{$all['id']}" />
+						<input type="text" class="form-control" name="kw" value="{$_GPC['kw']}" placeholder="search" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!--
+<div class="para_search_met_16_1" m-id='15'>
+	<div class="    container">
+		<div class="row">
+			<div class="type-order">
+				<div class="clearfix">
+					<div class="attr-name col-xl-1 col-lg-2 col-md-2 col-sm-3">
+						分类：
+					</div>
+					<ul class="type-order-attr col-xl-11 col-lg-10 col-md-10 col-sm-9">
+						<li class="inline-block attr-value para_select_option">
+							<a href="" class="p-x-10 p-y-5">全部</a>
+						</li>
+						<li class="inline-block attr-value ">
+							<a href="" class="p-x-10 p-y-5">数学</a>
+						</li>
+						<li class="inline-block attr-value ">
+							<a href="" class="p-x-10 p-y-5">英语</a>
+						</li>
+						<li class="inline-block attr-value ">
+							<a href="" class="p-x-10 p-y-5">语文</a>
+						</li>
+						<li class="inline-block attr-value ">
+							<a href="" class="p-x-10 p-y-5">特训班</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clearfix">
+				<ul class="order m-y-20 p-0">
+					<li class="order-list inline-block m-r-10">
+						<a href="" class="p-x-10 p-y-5">推荐<i class="icon wb-triangle-up" aria-hidden="true"></i></a>
+					</li>
+					<li class="order-list inline-block m-r-10">
+						<a href="" class="p-x-10 p-y-5">热门<i class="icon wb-triangle-up" aria-hidden="true"></i></a>
+					</li>
+					<li class="order-list inline-block m-r-10">
+						<a href="" class="p-x-10 p-y-5">最新<i class="icon wb-triangle-up" aria-hidden="true"></i></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>-->
+<div class="product_list_page_met_16_1 met-product animsition type-1" m-id='14'>
+	<div class="container">
+		<ul class="blocks-xs-2 blocks-md-2 blocks-lg-4 blocks-xxl-4 met-pager-ajax imagesize cover met-product-list met-grid" id="met-grid" data-scale='400x400'>
+            {loop $articles $item}
+            {if $item['status'] == '1'}
+			<li class="shown">
+				<div class="card card-shadow">
+					<figure class="card-header cover">
+						<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target="_blank">
+                            {if empty($item['thumb'])}
+                                {php $item['images'] = iunserializer($item['images']);}
+                                {php $item['thumb'] = $item['images'][0]}
+                            {/if}
+                            {php $item['thumb'] = tomedia($item['thumb'])}
+                            <img class="cover-image" data-original="{php echo m('image')->image_crop($item['thumb'], 400, 400)}" alt="{$item['title']}" />
+						</a>
+					</figure>
+					<h4 class="card-title m-0 p-x-10 font-size-16 text-xs-center">
+						<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="block" target="_blank">{$item['title']}</a>
+						<p class='m-b-0 m-t-5 red-600'></p>
+					</h4>
+				</div>
+			</li>
+			{/if}
+            {/loop}
+		</ul>
+                        <?php
+                        $param = array(
+                            'html' => array(
+                                's' => '<div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">', 
+                                'e' => '</div></div>', 
+                                'ac' => 'Ahover', 
+                                'fpnl' => array(
+                                    'fl' => 'null', 
+                                    'p' => 'class="PreSpan"', 
+                                    'n' => 'class="NextSpan"'
+                                )
+                            ),
+                            'li' => 'null',
+                            'always_show' => 1,
+                            'nopages' => '
+                                <div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">
+                                    <span class="PreSpan">
+    									上一页
+    								</span>
+    								<a href="'.$_W['siteurl'].'" class="Ahover">1</a>
+    								<span class="NextSpan">
+    									下一页
+    								</span>
+                                </div></div>'
+                        );
+                        echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                        ?>
+	</div>
+</div>
+{mytemplate 'common/footer'}

@@ -1,0 +1,49 @@
+<li class="panel-group" >
+    <div class="panel panel-default">
+        <span class="mmove"><i class="fa fa-arrows"></i></span>
+        <input type="hidden" name="mtype[{$mid}]" value="video" />
+        <div class="panel-heading" {if !$is_ajax_tpl}onclick="display('video{$mid}');"{/if}>
+            <h5 class="panel-title">
+                <div>
+                    {if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}视频展示{/if}
+                    <span class="color-red" style="font-size: 13px;">整个页面只允许存在一个 </span>
+                    {if !$is_ajax_tpl}<span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+                </div>
+            </h5>
+        </div>
+        <div class="panel-body" id="video{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" >板块名称</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="title[{$mid}]" class="form-control" value="{if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}视频展示{/if}" placeholder="" />
+                    <div class="help-block">该项不显示在站点中，仅用于方便区分后台板块</div>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" >视频上传</label></label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_video('video['.$mid.']', $settings['home']['met_364'][$k1]['video']);}
+                    <div class="help-block">注：视频板块的数据来源</div>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" >背景图</label></label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_image('bgimg['.$mid.']', $settings['home']['met_364'][$k1]['bgimg']);}
+                    <div class="help-block">任意尺寸，展示过程时将会被裁剪为1400*1400的图片，并横向平铺</div>
+                </div>
+            </div>
+
+            <hr/>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                <div class="col-sm-8">
+                    <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

@@ -1,0 +1,23 @@
+<xml>
+    <name><![CDATA[bowen_help]]></name>
+    <title><![CDATA[帮助中心(模板6)]]></title>
+    <auther><![CDATA[Bowen]]></auther>
+    <url><![CDATA[www.we7pc.com]]></url>
+    <type><![CDATA[]]></type>
+    <description><![CDATA[]]></description>
+    <tag><![CDATA[简约大气|响应式|页面多]]></tag>
+    <themes>
+        <article>
+            <pages>
+                <name><![CDATA[pages]]></name>
+                <title><![CDATA[默认文章模板]]></title>
+            </pages>
+        </article>
+        <class>
+            <article>
+                <name><![CDATA[article]]></name>
+                <title><![CDATA[默认分类模板]]></title>
+            </article>
+        </class>
+    </themes>
+</xml>

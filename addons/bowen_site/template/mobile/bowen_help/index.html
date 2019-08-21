@@ -1,0 +1,7 @@
+<?php
+if(!empty($settings['home']['bowen_help']['tourl'])){
+	header('location: '.$settings['home']['bowen_help']['tourl']);
+}else{
+	exit('未配置主题设置，请先配置主题设置');
+}
+?>

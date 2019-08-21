@@ -1,0 +1,97 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/header')}
+        <section role="main" class="subpage active">
+			<div class="main-box"> 
+                <div class="sidebar-header active">
+					<div class="sidebar-icon active">
+						<i class="fa fa-arrow-left"></i>
+						<i class="fa fa-th-list"></i>
+					</div>
+					<div class="sidebar-nav">
+						<ul>
+							<li class="{if $id == $all['id']}active{/if}">
+								<a href="{php echo foregUrl()}" title="{$lastclass['title']}" class="{if $id == $all['id']}active{/if}">首页</a>
+							</li>
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+        					<li class="{if $id == $n['id'] || $class_info['parid'] == $n['id']}active{/if}">
+        						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}" class="{if $id == $n['id']}active{/if}">{$n['title']}{if $n['t']} <span class="caret"></span>{/if}</a>
+                                {if $n['t']}
+                                <ul>
+                                    {loop $n['t'] $n_t}
+                                    {if $n_t['status'] == '1'}
+                                    <li><a href="{php echo foregUrl('class',array('id'=>$n_t['id']))}" title="{$n_t['title']}">{$n_t['title']}</a></li>
+                                    {/if}
+                                    {/loop}
+                                </ul>
+                                {/if}
+        					</li>
+                            {/if}
+        					{/loop}
+						</ul>
+					</div>
+                    
+					{php include $this->mytemplate('common/search')}
+                    
+				</div>
+
+                <section class="met-search animsition">
+                	<div class="container">
+                		<div class="row">
+                			<div class="met-search-body">
+                				<form method='get' class="page-search-form" role="search" action="{if $_B['core_settings']['is_rewrite'] == 1}../{$_W['uniacid']}/search.html">{else}../app/index.php">
+                					<input type="hidden" name="i" value="{$_W['uniacid']}" />
+                                    <input type="hidden" name="c" value="entry" />
+                                    <input type="hidden" name="m" value="bowen_site" />
+                                    <input type="hidden" name="do" value="foreg" />
+                                    <input type="hidden" name="r" value="search" />
+                                    {/if}
+                					<div class="input-search input-search-dark">
+                						<button type="submit" class="input-search-btn">
+                							<i class="icon wb-search" aria-hidden="true"></i>
+                						</button>
+                						<input type="text" class="form-control input-lg" name="kw" value="{$keywords}" placeholder="请输入搜索关键词！" data-fv-notempty="true" data-fv-message="不能为空">
+                					</div>
+                				</form>
+        
+                                {if empty($articles)}
+                                    <h1 class="page-search-title">
+                                        没有含有 "{$keywords}" 的信息内容
+                                    </h1>
+                                {else}
+                                    <ul class="list-group list-group-full list-group-dividered met-page-ajax">
+                                        {loop $articles $item}
+                                        {if $item['status'] == '1'}
+                                        <li class="list-group-item">
+                                            <h4>
+                                                <a href="{php echo foregUrl('article',array('id'=>$item['id']))}">
+                                                    {$item['title']}
+                                                </a>
+           									</h4>
+                                            <a class="search-result-link" href="{php echo foregUrl('article',array('id'=>$item['id']))}">
+                                                {php echo foregUrl('article',array('id'=>$item['id']))}
+                                            </a>
+                                            <p>
+                                                {if $item['description']}
+                                                    {php $item['description'] = deleteRN($item['description'])}
+                                                {else}
+                                                    {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                                {/if}
+                                                {php echo m('common')->msubstr($item['description'], 0, 120)}
+          									</p>
+                                        </li>
+                                        {/if}
+                                        {/loop}
+           							</ul>
+           							{php echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), array('html' => array('s' => '<div class="hidden-xs"><div class="met_pager">', 'e' => '</div></div>', 'ac' => 'Ahover'), 'li' => 'null'));}
+                                {/if}
+        
+                			</div>
+                		</div>
+                	</div>
+                </section>
+                
+            </div>
+        </section>
+
+{php include $this->mytemplate('common/footer-base')}

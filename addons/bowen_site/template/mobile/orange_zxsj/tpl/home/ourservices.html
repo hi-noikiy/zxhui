@@ -1,0 +1,40 @@
+
+            <div class="met-index-service met-index-body">
+				<div class="container services-bg">
+					<h3 class="animation-slide-top appear-no-repeat" data-plugin="appear" data-animate="slide-top" data-repeat="false" style="visibility: visible;">
+						<a href="{php echo foregUrl('class',array('id'=>$settings['home']['orange_zxsj']['class'][$mid]))}" title="{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}我们的服务{/if}" target="_self">{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}我们的服务{/if}</a>
+					</h3>
+					<p class="desc animation-fade appear-no-repeat" data-plugin="appear" data-animate="fade" data-repeat="false" style="visibility: visible;">
+						{$settings['home']['orange_zxsj']['title_en'][$mid]}
+					</p>
+					<div class="row">
+                        
+                        {php $ourservices[$mid] = $this->getClasseArticles($settings['home']['orange_zxsj']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+						{loop $ourservices[$mid] $item}
+                        <div class="col-lg-6 col-md-12" data-plugin="appear" data-animate="slide-bottom" data-repeat="false"> 
+                            <a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}" target="_self">
+    							<div class="services-box">
+                                    {if $item['thumb']}
+                                        {php $item['thumb'] = tomedia($item['thumb'])}
+                                    {else}
+                                        {php $item['images'] = iunserializer($item['images']);}
+                                        {php $item['thumb'] = tomedia($item['images'][0])}
+                                    {/if}
+        							<img data-original="{php echo m('image')->image_crop($item['thumb'], 160, 160)}" title="{$item['title']}" alt="{$item['title']}" />
+        							<div class="content">
+            							<h4>{$item['title']}</h4>
+                                        {if $item['description']}
+                                            {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+            							<p>{php echo m('common')->msubstr($item['description'], 0, 100)}</p>
+        							</div>
+    							</div>
+							</a>
+						</div>
+                        {/loop}
+                        
+					</div>
+				</div>
+			</div>

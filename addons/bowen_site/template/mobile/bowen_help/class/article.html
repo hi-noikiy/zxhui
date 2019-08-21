@@ -1,0 +1,25 @@
+{php include $this->mytemplate('common/header')}
+            
+			<div class="site-content" id="lightgallery">
+				<h1 class="site-h1">
+					{$class_info['title']}{if $class_info['level'] >=2} - {$lastclass['title']}{/if}
+				</h1>
+                {if $class_info['description']}
+				<blockquote class="layui-elem-quote">
+					{php echo html_entity_decode($class_info['description'], ENT_QUOTES)}
+				</blockquote>
+				{/if}
+                {if !empty($banner)}
+                <p style="margin-bottom: 20px; text-align: center">
+                    <img src="{media $banner}" alt="{$class_info['title']}" title="{$class_info['title']}" />
+                </p>
+                {/if}
+                
+                <div id="items"></div>
+                
+			</div>
+        </div>
+        <!-- 右侧目录 -->
+        <ul class="site-dir"></ul>
+
+{php include $this->mytemplate('common/footer')}

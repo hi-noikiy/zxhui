@@ -1,0 +1,22 @@
+
+{php $service_articles = $this->getClasseArticles($settings['home']['advertising_design']['service_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+<div id="fh5co-service-list" class="layout">
+	<div class="bg-service">
+		<div class="container">
+			<div class="line-big content not-animated" data-animate="fadeInUp" data-delay="200">
+				{php $a_i = '0';}
+                {loop $service_articles $sa}
+                {php $a_i++;}
+				<div class="xl6 xs6 xm3  text-center item-block margin-large-bottom">
+					<div class="item">
+						<a href="#" title="{$sa['title']}">
+						<div class="media-img"> {if $sa['icon']}<span class="fa fa-{$sa['icon']}"></span>{else}<span class="cicon cicon{$a_i}"></span>{/if} </div>
+						<h5>{$sa['title']}</h5>
+						</a>
+					</div>
+				</div>
+				{/loop}
+			</div>
+		</div>
+	</div>
+</div>

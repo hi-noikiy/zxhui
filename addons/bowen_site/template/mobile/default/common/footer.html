@@ -1,0 +1,262 @@
+    
+    	<!--====================S footer====================-->
+    	<footer class="footer">
+    		<div class="footer-main">
+    			<div id="a1portalSkin_footerAreaA" class="page-width clearfix">
+    				<!-- Start_Module_225315 -->
+    				<a name="34207" id="34207"></a>
+    				<div class="module-default">
+    					<div class="module-inner">
+    						<div id="a1portalSkin_ctr225315225315_mainArea" class="module-content">
+    							<!-- Start_Module_225315 -->
+    							<div class="qhd-module">
+    								<div class="column">
+    									<div class="col-5-2">
+    										<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_QHDCPM225315M1" class="qhd_column_contain">
+    											<!-- Start_Module_225319 -->
+    											<a name="34211" id="34211"></a>
+    											<div class="module-default">
+    												<div class="module-inner">
+    													<div class="module-title module-title-default clearfix">
+    														<div class="module-title-content clearfix">
+    															<h3 style="" class="">
+    																友情链接
+    															</h3>
+    														</div>
+    													</div>
+    													<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_ctr225319225319_mainArea" class="module-content">
+    														<!-- Start_Module_225319 -->
+    														<div class="qhd-content">
+                                                                <p>
+                                                                {loop $_B['setting']['global']['flink'] $fl}
+    																<a href="{$fl['url']}" target='_blank'>{$fl['title']}</a>
+                                                                {/loop}
+                                                                </p>
+    														</div>
+    														<!-- End_Module_225319 -->
+    													</div>
+    												</div>
+    											</div>
+    										</div>
+    									</div>
+    									<div class="col-5-2">
+    										<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_QHDCPM225315M2" class="qhd_column_contain">
+    											<!-- Start_Module_225318 -->
+    											<a name="34210" id="34210"></a>
+    											<div class="module-default">
+    												<div class="module-inner">
+    													<div class="module-title module-title-default clearfix">
+    														<div class="module-title-content clearfix">
+    															<h3 style="" class="">
+    																联系我们
+    															</h3>
+    														</div>
+    													</div>
+    													<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_ctr225318225318_mainArea" class="module-content">
+    														<!-- Start_Module_225318 -->
+    														<div class="qhd-content">
+                                                                <p>
+    															{loop $_B['setting']['global']['bt_contact'] $bc}
+                                                                    {if !empty($bc['url'])}
+    																<a href="{$bc['url']}">{$bc['title']}</a><br />
+                                                                    {else}
+                                                                    {$bc['title']}<br />
+                                                                    {/if}
+                                                                {/loop}
+                                                                </p>
+    														</div>
+    														<!-- End_Module_225318 -->
+    													</div>
+    												</div>
+    											</div>
+    										</div>
+    									</div>
+    									<div class="col-5-1 last">
+    										<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_QHDCPM225315M3" class="qhd_column_contain">
+    											<!-- Start_Module_225316 -->
+    											<a name="34208" id="34208"></a>
+    											<div class="module-default">
+    												<div class="module-inner">
+    													<div id="a1portalSkin_ctr225315225315_Column4C25A25A25A25_ctr225316225316_mainArea" class="module-content">
+    														<!-- Start_Module_225316 -->
+    														<div class="qhd-content">
+    															<p style="text-align: center;">
+    																<img alt="" class="lazyload onclick" data-type="show_qr_wechat" src="{M_URL}/template/mobile/default/static/img/lazy.png" data-src="{media $_B['setting']['global']['qr']}" style="width: 130px; height: 130px;" />
+    																<br />
+    																关注官方微信
+    															</p>
+    														</div>
+    														<!-- End_Module_225316 -->
+    													</div>
+    												</div>
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+    							</div>
+    							<!-- End_Module_225315 -->
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</footer>
+    	<!--====================E footer====================-->
+        
+        {if $_B['setting']['global']['copyright']}
+    	<!--====================S bottom====================-->
+    	<section class="bottom">
+    		<div id="a1portalSkin_bottomAreaA" class="page-width clearfix">
+    			<!-- Start_Module_225320 -->
+    			<a name="34212" id="34212"></a>
+    			<div class="module-default module-no-margin">
+    				<div class="module-inner">
+    					<div id="a1portalSkin_ctr225320225320_mainArea" class="module-content">
+    						<!-- Start_Module_225320 -->
+    						<div class="qhd-content">
+    							<p style="text-align: center;">
+                                    {php $copyright = str_replace('#年#',date('Y'),$_B['setting']['global']['copyright'])}
+                                    {php echo html_entity_decode($copyright, ENT_QUOTES)}
+    							</p>
+								{mcommon 'copyright'}
+    						</div>
+    						<!-- End_Module_225320 -->
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</section>
+    </div>
+	<!--====================E bottom====================-->
+    {/if}
+    
+	<!-- end of wrapper -->
+	<!-- S fixed-bottom -->
+	<div id="a1portalSkin_fixedBottomArea" class="QHDEmptyArea fixed-bottom"></div>
+	<!-- E fixed-bottom -->
+	<!-- S fixed-side -->
+	<div id="a1portalSkin_fixed-left" class="QHDEmptyArea fixed-side fixed-left"></div>
+	<!-- E fixed-side -->
+	<!-- S fixed-side -->
+	<div id="a1portalSkin_fixed-right" class="QHDEmptyArea fixed-side fixed-right"></div>
+	<!-- E fixed-side -->
+	<!-- S popup -->
+	<div id="popup" class="popup">
+		<div class="popup-content not-animated" data-animate="fadeInDown">
+			<div id="a1portalSkin_popup-area" class="QHDEmptyArea popup-content-wrapper">
+			</div>
+			<div class="popup-close-btn">
+				<a href="javascript:;" title="关闭"><span>关闭</span></a>
+			</div>
+		</div>
+		<div class="popup-overlay"></div>
+	</div>
+	<!-- E popup -->
+	<!-- E go top -->
+	<div class="gotop-wrapper">
+		<a href="javascript:;" class="fixed-gotop gotop"></a>
+	</div>
+	<!-- E go top -->
+	<!-- 外部脚本 -->
+    <!-- S 全局统计 -->
+    <div style="display: none;">
+    {php echo html_entity_decode(base64_decode($_B['setting']['global']['diycode']), ENT_QUOTES)}
+    </div>
+    <!-- E 全局统计 -->
+    <!-- S 在线客服插件 -->
+    {if $_B['setting']['global']['diycode']}
+    {php //include $this->mytemplate('common/onlineservice')}
+    {/if}
+    <!-- E 在线客服插件 -->
+</body>
+<script type="text/javascript">
+$(function(){
+    var lazyloadImg = new LazyloadImg({
+        el: '.lazyload[data-src]', //匹配元素
+        top: 50, //元素在顶部伸出长度触发加载机制
+        right: 50, //元素在右边伸出长度触发加载机制
+        bottom: 50, //元素在底部伸出长度触发加载机制
+        left: 50, //元素在左边伸出长度触发加载机制
+        qriginal: false, // true，自动将图片剪切成默认图片的宽高；false显示图片真实宽高
+        load: function(el) {
+            el.style.cssText += '-webkit-animation: fadeIn 01s ease 0.2s 1 both;animation: fadeIn 1s ease 0.2s 1 both;';
+        },
+        error: function(el) {
+
+        }
+    });
+}); 
+</script>
+<script type="text/javascript" src="{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=utility&a=visit&do=showjs&m={$_W['current_module']['name']}"></script>
+{if !empty($_B['setting']['global']['isrewrite']) && $_W['core_settings']['is_rewrite'] == 1}
+<script type="text/javascript">
+var siteurl = window.location.href; 
+if(siteurl.indexOf(".php") >= 0){
+    if(siteurl.indexOf("r=article") >= 0){
+        window.location.href="{php echo foregUrl('article', array('id' => $id), true)}";
+    }else if(siteurl.indexOf("r=class") >= 0){
+        window.location.href="{php echo foregUrl('class', array('id' => $id, 'page' => $pindex), true)}";
+    }else if(siteurl.indexOf("r=search") >= 0){
+        
+    }else{
+        window.location.href="{php echo foregUrl()}";
+    }    
+}
+</script>
+{/if}
+<script>
+    window.global = {
+        uniacid: "{$_W['uniacid']}"
+        ,fixbar: {
+            bgcolor: "rgba(0,0,0,0.5);"
+            {if !empty($_B['setting']['global']['kf']['pc'][0]) && $_W['os'] != 'mobile'}
+            ,bar1: true,
+            click: function(type) {
+                if (type === 'bar1') {
+                    window.open("{$_B['setting']['global']['kf']['pc'][0]}");
+                }
+    	   }
+           {elseif !empty($_B['setting']['global']['kf']['mobile'][0]) && $_W['os'] != 'windows'}
+           ,bar1: true
+           ,click: function(type) {
+                if (type === 'bar1') {
+                    window.open("{$_B['setting']['global']['kf']['mobile'][0]}");
+                }
+    	   }
+           {/if}
+       	}
+        ,os : "{$_W['os']}"
+        ,qr_wechat: "{media $_B['setting']['global']['qr']}"
+        
+		{if !empty($_W['openid'])},'openid': '{$_W['openid']}'{/if}
+		,'family': '{IMS_FAMILY}'
+		,'siteroot': '{$_W['siteroot']}'
+		,'siteurl': '{$_W['siteurl']}'
+		,'attachurl': '{$_W['attachurl']}'
+		,'attachurl_local': '{$_W['attachurl_local']}'
+		,'attachurl_remote': '{$_W['attachurl_remote']}'
+		,'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'}
+		,'account_type' : {$_W['account']['type']}
+        ,'uni_is_multi_acid': {if uni_is_multi_acid()}true{else}false{/if}
+        ,'isrewrite' : {if !empty($_B['setting']['global']['isrewrite'])}1{else}0{/if}
+        ,'route': "{if !empty($_GET['r'])}{php echo trim($_GET['r'])}{else}null{/if}"
+        ,'op': "{if !empty($_GET['op'])}{php echo trim($_GET['op'])}{else}null{/if}"
+        ,apptheme: "{$_B['setting']['global']['mobilethemes']}"
+        ,version: "{VERSION}"
+        ,release: "{RELEASE}"
+        
+    };
+    
+    layui.config({
+        base: '{M_URL}static/layui/lay/mymodules/',
+        version: '{RELEASE}'
+    });
+    
+    layui.extend({
+        global: '{/}{M_URL}template/mobile/default/static/js/global'
+    }).use('global');
+    
+</script>
+{mcommon 'share'}
+{mcommon 'baidu_js_push'}
+</html>

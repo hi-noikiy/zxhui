@@ -1,0 +1,186 @@
+<title>系统设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+        <a><cite>应用</cite></a>
+        <a lay-href="/sys/plugin/perm/">平台权限</a>
+        <a><cite>编辑权限</cite></a>
+    </div>
+</div>
+
+<form class="layui-fluid layui-form" lay-filter="BOWEN_app-sys-plugin-perm-post-form">
+
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <blockquote class="layui-elem-quote">
+                如编辑时重新选择平台站点，将会把数据储存到新选择的平台站点中<br>
+                如编辑时重新选择平台站点，请点 <a class="layui-btn layui-btn-normal layui-btn-sm onclick" data-type="refresh">重载数据</a> ，重新加载已储存数据
+                <div style="padding-top: 5px;padding-bottom: 5px;">
+                    <a class="layui-btn layui-btn-normal layui-btn-sm onclick" data-type="refresh">重载数据</a>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm onclick" data-type="checkAll">全选</a>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm onclick" data-type="checkNull">全不选</a>
+                    <a class="layui-btn layui-btn-primary layui-btn-sm onclick" data-type="checkOther">反选</a>
+                </div>
+            </blockquote>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-form-item">
+                <label class="layui-form-label">平台站点</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="uniacid" class="uniacid" >
+                    <input type="text" name="account_name" autocomplete="off" class="layui-input layui-input-group" readonly="true" placeholder="点击右侧按钮开始选择" style="background-color: #f8f8f8;">
+                    <span>
+                        <button class="layui-btn layui-btn-primary selector" data-type="account" type="button">选择平台</button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">开放主题</label>
+                <div class="layui-input-block" id="BOWEN_app-sys-plugin-perm-post-themes"></div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">开放应用</label>
+                <div class="layui-input-block" id="BOWEN_app-sys-plugin-perm-post-plugins"></div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="BOWEN_app-sys-plugin-perm-post-form-submit">立即提交</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<script type="text/html" id="BOWEN_app_sys_plugin_perm_post_themesTpl">
+    {{#  layui.each(d.data.themes, function(index, item){ }}
+    <input type="checkbox" class="perm_checkbox" name="themes[{{ item.name }}]" title="{{ item.title }}">
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/html" id="BOWEN_app_sys_plugin_perm_post_pluginsTpl">
+    {{#  layui.each(d.data.plugins, function(index, item){ }}
+    <input type="checkbox" class="perm_checkbox" name="plugins[{{ item.name }}]" title="{{ item.title }}">
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl', 'selector'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,form = layui.form
+            ,laytpl = layui.laytpl
+            ,selector = layui.selector
+            ,router = layui.router();
+
+        selector.render();
+
+        var new_perm = function (uniacid) {
+            admin.req({
+                url: myutil.webUrl('sys/plugin/perm')
+                ,type: 'post'
+                ,data: {uniacid:uniacid}
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        var themes_getTpl = BOWEN_app_sys_plugin_perm_post_themesTpl.innerHTML
+                            ,themes_view = document.getElementById('BOWEN_app-sys-plugin-perm-post-themes')
+                            ,plugins_getTpl = BOWEN_app_sys_plugin_perm_post_pluginsTpl.innerHTML
+                            ,plugins_view = document.getElementById('BOWEN_app-sys-plugin-perm-post-plugins');
+                        laytpl(themes_getTpl).render(d, function(html){
+                            themes_view.innerHTML = html;
+                        });
+                        laytpl(plugins_getTpl).render(d, function(html){
+                            plugins_view.innerHTML = html;
+                            form.val("BOWEN_app-sys-plugin-perm-post-form", d.data.content);
+                        });
+                        $('.onclick').on('click', function() {
+                            var type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
+                    }
+                }
+            });
+        };
+
+        if(router.search.uniacid){
+            new_perm(router.search.uniacid);
+        }else{
+            new_perm(false);
+        }
+
+        form.on('submit(BOWEN_app-sys-plugin-perm-post-form-submit)', function(data){
+            if(!data.field.uniacid){
+                layer.msg('请先选择平台站点', {icon: 2});
+                return false;
+            }
+            admin.req({
+                url: myutil.webUrl('sys/plugin/perm/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            location.hash = '/sys/plugin/perm/post/uniacid='+data.field.uniacid;
+                        });
+                    }else{
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+
+        var active = {
+            refresh: function(){
+                var uniacid = $('.uniacid').val();
+                if(!uniacid || uniacid == 0){
+                    layer.msg('尚未选择平台站点，无需重载', {icon: 2});
+                    return false;
+                }
+                new_perm(uniacid);
+            },
+            checkAll: function() {
+                $('.perm_checkbox').prop("checked", true);
+                form.render();
+            },
+            checkNull: function() {
+                $('.perm_checkbox').prop("checked", false);
+                form.render();
+            },
+            checkOther: function() {
+                $('.perm_checkbox').each(function() {
+                    if($(this).prop("checked") == true){
+                        $(this).prop("checked", false)
+                    }else{
+                        $(this).prop("checked", true);
+                    }
+                });
+                form.render();
+            }
+        };
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/20 12:17:22] -->

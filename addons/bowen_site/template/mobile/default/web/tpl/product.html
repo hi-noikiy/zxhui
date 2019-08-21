@@ -1,0 +1,100 @@
+    <li class="panel-group" >
+		<div class="panel panel-default">
+            <span class="mmove"><i class="fa fa-arrows"></i></span>
+            <input type="hidden" name="mtype[]" value="product" />
+			<div class="panel-heading" {if !$is_ajax_tpl}onclick="display('product{$mid}');"{/if}>
+				<h5 class="panel-title">
+					<div>
+						{if $settings['home']['default']['title'][$mid]}{$settings['home']['default']['title'][$mid]}{else}产品中心{/if}
+                        {if !$is_ajax_tpl}<span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body" id="product{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >中文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title[]" class="form-control" value="{if $settings['home']['default']['title'][$mid]}{$settings['home']['default']['title'][$mid]}{elseif empty($settings['home']['default']['mtype'])}{$settings['home']['default']['cases_title']}{else}产品中心{/if}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >英文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en[]" class="form-control" value="{if $settings['home']['default']['title_en'][$mid]}{$settings['home']['default']['title_en'][$mid]}{elseif empty($settings['home']['default']['mtype'])}{$settings['home']['default']['cases_title_en']}{else}PRODUCTS SHOW{/if}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >文章ID</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('article_ngi[]', $settings['home']['default']['article'][$mid])}
+                        <div class="help-block">
+                            注：填写该文章的ID或者直接填写该文章的链接，系统自动提取ID<br/>
+                            首页显示该文章的简介，点击简介下图片跳转至该文章
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >分类ID</label></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <?php
+                        if(empty($settings['home']['default']['mtype'])){
+                            $settings['home']['default']['class'][$mid] = $settings['home']['default']['cases_class'];
+                        }
+                        ?>
+                        {php echo mytpl_form_field_link('class_ngi[]', $settings['home']['default']['class'][$mid])}
+                        <div class="help-block">注：注：企业案例数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >简介下方长图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('thumb[]', $settings['home']['default']['thumb'][$mid], '../addons/bowen_site/template/mobile/default/static/img/ad9eb510-79b7-45ee-b5e2-662c120f0fcc.png');}
+                        <div class="help-block">注：689*131</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >上下偏移</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" name="margin_top[]" class="form-control" value="{if $settings['home']['default']['margin_top'][$mid]}{$settings['home']['default']['margin_top'][$mid]}{else}0{/if}" placeholder="" />
+                            <span class="input-group-addon">px</span>
+                        </div>
+                        <div class="help-block">注：格式为数字；裁剪框宽度为233px；裁剪框不动，此处为负数，即图片向上移动。</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >图标大小</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" name="size[]" class="form-control" value="{if $settings['home']['default']['size'][$mid]}{$settings['home']['default']['size'][$mid]}{else}84{/if}" placeholder="" />
+                            <span class="input-group-addon">px</span>
+                        </div>
+                        <div class="help-block">注：格式为数字；图标为正方形，此处为图标的宽度。</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >板块背景色</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="color" name="background_color[]" class="form-control" value="{if $settings['home']['default']['background_color'][$mid]}{$settings['home']['default']['background_color'][$mid]}{else}#ffffff{/if}" placeholder="" />
+                    </div>
+                </div>
+                
+                <hr/>
+                <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</li>

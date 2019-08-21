@@ -1,0 +1,39 @@
+
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module002 S -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" data-background="{if $settings['home']['metinfo_328']['background_color'][$mid]}{php echo tomedia($settings['home']['metinfo_328']['background_color'][$mid])}{else}{M_URL}template/mobile/metinfo_328/static/images/1482203407.jpg{/if}">
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												{$settings['home']['metinfo_328']['title'][$mid]}
+											</h2>
+										</div>
+										<div class="height-10"></div>
+										<div class="icon-box icon-type-0">
+											<ul>
+                                                {php $icon_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+                                                {loop $icon_articles[$mid] $item}
+                                                <li>
+													<a title="{$item['title']}" href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" target="_blank">
+    													<i class="fa fa-{if $item['icon']}{$item['icon']}{else}{$item['thumb']}{/if}"></i>
+    													<h3>{$item['title']}</h3>
+    													<p>{php echo replaceRN($item['description'], 'br')}</p>
+													</a>
+												</li>
+                                                {/loop}
+											</ul>
+										</div>
+										<div class="icon-text">
+											{$settings['home']['metinfo_328']['bottom_title'][$mid]}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module002 E -->
+                        {/if}

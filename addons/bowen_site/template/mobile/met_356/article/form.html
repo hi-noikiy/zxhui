@@ -1,0 +1,62 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+<main class="job_list_detail_met_16_1 met-job animsition">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1 met-shownews-body" m-id='26'>
+                <div class="card card-article card-shadow">
+                    <div class="card-body">
+                        <h3 class="card-title">{$article['title']}</h3>
+                        <p class="card-metas">
+                            <span class="m-r-5">{php echo date('Y-m-d', $article['createtime'])}</span>
+                            <span class="m-r-5"><i class="fa fa-eye margin-right-5" aria-hidden="true"></i> {php echo intval($article['reading'])}</span>
+                        </p>
+                        <hr>
+                        {php echo m('ui')->html_lazy($article['content'])}
+                        <hr>
+                        <div class="card-body-footer m-t-0">
+                            <a class="btn btn-outline btn-squared btn-primary met-job-cvbtn"
+                               href="javascript:;" data-type="show_form"
+                               bowen-form="{if $article['tourl']}{$article['tourl']}{/if}">在线提交</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{mytemplate 'common/footer'}
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var $ = layui.$
+            ,layer = layui.layer;
+
+        var active = {
+            show_form: function(){
+                var dfurl = this.getAttribute('bowen-form');
+                if(!dfurl || dfurl == ""){
+                    console.error('文章的直接链接为空。如需弹出表单，请在文章的直接链接中填写表单链接。');
+                    return layer.msg('当前职位暂不支持在线应聘，请直接联系我们', {'icon':2});
+                }
+
+                layer.open({
+                    type: 2
+                    ,title: '{$class_info["title"]}'
+                    ,content: dfurl
+                    ,area: ['98%', '95%']
+                    ,scrollbar: false
+                    ,shadeClose: true
+                    ,moveOut: true
+                });
+            }
+        };
+
+        $('.btn').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/10/09 18:15:15] -->

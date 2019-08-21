@@ -1,0 +1,82 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+	<div class="layui-input-block" id="input-{$kw}">
+		<div class="layui-upload">
+            <div class="layui-upload-drag" id="{$k1}_{$kw}">
+                <i class="layui-icon">&#xe67c;</i>
+                <p class="layui-show-xs-block layui-show-sm-block layui-hide-md">点击这里选择图片</p>
+                <p class="layui-hide-xs layui-hide-sm layui-show-md-block">点击选择或将拖拽文件到此处</p>
+            </div>
+			<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;display: none;" id="{$k1}_show" >
+				预览：<button type="button" class="layui-btn layui-btn-primary go_upload_image hidden" id="{$k1}_go">开始上传</button>
+				<div class="layui-upload-list" id="showUpImg-{$k1}"></div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+layui.use(['upload', 'jquery'], function(){
+    var $ = layui.jquery
+    ,upload = layui.upload;
+
+    upload.render({
+        elem: '#{$k1}_{$kw}'
+        ,url: '{php echo foregUrl("util/uploader", "", true)}'
+        ,method: 'post'
+        ,multiple: true
+        ,number: "{$v1['tp_max']}"
+        ,acceptMime: 'image/*'
+        ,accept: 'images'
+        ,size: 2048
+        ,auto: false
+        ,bindAction: '#{$k1}_go'
+        ,choose: function(obj){
+            //删除预览图
+            $(".layui-upload-img-{$kw}").each(function(){
+                var num_img = $('#num_img').html();
+                num_img--
+                $('#num_img').html(num_img);
+                $(this).remove();
+            });
+            //显示预览框
+            $('#{$k1}_show').show();
+            //预读本地文件，不支持ie8
+            obj.preview(function(index, file, result){
+                var num_img = $('#num_img').html();
+                num_img++
+                $('#num_img').html(num_img);
+                $('#showUpImg-{$k1}').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img layui-upload-img-{$kw}">');
+            });
+        }
+        ,before: function(obj){
+            layer.load(1);
+        }
+        ,done: function(res){
+            $('#input-{$kw}').append('<input type="text" name="field_data{$kw}[]" class="hidden img_input img_input-{$kw}" value="'+res.data.path+'" />')
+            layer.closeAll('loading');
+            console.log(res);
+            
+            var num_img = $('#num_img').html();
+            num_img--
+            $('#num_img').html(num_img);
+            
+            //图片上传完毕就提交表单数据
+            var num_img_check = $('#num_img').html();
+            if(num_img_check == 0){
+                $(".real-submit").click();
+            }
+        }
+        ,error: function(index, upload){
+            $('.img_input-{$kw}').remove();
+            $('#showUpImg-{$k1}').empty();
+            layer.closeAll('loading');
+            layer.msg('上传发生异常，请稍后再试！', {icon: 5});
+        }
+    });
+  
+  
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/28 10:09:45] -->

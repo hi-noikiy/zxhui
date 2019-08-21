@@ -1,0 +1,230 @@
+<title>分类管理</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>内容</cite></a>
+		<a><cite>分类管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card">
+		<div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                <p>功能描述：分类功能主要是作为栏目对内容进行分类（比如站点中的新闻中心、产品中心等列表形式的页面都是由分类进行搭建的）。</p>
+                <p>补充说明：①分类最多为三级；②当前页面的分类状态，可直接点击切换</p>
+            </blockquote>
+        </div>
+    </div>
+
+	<div class="layui-card">
+    
+		<div class="layui-card-header layuiadmin-card-header-auto">
+			
+		</div>
+        
+		<div class="layui-card-body">
+            <div style="padding-bottom: 20px;" class="btnGroup">
+                <div class="layui-btn-group">
+                    <button class="layui-btn layui-btn-primary  layui-btn-sm" id="BOWEN_app-content-category-btn-expand">全部展开</button>
+                    <button class="layui-btn layui-btn-primary  layui-btn-sm" id="BOWEN_app-content-category-btn-fold">全部折叠</button>
+                </div>
+                <div style="float: right;">
+                    <button class="layui-btn onclick" data-type="batchdel">删除</button>
+                    <button class="layui-btn" lay-href="/content/category/post/op=add">新增分类</button>
+                </div>
+            </div>
+			<table id="BOWEN_app-content-category-table" lay-filter="BOWEN_app-content-category-table"></table>
+		</div>
+        <script type="text/html" id="statusTpl">
+            {{#  if(d.status == '1'){ }}
+            <span style="color: #5FB878;">显示</span>
+            {{#  } else { }}
+            <span style="color: #FFB800;">隐藏</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="viewTpl">
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" data-type="preview" data-id="{{ d.id }}" lay-tips="预览"><i class="fa fa-search"></i></a>
+            {{# if(d.level == '1'){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/article//class={{ d.id }}|0|0" lay-tips="查看分类下文章"><i class="fa fa-list-ul"></i></a>
+            {{# }else if(d.level == '2'){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/article//class={{ d.topid }}|{{ d.id }}|0" lay-tips="查看分类下文章"><i class="fa fa-list-ul"></i></a>
+            {{# }else if(d.level == '3'){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/article//class={{ d.topid }}|{{ d.parid }}|{{ d.id }}" lay-tips="查看分类下文章"><i class="fa fa-list-ul"></i></a>
+            {{# } }}
+        </script>
+        <script type="text/html" id="toolbar">
+            {{# if(d.level < '3'){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/category/post/op=add/id={{ d.id }}" lay-tips="添加"><i class="fa fa-plus"></i></a>
+            {{# } }}
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" lay-event="clip" lay-tips="复制链接" data-id="{{ d.id }}" data-clip=""><i class="fa fa-link"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/category/post/op=edit/id={{ d.id }}" lay-tips="编辑"><i class="fa fa-edit"></i></a>
+        </script>
+	</div>
+</div>
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'table', 'myutil', 'clip', 'treetable'], function(){
+        var $ = layui.jquery
+        ,admin = layui.admin
+        ,table = layui.table
+        ,myutil = layui.myutil
+        ,layer = layui.layer
+        ,clip = layui.clip
+        ,treetable = layui.treetable;
+        
+        var The_width = $('.btnGroup').width();
+        if(admin.screen() > 1)The_width = The_width-17;
+        // 渲染表格
+        treetable.render({
+            treeColIndex: 3,
+            treeSpid: 0,
+            treeIdName: 'id',
+            treePidName: 'parid',
+            elem: '#BOWEN_app-content-category-table',
+            url: myutil.webUrl('content/category/getList'),
+            cellMinWidth: 130,
+            width: The_width,
+            page: false,
+            cols: [[
+                {title: '查看', width:100, align:'center', templet: '#viewTpl'}
+                ,{type:'checkbox'}
+                ,{field: 'id', width:60, align: 'center', title: 'ID'}
+                ,{field: 'title', title: '分类'}
+                ,{field: 'displayorder', width:60,title: '排序', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'title', title: '分类标题', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'sign', title: '分类标识', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'themes_title', title: '模板', align: 'center'}
+                ,{field: 'tourl', title: '直接链接', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'status', title: '状态', align: 'center', templet: '#statusTpl', event: 'changeStatus', style:'cursor: pointer;'}
+                ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+            ]],
+            done: function () {
+                $(".onclick").each(function() {
+                    if(($(this).attr('lay-event') == 'clip' || $(this).data('type') == 'clip')){
+                        if(!$(this).attr("data-clip") && $(this).data('id'))$(this).attr("data-clip", myutil.foregUrl('class', {'id': $(this).data('id')}, true))
+                        clip(this, $(this).attr("data-clip"))
+                    }
+            	});
+                $('.onclick').on('click', function() {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            }
+        });
+        
+        //监听单元格编辑
+        table.on('edit(BOWEN_app-content-category-table)', function(obj){
+            var value = obj.value
+            ,data = obj.data
+            ,field = obj.field;
+            if(value == '' && field != 'tourl'){
+                layer.msg('修改内容不能为空', {
+                    icon: 2
+                    ,time: 1000
+                }, function(){
+                    admin.events.refresh();
+                });
+                return false;
+            }
+            admin.req({
+                url: myutil.webUrl('content/category/updateField')
+                    ,type: 'post'
+                    ,data: {id:data.id, field:field, value:value}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1000
+                            }, function(){
+                                admin.events.refresh()
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+        });
+        
+        //监听工具条
+        table.on('tool(BOWEN_app-content-category-table)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'changeStatus') {
+                admin.req({
+                    url: myutil.webUrl('content/category/changeStatus')
+                    ,type: 'post'
+                    ,data: {id:data.id,status:data.status}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                status: d.data.status
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            }
+        });
+        
+        $('#BOWEN_app-content-category-btn-expand').click(function () {
+            treetable.expandAll('#BOWEN_app-content-category-table');
+        });
+
+        $('#BOWEN_app-content-category-btn-fold').click(function () {
+            treetable.foldAll('#BOWEN_app-content-category-table');
+        });
+        
+        var active = {
+            batchdel: function(){
+                var checkData = table.checkStatus('BOWEN_app-content-category-table').data;
+                
+                if(checkData.length === 0){
+                  return layer.msg('请选择数据');
+                }
+                
+                var domain_del_confirm = layer.confirm('确定删除勾选分类及其下级分类吗？删除后不可恢复', function(index) {
+                    admin.req({
+                        url: myutil.webUrl('content/category/delete')
+                        ,type: 'post'
+                        ,data: {checkData:checkData}
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno == 0){
+                                layer.close(domain_del_confirm);
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    admin.events.refresh();
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        }
+                    });
+               	});
+            }
+            ,clip: function(){
+                if($(this).data('type') == 'clip'){
+                    clip(this, $(this).attr("data-clip"))
+                }
+            }
+            ,preview: function(){
+                if(!$(this).data('id'))return;
+                var url = myutil.foregUrl('class', {'id': $(this).data('id')}, true);
+                window.open(url);
+            }
+        };
+
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/26 10:57:19] -->

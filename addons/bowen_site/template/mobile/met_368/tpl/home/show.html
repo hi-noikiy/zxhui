@@ -1,0 +1,61 @@
+        <section class="about_list_met_11_4 text-xs-center" m-id='7'>
+			<div class="container">
+				<div class="title-box">
+					<div class="head">
+						<h2 class="title">
+							{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}优秀学员{/if}
+						</h2>
+						<p class="desc">
+							{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}进步巨大的每期优秀学员{/if}
+						</p>
+					</div>
+				</div>
+				<div class="about-list">
+					<ul class=" blocks-xs-2 blocks-md-2 blocks-lg-4 blocks-xxl-4">
+                        {php $show_a[$mid] = $this->getClasseArticles($settings['home']['met_368'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+                        {loop $show_a[$mid] $item}
+						<li class="item">
+							<a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" title="{$item['title']}" target='_self'>
+							<div class="left">
+                                {if $item['thumb']}
+                                    {php $item['thumb'] = tomedia($item['thumb'])}
+                                {else}
+                                    {php $item['images'] = iunserializer($item['images']);}
+                                    {php $item['thumb'] = tomedia($item['images'][0])}
+                                {/if}
+                                <img data-original="{php echo m('image')->image_crop($item['thumb'], 75, 75)}" alt="{$item['title']}" class="img-fluid" />
+							</div>
+							<div class="right">
+    							<h3 >{$item['title']}</h3>
+    							<p >
+                                    {if $item['description']}
+                                        {php $item['description'] = deleteRN($item['description'])}
+                                    {else}
+                                        {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                    {/if}
+                                    {php echo m('common')->msubstr($item['description'], 0, 50)}
+                                </p>
+							</div>
+							</a>
+						</li>
+                        {/loop}
+					</ul>
+				</div>
+			</div>
+			<div class="about-bg bgscroll">
+                {if $settings['home']['met_368'][$k1]['bgimg']}
+                    {php $settings['home']['met_368'][$k1]['bgimg'] = tomedia($settings['home']['met_368'][$k1]['bgimg'])}
+                {else}
+                    {php $settings['home']['met_368'][$k1]['bgimg'] = M_URL."template/mobile/met_368/static/images/1517906391.jpg"}
+                {/if}
+				<div class="bg-block">
+					<img data-original="{$settings['home']['met_368'][$k1]['bgimg']}" />
+				</div>
+				<div class="bg-block">
+					<img data-original="{$settings['home']['met_368'][$k1]['bgimg']}" />
+				</div>
+				<div class="bg-block">
+					<img data-original="{$settings['home']['met_368'][$k1]['bgimg']}" />
+				</div>
+			</div>
+		</section>

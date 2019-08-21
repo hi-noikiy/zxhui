@@ -1,0 +1,157 @@
+<!--jquery-confirm-->
+<link rel="stylesheet" href="{M_LOCAL}static/jquery-confirm/jquery-confirm.min.css" />
+<script src="{M_LOCAL}static/jquery-confirm/jquery-confirm.min.js"></script>
+
+<form action="" method="post" class="form-horizontal form">
+
+    <div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('info');">
+				<h5 class="panel-title">
+					<div>
+						参数设置
+                        <span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="info" style="display: none;">
+            
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >顶部导航偏移</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" name="info[nav_left]" class="form-control" value="{if $settings['home']['default']['info']['nav_left']}{$settings['home']['default']['info']['nav_left']}{else}0{/if}" placeholder="" />
+                            <span class="input-group-addon">px</span>
+                        </div>
+                        <div class="help-block">注：格式为数字；负数向左偏移，正数向右偏移。</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >首页banner高度设置</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" name="info[banner_height]" class="form-control" value="{if $settings['home']['default']['info']['banner_height']}{$settings['home']['default']['info']['banner_height']}{else}650{/if}" placeholder="" />
+                            <span class="input-group-addon">px</span>
+                        </div>
+                        <div class="help-block">
+                            注：首页banner高度，默认高度为650px。该高度下，大部分电脑浏览时左右会有少量留白。
+                            <br />当设置高度为743px时，大部分电脑屏幕访问时，banner图的左右是铺满的。
+                        </div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <ol class="contents">
+        <?php
+        $num = !empty($settings['home']['default']['mtype'])?count($settings['home']['default']['mtype']):5;
+        $mtype = $settings['home']['default']['mtype'];
+        if(empty($mtype)){$mtype = array('banner', 'icon', 'about', 'product', 'news');}
+        for($mid = 0; $mid < $num; $mid++){
+            include $this->mytemplate("web/tpl/".$mtype[$mid], 'mobile');
+        }
+        ?>
+    </ol>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+				<input class="layui-btn col-lg-2" value="保 存" onclick="checkSubmit()" />
+				<input id="submit" type="submit" name="submit" value="提交" class="layui-btn col-lg-2 hidden" />
+                <a class="layui-btn layui-btn-primary" onclick="module_selector();">唤出板块选择器</a>
+			</div>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+function addBanner() {
+	$(".btn-add-banner").button("loading");
+	$.ajax({
+		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+		,cache: false
+        ,type :'post'
+        ,data :{fname:'banner-s'}
+	}).done(function(html) {
+		$(".btn-add-banner").button("reset");
+		$(".banner").append(html);
+	});
+}
+
+function delete_item(obj) {
+	$(obj).closest('.item').remove();
+}
+
+function delete_module(obj) {
+	$(obj).closest('.panel-group').remove();
+}
+
+function module_selector(){
+    layui.use('layer', function(){
+      var layer = layui.layer;
+      
+      layer.open({
+          title: '板块选择器'
+          ,offset: 'r'
+          ,area: '300px'
+          ,shade: 0
+          ,content: '<div class="panel-body tm">'+
+                        '<a href="JavaScript:;" data="banner" class="btn btn-default btn-sm">轮播图</a>'+
+                        '<a href="JavaScript:;" data="icon" class="btn btn-default btn-sm">我们的优势</a>'+
+                        '<a href="JavaScript:;" data="about" class="btn btn-default btn-sm">了解我们</a>'+
+                        '<a href="JavaScript:;" data="product" class="btn btn-default btn-sm">产品中心</a>'+
+                        '<a href="JavaScript:;" data="news" class="btn btn-default btn-sm">最新资讯</a>'+
+                        '<a href="JavaScript:;" data="richtext" class="btn btn-default btn-sm">富文本板块</a>'+
+                    '</div>'+
+                    '<!--div class="panel-body">'+
+                        ''+
+                        '<div class="text text-danger"></div>'+
+                    '</div-->'
+          ,btn: '关闭'
+        });
+    });
+    
+    $(function () {
+        require(['jquery.caret'],function(){
+            $("a[href='JavaScript:;']").click(function () {
+                var fthemes = this.getAttribute("data"); 
+                addModules(fthemes);
+            })
+        })
+    })
+    
+    function addModules(fname){
+        $(".tm .btn").button("loading");
+    	$.ajax({
+    		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+    		,cache: false
+            ,type :'post'
+            ,data :{fname:fname}
+    	}).done(function(html) {
+    		$(".tm .btn").button("reset");
+    		$(".contents").append(html);
+    	});
+    }
+}
+
+function checkSubmit()
+{
+    var advimg = '';
+    advimg = $('input[name="advimg[]"').map(function(){return $(this).val();}).get();
+    var check_empty = 0;
+    for(var i=0;i<advimg.length;i++){
+        if(advimg[i] == ''){
+            check_empty++;
+        }
+    }
+    if(check_empty>0){
+        $.alert('请将 我们的优势-4个图标 补充完整');
+        return false;
+    }
+    $("#submit").trigger("click");
+}
+</script>

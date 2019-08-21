@@ -1,0 +1,6 @@
+{php include $this->mytemplate('common/header')}
+    <script type="text/javascript">
+    var real_url = "{php echo foregUrl('class', array('id' => $class_info['id']), true)}#article_{$article['id']}";
+    window.location.href = real_url;
+    </script>
+{php include $this->mytemplate('common/footer')}

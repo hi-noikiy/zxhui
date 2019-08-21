@@ -1,0 +1,41 @@
+                        {php $mid = 3;}
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module004 S -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" style="background-image: url('{M_URL}template/mobile/metinfo_328/static/images/1482204540.jpg');">
+								<div class="joint-ctrl">
+									<div class="ctrl-box ctrl-left">
+										<i class="fa fa-angle-left"></i>
+									</div>
+									<div class="ctrl-box ctrl-right">
+										<i class="fa fa-angle-right"></i>
+									</div>
+								</div>
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												{$settings['home']['metinfo_328']['title'][$mid]}
+											</h2>
+										</div>
+										<div class="joint-box joint-type-1 swiper-container-horizontal swiper-container-multirow" style="cursor: -webkit-grab;">
+											<ul class="joint-cut" style="width: 1380px;">
+                                                {php $joint_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+                                                {loop $joint_articles[$mid] $item}
+												<li class="joint-bin" style="width: 230px;">
+													<a target="_blank" href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}">
+													   <img class="swiper-lazy" alt="{$item['title']}" src="{php echo tomedia($item['thumb'])}" />
+													</a>
+												</li>
+												{/loop}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module004 E -->
+                        {/if}

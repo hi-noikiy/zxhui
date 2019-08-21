@@ -1,0 +1,59 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+    <div class="met-column-nav  ">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12 sidebar_tile">
+                    <div class="row">
+                        <ul class="met-column-nav-ul">
+
+                            {if $id == $all['id']}
+                            <li>
+                                <a href="{php echo foregUrl('class',array('id'=>$all['id']))}"
+                                   class="link {if $id == $all['id']}active{/if}" title="{$lastclass['title']}">
+                                    全部
+                                </a>
+                            </li>
+                            {/if}
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+                            <li>
+                                <a href="{if !$n['t']}{php echo foregUrl('class',array('id'=>$n['id']))}{else}JavaScript:;{/if}" title="{$n['title']}"
+                                   class="link {if $article['secondclass'] == $n['id'] || $article['thirdclass'] == $n['id']}active{/if}">
+                                    {$n['title']}
+                                </a>
+                            </li>
+                            {/if}
+                            {/loop}
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <section class="met-show animsition">
+        <div class="container">
+            <div class="row">
+                <div class="met-editor lazyload clearfix">
+                    <div>
+                        {if !empty($article['thumb']) || ($article['images'] != "N;" && !empty($article['images']))}
+                        <h3>
+                            <img
+                            data-original="{if !empty($article['thumb'])}{media $article['thumb']}{else}{php $article['images'] = iunserializer($article['images']);}{media $article['images'][0]}{/if}"
+                            title="{$article['title']}" alt="{$article['title']}" style="float: right;"/>
+                            <br/>
+                        </h3>
+                        {/if}
+                        {php echo m('ui')->html_lazy($article['content'])}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{mytemplate 'common/footer'}

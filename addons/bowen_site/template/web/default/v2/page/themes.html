@@ -1,0 +1,100 @@
+<title>专题切换</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>页面</cite></a>
+		<a><cite>专题切换</cite></a>
+	</div>
+</div>
+
+<script type="text/html" template>
+  <link rel="stylesheet" href="{{ layui.setter.base }}style/template.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+
+<style type="text/css">
+.cmdlist-text h3{color: #a5c7c4;}
+.cmdlist-text .info{color: #009688;}
+.current{background-color: #009688;}
+.current .info{color: white;}
+.current h3{color: #b5dcd8;}
+.price span{border:1px solid #0fd4c1;margin-bottom: 3px;}
+</style>
+<div class="layui-fluid layadmin-cmdlist-fluid"><div class="layui-row layui-col-space30" id="items"></div></div>
+
+<script type="text/javascript">
+var changeTheme = '';
+
+layui.use(['layer', 'flow', 'myutil'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,layer = layui.layer
+    ,flow = layui.flow
+    ,myutil = layui.myutil;
+    
+    flow.load({
+		elem: '#items'
+        ,isLazyimg: true
+		,done: function(page, next) {
+			var lis = [];
+            $.get(myutil.webUrl('setting/themes/getThemes')+"page=" + page, function(res) {
+                var res = $.parseJSON(res);
+				layui.each(res.data, function(index, item) {
+				    var current_class = '';
+				    if(res.current == item.name){
+				        current_class = 'current';
+				    }
+                    var item_data = ''+
+                        '<div class="layui-col-lg3 layui-col-md6 layui-col-sm4">'+
+                            '<div class="cmdlist-container ' + current_class + '" onclick="changeTheme(\'' + item.name + '\')">'+
+                                '<img class="no-lightGallery" src="' + item.preview + '">'+
+                     			'<div class="cmdlist-text">'+
+                            		'<h3>' + item.name + '</h3>'+
+                                    '<p class="info" style="font-weight:bold;font-size:16px;">' + item.title + '</p>'+
+							/**
+                            		'<div class="price">'+
+                                		'<p>'+
+                                            '<span class="layui-badge layui-bg-blue">'+item.tag[0]+'</span> '+
+                        					'<span class="layui-badge layui-bg-blue">'+item.tag[1]+'</span> '+
+                        					'<span class="layui-badge layui-bg-blue">'+item.tag[2]+'</span> '+
+                        				'</p>'+
+                            		'</div>'+
+							*/
+                        		'</div>'+
+                                
+                            '</div>'+
+                    	'</div>';
+					lis.push(item_data);
+				});
+                
+				next(lis.join(''), page < res.pages);
+			});
+            
+		}
+        ,end: '&nbsp;'
+	});
+    
+    changeTheme = function(obj){
+        var loader = layer.msg('主题切换中...', {icon: 16,time: 0});
+        $.post(
+            myutil.webUrl('setting/themes/changeMobileTheme')
+            ,{mobilethemes:obj}
+            ,function(d){
+                layer.close(loader);
+                if(d.errno == 0){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1000
+                    }, function(){
+                        //admin.events.refresh();//局部刷新会导致common.js检测不到已经设置模板了
+                        window.location.reload();
+                    });
+                }else{
+                    layer.msg(d.message, {icon: 2})
+                }
+            }
+            ,'json'
+        );
+    }
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/01 0:23:25] -->

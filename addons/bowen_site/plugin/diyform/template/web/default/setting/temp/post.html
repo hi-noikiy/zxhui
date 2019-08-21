@@ -1,0 +1,208 @@
+{mytemplate 'common/header','web'}
+<style>
+body{background-color: #f2f2f2;}
+.layui-form-label { width: 90px;}
+.form-group * {-webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box;}
+input, textarea{-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+select { -webkit-appearance: menulist; background: white!important; }
+.layui-laypage select { height: 18px !important;}
+.layui-form-checkbox[lay-skin=primary] i { top: 5px;}
+</style>
+
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+        <div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-body">
+                    
+                    <a class="layui-btn layui-btn-primary layui-btn-sm" href="{php echo webUrl('diyform/setting/temp/post')}">添加新模板</a>
+                    
+				</div>
+			</div>
+        </div>
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					
+                    <span class="layui-breadcrumb">
+                        <a href="{php echo webUrl('diyform')}">自定义表单</a>
+                        <a href="{php echo webUrl('diyform/setting/temp')}">模板管理</a>
+                        <a><cite>编辑模板</cite></a>
+                    </span>
+                    
+				</div>
+				<div class="layui-card-body">
+                    
+                    {if !empty($_GPC['id'])}
+					<blockquote class="layui-elem-quote" style="border-left: 5px solid #FFB800; font-size: 14px;">
+						警告：当模板中已经添加数据后改变模板结构有可能导致无法使用！
+					</blockquote>
+                    {/if}
+                    
+                    <div class="layui-form">
+                        <input type="hidden" name="id" value="{$item['id']}" />
+                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label must">模板名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tp_title" value="{$item['title']}" required  lay-verify="required" placeholder="模板名称，例：用户留言" autocomplete="off" class="layui-input" />
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">描述</label>
+                            <div class="layui-input-block">
+                                {php echo mytpl_ueditor('description', $item['description']);} 
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item hidden">
+                            <label class="layui-form-label">
+                                缓存数据
+                            </label>
+                           	<div class="layui-input-block">
+                          		<input type="radio" name="tp_iscache" value="0" title="开启" {if empty($item['iscache'])}checked="true"{/if} />
+                          		<input type="radio" name="tp_iscache" value="1" title="关闭" {if !empty($item['iscache'])}checked="true"{/if} />
+                           	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                是否启用
+                            </label>
+                           	<div class="layui-input-block">
+                                <input type="radio" name="tp_status" value="1" title="开启" {if !empty($item['status'])}checked="true"{/if} />
+                          		<input type="radio" name="tp_status" value="0" title="关闭" {if empty($item['status'])}checked="true"{/if} />
+                           	</div>
+                        </div>
+                        
+                        {mytemplate 'setting/temp/tpl/data'}
+                        
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formSubmit">
+                        			立即提交
+                        		</button>
+                        		<a class="layui-btn layui-btn-primary" href="{php echo webUrl('diyform/setting/temp')}">
+                        			返回列表
+                        		</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+				</div>
+			</div>
+        </div>
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        load_datetimepicker();
+        require(['jquery.ui'],function(){
+            $('#type-items').sortable();
+        })
+    })
+
+    function load_datetimepicker() {
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            $(function(){
+                $(".datetimepicker").each(function(){
+                    laydate.render({elem: this});
+                });
+            });
+        });
+    }
+
+    function tp_change_default(knum){
+        if ($("#tp_is_default"+knum).val() == 1) {
+            $("#tp_default"+knum).css("display","inline");
+        } else {
+            $("#tp_default"+knum).hide();
+        }
+    }
+
+    function tp_change_default_time(obj,ids){
+        if (obj.value == 2) {
+            $("#"+ids).css("display","inline");
+
+        } else {
+            $("#"+ids).hide();
+        }
+    }
+
+    function removeType(obj) {
+        $(obj).parent().parent().parent().parent().remove();
+    }
+
+    layui.use(['layer', 'form'], function(){
+        var form = layui.form
+        ,layer = layui.layer
+        ,kw = {php echo $kw};
+
+        var active = {
+            addType: function(){
+                var data_type = $("#data_type").val();
+                $.ajax({
+                    url: "{php echo webUrl('diyform/setting/temp/tpl')}&flag=1&kw="+kw+"&data_type="+data_type,
+                    cache: false
+                }).done(function (html) {
+                    $("#type-items").append(html);
+                    if (data_type == 'date' || data_type == 'date_range'){
+                        load_datetimepicker();
+                    }
+                    form.render();
+                });
+                kw++;
+            }
+        };
+        $('.onclick').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        
+        form.on('submit(formSubmit)', function(data){
+            var check = true;
+    
+            if(kw == 0) {
+                $(this).focus(),layer.tips('请先添加字段再提交!', this);
+                check =false;
+                return false;
+            }
+    
+            if(!check){return false;}
+            var o={}; // 判断重复
+    
+            if(!check){
+                return false;
+            }
+            data.field.description = bowen_editor_description.body.innerHTML;
+            $.post("{php echo webUrl('diyform/setting/temp/post')}"
+                ,data.field
+                ,function(d){
+                    if(d.errno == '0'){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            //window.location.reload();
+                            window.location.href="{php echo webUrl('diyform/setting/temp/post')}&id="+d.data.re_id;
+                        });
+                    }else{
+                        layer.msg(d.message, {icon: 2});
+                        return false;
+                    }
+                }
+                ,'json'
+            );
+        });
+    });
+
+</script>
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/8/9 18:01:34] -->

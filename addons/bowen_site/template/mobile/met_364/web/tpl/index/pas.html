@@ -1,0 +1,70 @@
+<li class="panel-group" >
+    <div class="panel panel-default">
+        <span class="mmove"><i class="fa fa-arrows"></i></span>
+        <input type="hidden" name="mtype[{$mid}]" value="pas" />
+        <div class="panel-heading" {if !$is_ajax_tpl}onclick="display('pas{$mid}');"{/if}>
+            <h5 class="panel-title">
+                <div>
+                    {if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}主题拍摄{/if}{if $settings['home']['met_364'][$k1]['title2']}-{$settings['home']['met_364'][$k1]['title2']}{else}-店铺信息{/if}
+                    {if !$is_ajax_tpl}<span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+                </div>
+            </h5>
+        </div>
+        <div class="panel-body" id="pas{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" >左侧列表标题</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="title[{$mid}]" class="form-control" value="{if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}主题拍摄{/if}" placeholder="" />
+                    <div class="help-block"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" >右侧列表标题</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" name="title2[{$mid}]" class="form-control" value="{if $settings['home']['met_364'][$k1]['title2']}{$settings['home']['met_364'][$k1]['title2']}{else}店铺信息{/if}" placeholder="" />
+                    <div class="help-block"></div>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" >分类ID1</label></label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo mytpl_form_field_link('class_ngi['.$mid.']', $settings['home']['met_364'][$k1]['class'])}
+                    <div class="help-block">注：该板块左侧产品数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" >显示数量</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="number" name="psize[{$mid}]" class="form-control" value="{if $settings['home']['met_364'][$k1]['psize']}{$settings['home']['met_364'][$k1]['psize']}{else}6{/if}" placeholder="" />
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" >分类ID2</label></label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo mytpl_form_field_link('class2_ngi['.$mid.']', $settings['home']['met_364'][$k1]['class2'])}
+                    <div class="help-block">注：该板块右侧店铺数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" >显示数量</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="number" name="psize2[{$mid}]" class="form-control" value="{if $settings['home']['met_364'][$k1]['psize2']}{$settings['home']['met_364'][$k1]['psize2']}{else}2{/if}" placeholder="" />
+                </div>
+            </div>
+
+            <hr/>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+                <div class="col-sm-8">
+                    <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

@@ -1,0 +1,100 @@
+        
+        <!-- S 新闻资讯 -->
+        {php $news_articles[$mid] = $this->getClasseArticles($settings['home']['default']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+        {php $news_article = $news_articles[$mid][0];}
+        <section class="main">
+			<div class="module-full-screen module-full-screen-gray" style="{if $settings['home']['default']['background_color'][$mid]}background-color: {$settings['home']['default']['background_color'][$mid]};{/if}">
+				<div class="module-inner not-animated" data-animate="fadeInDown" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['title'][$mid]}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['title_en'][$mid]}</h3>
+								<i class="mark-right"></i>
+							</div>
+							<em class="module-full-screen-title-line"></em>
+						</div>
+						<div id="a1portalSkin_ctr225314225314_mainArea" class="module-full-screen-content">
+                            
+							<div class="headlines-list-2col clearfix">
+                            
+								<div class="headlines-content not-animated" data-animate="fadeInUp" data-delay="200">
+                                    <style>
+                                        .headlines-p{
+                                            height: 233px;
+                                            overflow:hidden;
+                                            position: relative;
+                                        }
+                                        @media screen and (min-width: 768px){
+                                            .headlines-p img{
+                                                {if $settings['home']['default']['margin_top'][$mid]}margin-top: {$settings['home']['default']['margin_top'][$mid]}px;{/if}
+                                            }
+                                        }
+                                    </style>
+									<p class="headlines-p">
+										<a href="{php echo foregUrl('article',array('id'=>$news_article['id']), true)}" target="_blank">
+                                            <img lay-src="{php echo tomedia($news_article['thumb'])}"  alt="{$news_article['title']}" style="" />
+                                        </a>
+									</p>
+									<h2>
+										<a href="{php echo foregUrl('article',array('id'=>$news_article['id']), true)}" target="_blank">{$news_article['title']}</a>
+									</h2>
+									<div class="headlines-content-summary">
+										<div class="qhd-content">
+                                            {if !empty($news_article['description'])}
+                                                {php $news_article['description'] = deleteRN($news_article['description'])}
+                                            {else}
+                                                {php $news_article['description'] = m('ui')->html_to_text($news_article['content'])}
+                                            {/if}
+                                            {php echo m('common')->msubstr($news_article['description'], 0, 82)}
+                                        </div>
+									</div>
+								</div>
+                                
+								<div class="headlines-others not-animated" data-animate="fadeInUp" data-delay="400">
+                                    
+									<div class="entry-list entry-list-time-hl entry-set-time-hl">
+                                        {loop $news_articles[$mid] $item}
+                                        {if $item['id'] != $news_article['id']}
+                                        
+										<div class="entry-item">
+											<div class="time">
+												<p class="time-day">{php echo date('d',$item['createtime'])}</p>
+												<p class="time-date">{php echo date('Y-m',$item['createtime'])}</p>
+											</div>
+											<div class="entry-title">
+												<h2>
+													<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" target="_blank">{$item['title']} </a>
+												</h2>
+											</div>
+											<div class="entry-summary">
+												<div class="qhd-content">
+													<p>
+                                                        {if $item['description']}
+                                                            {php $item['description'] = deleteRN($item['description'])}
+                                                        {else}
+                                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                                        {/if}
+                                                        {php echo m('common')->msubstr($item['description'], 0, 86)}
+                                                    </p>
+												</div>
+											</div>
+										</div>
+                                        
+                                        {/if}
+										{/loop}
+									</div>
+                                    
+								</div>
+							</div>
+                            
+						</div>
+						<div class="module-full-screen-more">
+							<a href="{php echo foregUrl('class',array('id'=>$settings['home']['default']['class'][$mid]), true)}" target="_blank">查看更多 ></a>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- E新闻资讯 -->

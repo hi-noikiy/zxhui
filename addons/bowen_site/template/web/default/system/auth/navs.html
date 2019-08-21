@@ -1,0 +1,9 @@
+<ul class="we7-page-tab">
+    <li class="{if $sign == 'pc_auth'}active{/if}">
+        <a href="{php echo webUrl('system/auth', array('v' => 2))}">授权维护</a>
+	</li>
+    <li class="{if $sign == 'pc_auth_upgrade'}active{/if} btn_upgrade">
+        <a href="{if !empty($cid)}#{else}{php echo webUrl('system/auth/upgrade2')}{/if}">系统升级</a>
+	</li>
+</ul>
+<!-- phpDesigner :: Timestamp [2018/8/18 17:45:20] -->

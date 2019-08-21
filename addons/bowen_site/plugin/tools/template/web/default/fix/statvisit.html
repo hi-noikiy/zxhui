@@ -1,0 +1,64 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+body{background-color: #f2f2f2;}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					清空最后访问 工具说明
+				</div>
+				<div class="layui-card-body">
+                    
+					<blockquote class="layui-elem-quote" style="font-size: 14px;">
+						如果在登录系统后的欢迎页中，出现了 用户 权限下不存在的公众号或PC，请使用本工具进行修复。
+					</blockquote>
+                    <br />
+                    <a class="layui-btn" onclick="fix('this')">修复当前登录用户</a>
+                    <!--<a class="layui-btn">修复指定用户</a>-->
+                    {if $_W['role'] == 'founder'}
+                    <a class="layui-btn" onclick="fix('all')">整站修复</a>
+                    {/if}
+                    <p>&nbsp;</p>
+				</div>
+			</div>
+        </div>
+        
+    </div>
+</div>
+<script>
+var fix = function(action){
+    if(action == 'all'){
+        post_info(0);
+    }
+    if(action == 'this'){
+        post_info(window.sysinfo.uid);
+    }
+    if(action == 'that'){
+        //post_info(0);
+        util.message('该功能暂未开发完毕，请耐心等候');
+    }
+}
+var post_info = function(uid){
+    $.post(""
+        ,{uid:uid}
+        ,function(d){
+            console.log(d);
+            if(d.errno == 0){
+                layer.msg(d.message, {
+                    icon: 1
+                });
+            }else{
+                layer.msg(d.message, {
+                    icon: 2
+                });
+            }
+        }
+        ,'json'
+    );
+}
+</script>
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/8/22 11:38:13] -->

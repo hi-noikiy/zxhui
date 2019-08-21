@@ -1,0 +1,203 @@
+<title>域名管理</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>设置</cite></a>
+        <a><cite>消息推送</cite></a>
+        <a><cite>微信模板库</cite></a>
+    </div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card" lay-filter="">
+
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <blockquote class="layui-elem-quote" style="font-size: 14px;">
+                注意：
+                您的公众平台模板消息目前所属行业为： <span class="industry_info" style="color: #009688;">获取中...</span><br/>
+                当前列表内的模板消息为您已申请的模板消息，您可以点击查看详情或者删除处理。
+            </blockquote>
+        </div>
+        <div class="layui-card-body">
+            <script type="text/html" id="industryTpl">
+                {{ d.primary_industry }}/{{ d.deputy_industry }}
+            </script>
+            <script type="text/html" id="templateidTpl">
+                <span class="onclick" data-type="clip" data-clip="{{ d.template_id }}">{{ d.template_id }}</span>
+            </script>
+            <script type="text/html" id="toolbar">
+                <a class="layui-btn layui-btn-xs layui-btn-primary onclick" data-type="viewTpl" data-template_id="{{ d.template_id }}" lay-tips="查看详情"><i class="layui-icon layui-icon-search"></i></a>
+                <a class="layui-btn layui-btn-xs layui-btn-primary onclick" data-type="delTpl" data-template_id="{{ d.template_id }}" lay-tips="删除模板"><i class="layui-icon layui-icon-delete"></i></a>
+            </script>
+            <table id="Tpllist" lay-filter="Tpllist"></table>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'table', 'clip'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,table = layui.table
+            ,myutil = layui.myutil
+            ,clip = layui.clip;
+
+
+        table.render({
+            elem: '#Tpllist'
+            ,url: myutil.webUrl('set/notice/getAllTpl')
+            ,method: 'post'
+            ,cols: [[
+                {type: 'numbers', title: '序号', fixed: 'left'}
+                ,{field: 'title', title: '模板名称'}
+                ,{field: 'industry', title: '所属行业', templet: '#industryTpl'}
+                ,{field: 'template_id', title: '模板ID', width:420, templet: '#templateidTpl', style:'cursor: pointer;'}
+                ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+            ]]
+            ,parseData: function(d){
+                if(d.errno != 0){
+                    return layer.msg(d.message, {
+                        icon: 2
+                        ,time: 1000
+                    }, function () {
+                        if(d.data.re_url){
+                            location.hash = d.data.re_url;
+                        }
+                    });
+                }
+                if(!d.industry)return false;
+                var industry = ''+
+                    d.industry.primary_industry.first_class+'/'+
+                    d.industry.primary_industry.second_class+' '+
+                    d.industry.secondary_industry.first_class+'/'+
+                    d.industry.secondary_industry.second_class;
+                $('.industry_info').html(industry);
+            }
+            ,done: function(){
+                $(".onclick").each(function() {
+                    if($(this).data('type') == 'clip'){
+                        if($(this).attr("data-clip"))clip(this, $(this).attr("data-clip"));
+                    }
+                });
+                $('.onclick').on('click', function() {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            }
+        });
+
+        var active = {
+            clip: function(){
+                clip(this, $(this).attr("data-clip"))
+            }
+            ,viewTpl: function () {
+                var template_id = $(this).data('template_id');
+                admin.req({
+                    url: myutil.webUrl('set/notice/viewTpl')
+                    ,type: 'post'
+                    ,data: {template_id:template_id}
+                    ,cache: true
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno != 0){
+                            return layer.msg(d.message, {
+                                icon: 2
+                                ,time: 1000
+                            }, function () {
+                                if(d.data.re_url){
+                                    location.hash = d.data.re_url;
+                                }
+                            });
+                        }
+                        admin.popup({
+                            type: 1
+                            ,title: '模板消息详情'
+                            ,id: 'viewTpl'
+                            ,area: global.layer_area
+                            ,shadeClose: true
+                            ,content: ''+
+                                '<style>'+
+                                    '#viewTpl input{border: 0;}'+
+                                    '#viewTpl textarea{min-height: 150px;}'+
+                                '</style>'+
+                                '<form class="layui-form">' +
+                                    '<div class="layui-form-item">' +
+                                        '<label class="layui-form-label">模板ID</label>' +
+                                        '<div class="layui-input-block">' +
+                                            '<input type="text" readonly class="layui-input" value="'+d.data.template_id+'">' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="layui-form-item">' +
+                                        '<label class="layui-form-label">模板名称</label>' +
+                                        '<div class="layui-input-block">' +
+                                            '<input type="text" readonly class="layui-input" value="'+d.data.title+'">' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="layui-form-item">' +
+                                        '<label class="layui-form-label">所属行业</label>' +
+                                        '<div class="layui-input-block">' +
+                                            '<input type="text" readonly class="layui-input" value="'+d.data.deputy_industry+'">' +
+                                        '</div>' +
+                                    '</div>' +
+
+                                    '<div class="layui-form-item">' +
+                                        '<label class="layui-form-label">模板格式</label>' +
+                                        '<div class="layui-input-block">' +
+                                            '<textarea readonly class="layui-textarea">'+d.data.content+'</textarea>' +
+                                        '</div>' +
+                                    '</div>' +
+
+                                    '<div class="layui-form-item">' +
+                                        '<label class="layui-form-label">模板示例</label>' +
+                                        '<div class="layui-input-block">' +
+                                            '<textarea readonly class="layui-textarea">'+d.data.example+'</textarea>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</form>'
+                            ,btn: '关闭'
+                        });
+                    }
+                });
+            }
+            ,delTpl: function () {
+                var template_id = $(this).data('template_id')
+                    ,delTpl_confirm = layer.confirm('确定删除该模板消息？删除后不可恢复！', {
+                        title:'请谨慎操作'
+                        ,skin: 'layui-layer-admin'
+                }, function(index){
+
+                    admin.req({
+                        url: myutil.webUrl('set/notice/delTpl')
+                        ,type: 'post'
+                        ,data: {template_id:template_id}
+                        ,cache: true
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno == 0){
+                                return layer.msg('删除成功', {
+                                    icon: 1
+                                    ,time: 1000
+                                }, function () {
+                                    admin.events.refresh();
+                                });
+                            }else{
+                                return layer.msg(d.message, {
+                                    icon: 2
+                                    ,time: 1000
+                                }, function () {
+                                    if(d.data.re_url){
+                                        location.hash = d.data.re_url;
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    layer.close(delTpl_confirm);
+                });
+            }
+        };
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/9/1 10:26:34] -->

@@ -1,0 +1,69 @@
+<div class="met_common_box gray_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <h2>
+                    <a href="{php echo foregUrl('class',array('id'=>$settings['home']['met_364'][$k1]['class']))}"
+                       title="{if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}产品展示{/if}"
+                       target='_blank'>
+                        {if $settings['home']['met_364'][$k1]['title']}{$settings['home']['met_364'][$k1]['title']}{else}产品展示{/if}
+                    </a>
+                </h2>
+                <ul>
+                    {php $settings['home']['met_364'][$k1]['psize'] = $settings['home']['met_364'][$k1]['psize']?$settings['home']['met_364'][$k1]['psize']:6;}
+                    {php $product_a[$mid] = $this->getClasseArticles($settings['home']['met_364'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,$settings['home']['met_364'][$k1]['psize']));}
+                    {loop $product_a[$mid] $item}
+                    <li class="clearfix">
+                        <a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']))}{/if}"
+                           title="{$item['title']}" target='_blank'>
+                            {$item['title']}
+                        </a>
+                        <span class="date"> {php echo date('Y/m/d', $item['createtime'])} </span>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+            <div class="col-sm-8 met-index-product">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>
+                            <a href="{php echo foregUrl('class',array('id'=>$settings['home']['met_364'][$k1]['class2']))}" title="{if $settings['home']['met_364'][$k1]['title2']}{$settings['home']['met_364'][$k1]['title2']}{else}店铺信息{/if}"
+                               target='_blank'>
+                                {if $settings['home']['met_364'][$k1]['title2']}{$settings['home']['met_364'][$k1]['title2']}{else}店铺信息{/if}
+                            </a>
+                        </h2>
+                    </div>
+
+                    {php $settings['home']['met_364'][$k1]['psize2'] = $settings['home']['met_364'][$k1]['psize2']?$settings['home']['met_364'][$k1]['psize2']:2;}
+                    {php $shop_a[$mid] = $this->getClasseArticles($settings['home']['met_364'][$k1]['class2'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,$settings['home']['met_364'][$k1]['psize2']));}
+                    {loop $shop_a[$mid] $item}
+                    <div class="col-sm-6">
+                        <div class="tit-margin">
+                            <a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']))}{/if}"
+                               title="{$item['title']}" target='_self'>
+                                {if $item['thumb']}
+                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                {else}
+                                {php $item['images'] = iunserializer($item['images']);}
+                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                {/if}
+                                <img class="img-responsive"
+                                     data-original="{php echo m('image')->image_crop($item['thumb'], 696)}"
+                                     alt="{$item['title']}" width="" height=""/>
+                            </a>
+                            <h3><a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']))}{/if}"
+                                   title="{$item['title']}" target='_self'> {$item['title']} </a>
+                            </h3>
+                            <p>
+                                {$item['description']}
+                                <br/>{php echo date('Y/m/d', $item['createtime'])}
+                            </p>
+                        </div>
+                    </div>
+                    {/loop}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

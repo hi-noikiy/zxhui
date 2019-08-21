@@ -1,0 +1,184 @@
+﻿@charset "utf-8";
+/* CSS Document 修改人：陈shi 修改日期： */
+/* 应用到的颜色   */
+
+/* 全局样式 */
+html{width: 100%;}
+.orange_line{width:100%;height:2px;background:#fd8d22;}
+.phcolor{ color:#999;}
+body{ font-family:'Microsoft YaHei';color: #333;font-size:12px;}
+.main{margin:0 auto}
+a{ color:#666; text-decoration:none; cursor:pointer;font-family:'Microsoft YaHei';}
+a:hover{ color:#666; text-decoration:none;}
+img{ vertical-align:-3px; *vertical-align:middle;border:none;}
+i{display:block;}
+.fff{background:#fff !important;}
+.f3f3f3{background:#f3f3f3;}
+div:after,ul:after{content:"";display:block;overflow:hidden;}
+p,h1,h2,h3,h4,h5,h6,ol,ul,dl,dd,body{margin:0;padding:0;list-style:none;font-weight: normal}
+div,ul,li,input,select{list-style:none;font-family: Microsoft YaHei,Arial,Helvetica, sans-serif;
+}
+/* iphone手机去掉默认按钮样式 */
+input[type="button"], input[type="submit"], input[type="reset"] {
+-webkit-appearance: none;
+}
+.radio{position:relative;top:3px;}
+textarea {  -webkit-appearance: none;}   
+.button{ border-radius: 0; } 
+
+/* 去掉谷歌浏览器黄色背景输入框 */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+/* 去掉select默认样式 */
+/* body select{
+	appearance:none;
+	-moz-appearance:none;
+	-webkit-appearance:none;
+	background:#fff;
+	text-indent:5px;
+	overflow:hidden;
+	border-radius:5px;
+	border:1px solid #ddd;
+	padding-right:20px;
+	background:url("/image/common/select.png") no-repeat center right;
+	*background:none;
+	background-size:auto 12px;
+	min-height:24px;
+	}
+ */
+/*布局*/
+.fl{ float:left !important;}
+.fr{ float:right !important;}
+.hide { display: none !important;}
+.show{ display:block !important;}
+.mc{ margin:0 auto;}
+.hand{ cursor:pointer;}
+.tac{ text-align:center;}
+.tal{ text-align:left;}
+.tar{ text-align:right;}
+
+/*布局*/
+.w10{width:10% !important;}
+.w20{width:20% !important;}
+.w25{width:25% !important;}
+.w30{width:30% !important;}
+.w33{width:33.3333% !important;}
+.w40{width:40% !important;}
+.w45{width:45% !important;}
+.w50{width:50% !important;}
+.w55{width:55% !important;}
+.w60{width:60% !important;}
+.w65{width:65% !important;}
+.w70{width:70% !important;}
+.w75{width:75% !important;}
+.w80{width:80% !important;}
+.w100{width:100% !important;}
+
+
+/*伸缩布局*/
+.sp-flex{ display: -webkit-flex; display: flex;}
+.sp-flex-column{ display: -webkit-flex; display: flex; -webkit-flex-flow:column; flex-flow:column;}
+.sp-center{ display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center;}
+.relative{position:relative}
+.clear_top:after{content:"";display:block;clear:both;}
+
+/*边距*/
+.mt0{margin-top:0 !important;}
+.mt5{margin-top:5px !important;}
+.mt8{margin-top:8px !important;}
+.mt10{margin-top:10px !important;}
+.mt15{margin-top:15px !important;}
+.mt20{margin-top:20px !important;}
+.mt30{margin-top:30px !important;}
+.mt40{margin-top:40px !important;}
+.mt60{margin-top:60px !important;}
+
+
+.mr5{margin-right:5px !important;}
+.mr10{margin-right:10px !important;}
+.mr20{margin-right:20px !important;}
+
+.mb5{margin-bottom:5px !important;}
+.mb10{margin-bottom:10px !important;}
+.mb15{margin-bottom:15px !important;}
+.mb20{margin-bottom:20px !important;}
+
+.ml5{margin-left:5px !important;}
+.ml10{margin-left:10px !important;}
+.ml15{margin-left:15px !important;}
+.ml20{margin-left:20px !important;}
+.ml40{margin-left:40px !important;}
+
+.pt0{padding-top:0 !important;}
+.pt5{padding-top:5px !important;}
+.pt10{padding-top:10px !important;}
+.pt20{padding-top:20px !important;}
+.pt30{padding-top:30px !important;}
+.pt5{padding-top:5px !important;}
+.pb5{padding-bottom:5px !important;}
+.pb10{padding-bottom:10px !important;}
+.pb20{padding-bottom:20px !important;}
+.pl0{padding-left:0 !important;}
+.pl5{padding-left:5px !important;}
+.pl10{padding-left:10px !important;}
+.pr10{padding-right:10px !important;}
+.p0{padding:0px !important;}
+.p10{padding:10px !important;}
+.p20{padding:20px !important;}
+
+.lh24{line-height:24px !important;}
+/*边框 背景*/
+.noborder{ border:none !important;}
+
+/*字体*/
+.ft12{ font-size:12px !important;}
+.ft14{ font-size:14px !important;}
+.ft16{ font-size:16px !important;}
+.ft18{ font-size:18px !important;}
+.ft24{ font-size:24px !important;}
+
+.bold{ font-weight:bold;}
+.font-normal{ font-weight:normal;}
+.nobold{ font-weight:normal;}
+.line-through{ text-decoration:line-through;}
+.text-gray{ color:#666 !important;}
+.text-light-gray{ color:#999 !important;}
+.text-green{ color:#8fc458 !important;}
+.text-blue{ color:#4fa1ad !important;}
+.text-yellow{ color:#ffff00 !important;}
+.text-orange{color:#fd9126 !important;}
+.text-red{ color:#ef0303 !important;}
+.text-white{ color:#fff !important;}
+.text-overflow{overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
+.text-overflow-2{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;}
+.text-overflow-3{display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;}
+
+.text-darkred{color: #960000}
+.text-shadow{ text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);}
+.yahei{ font-family:"microsoft yahei";}
+.block{display:block;}
+
+/*输入框100%*/
+.input{width: 100%;background: #fff; height: 36px;border: 1px solid #d1d1d1;padding-left:10px;border-radius: 3px;font-size:14px;}
+
+.btn{border:none;}
+.btn:hover{cursor:pointer;}
+.btn_white{background: #fff;color: #999;}
+.btn_blue{background: #2084FF !important;color: #fff;}
+.btn_orange{background: #ff7200;color: #fff;}
+.btn_orange:hover{background: #f76300;}
+.btn_gray{background: #ddd;color: #666;}
+.btn_border_gray{background: #f3f3f3;color: #666;border:1px solid #afafaf;font-size:12px;}
+.btn_border_gray:hover{background: #ddd;cursor:pointer;}
+.btn_red{background: #d40000;color: #fff;border-radius:0;}
+.fixed_button{position: fixed;bottom: 0;}
+
+/* 底部 */
+.login_footer_bg{background:#f4f4f4;}
+.login_footer{padding:60px 160px 0 160px;min-height:270px;margin:40px auto 0;width:1080px;}
+.footer_list ul{float:left;width:270px;height:150px;}
+.footer_list ul li{text-align:center;line-height:25px;cursor:pointer}
+.footer_list ul li:first-child{font-size:16px;font-weight:bold;}
+.login_footer .about{}
+.login_footer .about a{padding:0 10px;display:inline-block;cursor:pointer;color:#333}

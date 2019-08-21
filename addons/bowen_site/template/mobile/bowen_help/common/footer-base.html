@@ -1,0 +1,75 @@
+        <div class="site-tree-mobile layui-hide">
+			<i class="layui-icon"> &#xe602; </i>
+		</div>
+        
+		<div class="site-mobile-shade"></div>
+        <script type="text/javascript" src="../web/resource/js/lib/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="{M_URL}static/layui/layui.js?v=20180525"></script>
+        
+        <!-- S 全局统计 -->
+        <div style="display: none;">
+        {php echo html_entity_decode(base64_decode($settings['global']['diycode']), ENT_QUOTES)}
+        </div>
+        <!-- E 全局统计 -->
+        
+		<script type="text/javascript">
+        {if !empty($settings['global']['isrewrite']) && $_W['core_settings']['is_rewrite'] == 1}
+        var siteurl = window.location.href;
+        if(siteurl.indexOf(".php") >= 0){
+            if(siteurl.indexOf("r=article") >= 0){
+                window.location.href="{php echo foregUrl('article', array('id' => $id), true)}";
+            }else if(siteurl.indexOf("r=class") >= 0){
+                window.location.href="{php echo foregUrl('class', array('id' => $id, 'page' => $pindex), true)}";
+            }else if(siteurl.indexOf("r=search") >= 0){
+                
+            }else{
+                window.location.href="{php echo foregUrl()}";
+            }    
+        }
+        {/if}
+        window.global = {
+            uniacid: "{$_W['uniacid']}",
+            siteroot: "{$_W['siteroot']}",
+            code_title: "{$settings['home']['bowen_help']['code_title']}",
+        	link_getArticles_list: "{php echo foregUrl('class/getArticles_list', array('id' => $id), true)}",
+            list_psize: "{$psize}",
+          	siteurl: window.location.href,
+            fixbar: {
+                {if $settings['home']['bowen_help']['bbsurl']}
+                bar1: "&#xe63a;",
+                {/if}
+                {if !empty($settings['global']['kf']['pc'][0]) || !empty($settings['global']['kf']['mobile'][0])}
+                bar2: "&#xe606;",
+                {/if}
+                click: function(type) {
+                    if (type === 'bar1') {
+                        window.open("{$settings['home']['bowen_help']['bbsurl']}");
+                    }
+                    if (type === 'bar2') {
+                        {if $_W['container'] != 'wechat'}
+                        var kf_url = "{$settings['global']['kf']['pc'][0]}";
+                        {else}
+                        var kf_url = "{$settings['global']['kf']['mobile'][0]}";
+                        {/if}
+                        window.open(kf_url);
+                    }
+                }
+        	},
+            qr_wechat: "{php echo tomedia($settings['global']['qr'])}",
+            version: "{VERSION}",
+            release: "{RELEASE}",
+        };
+        
+        layui.config({
+        	base: '{M_URL}static/layui/lay/mymodules/',
+            version: '{RELEASE}'
+        });
+        
+        layui.extend({
+            global: '{/}{M_URL}template/mobile/bowen_help/static/js/global'
+        }).use('global');
+		</script>
+	</body >
+    {mcommon 'share'}
+    {mcommon 'baidu_js_push'}
+</html>

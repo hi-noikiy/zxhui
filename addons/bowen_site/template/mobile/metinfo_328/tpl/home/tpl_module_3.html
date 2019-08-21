@@ -1,0 +1,53 @@
+                        {php $mid = 2;}
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module003 S -->
+                        <!-- 该模块，最少要四个内容才会显示 -->
+						<div class="window-bin {if empty($settings['home']['metinfo_328']['class'][$mid])}hidden{/if}no" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy swiper-lazy-loaded" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" style="background-image: url('{M_URL}template/mobile/metinfo_328/static/images/1481211118.jpg');">
+								<div class="case-ctrl">
+									<div class="ctrl-box ctrl-left">
+										<i class="fa fa-angle-left"></i>
+									</div>
+									<div class="ctrl-box ctrl-right">
+										<i class="fa fa-angle-right"></i>
+									</div>
+								</div>
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												{$settings['home']['metinfo_328']['title'][$mid]}
+											</h2>
+										</div>
+										<div class="case-box swiper-container-horizontal" style="cursor: -webkit-grab;">
+											<ul class="case-cut" style="transform: translate3d(-1280px, 0px, 0px); transition-duration: 0ms;">
+                                                {php $case_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+                                                {loop $case_articles[$mid] $item}
+												<li class="case-bin" style="width: 300px; margin-right: 20px;">
+													<a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}">
+    													<font>
+        													<b></b>
+        													<img class="swiper-lazy swiper-lazy-loaded" title="{$item['title']}" alt="{$item['title']}" src="{php echo tomedia($item['thumb'])}">
+    													</font>
+    													<span>
+        													<h3>{$item['title']}</h3>
+                                                            {php $item['tag'] = implode(",", iunserializer($item['tag']))}
+        													<p>{$item['tag']}</p><!--标签-->
+    													</span>
+													</a>
+												</li>
+                                                {/loop}
+											</ul>
+										</div>
+										<div class="case-more">
+											<a href="{php echo foregUrl('class',array('id'=>$settings['home']['metinfo_328']['class'][$mid]))}" title="{$settings['home']['metinfo_328']['title'][$mid]}">{$settings['home']['metinfo_328']['bottom_title'][$mid]}</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module003 E -->
+                        {/if}

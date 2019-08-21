@@ -1,0 +1,21 @@
+                <li class="item">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">banner图</label>
+                        <div class="col-sm-3">
+                            {php echo tpl_form_field_image('bimg['.$mid.'][]', $item['bimg']);}
+                            <div class="help-block">注：1920*430</div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">标题</span>
+                                <input type="text" name="btitle[{$mid}][]" class="form-control" value="{if $item['btitle']}{$item['btitle']}{else}轮播图{/if}" placeholder="" />
+                            </div>
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">链接</span>
+                                {php echo mytpl_form_field_link('blink['.$mid.'][]', $item['blink'], '', array('width'=>'100%'))}
+                            </div>
+                        </div>
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_item(this)"><i class='fa fa-remove'></i> 删除</a>
+                    </div>
+                    <hr/>
+                </li>

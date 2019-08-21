@@ -1,0 +1,458 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+* {-webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box;}
+input, textarea{-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+select { height: 38px!important; -webkit-appearance: menulist; background: white!important; }
+.layui-laypage select { height: 18px !important;}
+</style>
+<div id="set_register_content">
+    <div class="panel-body">
+        <ul class="nav nav-tabs" id="set_registerTab">
+            <li class="active"><a href="#set_base">基础设置</a></li>
+            <li class=""><a href="#set_vicefounder_domain">副站长设置</a></li>
+        </ul>
+    </div>
+    
+    <div class="tab-content">
+        <div class="tab-pane active" id="set_base">
+            <div class="layui-fluid" >
+            	<div class="layui-row layui-col-space15">
+                    
+            		<div class="layui-col-md12">
+            			<div class="panel panel-default">
+            				<div class="panel-heading">
+            					注册设置
+            				</div>
+            				<div class="panel-body" >
+            					
+                                <form class="layui-form" action="" lay-filter="set_base">
+                                    
+                                    <div class="layui-form-item">
+                                    	<label class="layui-form-label">
+                                    		标题
+                                    	</label>
+                                    	<div class="layui-input-block">
+                                    		<input type="text" name="title" value="{$register_setting['title']}" placeholder="请输入标题（选填，默认为用户注册）" autocomplete="off" class="layui-input">
+                                    	</div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                    	<label class="layui-form-label">
+                                    		副标题
+                                    	</label>
+                                    	<div class="layui-input-block">
+                                    		<input type="text" name="title_vice" value="{$register_setting['title_vice']}" placeholder="请输入副标题（选填，默认不显示）" autocomplete="off" class="layui-input" />
+                                    	</div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                    	<label class="layui-form-label">
+                                    		用户注册
+                                    	</label>
+                                    	<div class="layui-input-inline">
+                                    		<input type="checkbox" name="isopen" {if !empty($register_setting['isopen'])}checked="true"{/if} lay-skin="switch" lay-filter="isopen" lay-text="开|关" />
+                                    	</div>
+                                        <div class="layui-form-mid layui-word-aux" >
+                                            是否打开本模块的注册功能。此处仅为本模块的开关，开启本模块的注册功能，也需要开启系统的注册功能。
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item type_set" style="{if empty($register_setting['isopen'])}display: none;{/if}">
+                                    	<label class="layui-form-label">
+                                    		注册方式
+                                    	</label>
+                                    	<div class="layui-input-block" >
+                                    		<input type="radio" name="register_open_type" value="0" lay-filter="register_open_type" title="全部" {if empty($register_setting['register_open_type'])}checked="true"{/if} />
+                                    		<input type="radio" name="register_open_type" value="1" lay-filter="register_open_type" title="只允许用户名注册" {if $register_setting['register_open_type'] == "1"}checked="true"{/if}  />
+                                            <input type="radio" name="register_open_type" value="2" lay-filter="register_open_type" title="只允许手机注册" {if $register_setting['register_open_type'] == "2"}checked="true"{/if}  />
+                                    	</div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item type_set type_set_default" style="{if empty($register_setting['isopen']) || !empty($register_setting['register_open_type'])}display: none;{/if}">
+                                    	<label class="layui-form-label">
+                                    		默认注册
+                                    	</label>
+                                    	<div class="layui-input-block">
+                                    		<input type="radio" name="register_default_type" lay-filter="register_default_type" value="system" title="用户名注册" {if empty($register_setting['register_default_type']) || $register_setting['register_default_type'] == "system"}checked="true"{/if} />
+                                    		<input type="radio" name="register_default_type" lay-filter="register_default_type" value="mobile" title="手机号注册" {if $register_setting['register_default_type'] == "mobile"}checked="true"{/if}  />
+                                    	</div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                    	<label class="layui-form-label">
+                                    		第三方注册
+                                    	</label>
+                                    	<div class="layui-input-inline">
+                                    		<input type="checkbox" name="isthirdlogin" {if !empty($register_setting['isthirdlogin'])}checked="true"{/if} lay-skin="switch" lay-filter="isthirdlogin" lay-text="开|关" />
+                                    	</div>
+                                        <div class="layui-form-mid layui-word-aux"  >
+                                            开启前，请先在登录设置中打开相关设置
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                    	<label class="layui-form-label">
+                                    		注册短信
+                                    	</label>
+                                    	<div class="layui-input-block">
+                                    		<input type="radio" name="smstype" value="0" title="系统短信" {if empty($register_setting['smstype'])}checked="true"{/if} />
+                                    		<input type="radio" name="smstype" value="1" title="短信应用" {if !empty($register_setting['smstype'])}checked="true"{/if} disabled />
+                                    	</div>
+                                    </div>
+                                    
+                                    <div class="layui-form-item">
+                                    	<div class="layui-input-block">
+                                    		<button class="layui-btn" lay-submit lay-filter="postSetBase">
+                                    			立即提交
+                                    		</button>
+                                    		<button type="reset" class="layui-btn layui-btn-primary">
+                                    			重置
+                                    		</button>
+                                    	</div>
+                                    </div>
+                                </form>
+                                
+            				</div>
+            			</div>
+            		</div>
+                    
+            	</div>
+            </div>
+        </div>
+        
+        <div class="tab-pane" id="set_vicefounder_domain">
+            <div>
+                条件筛选：
+            	<div class="layui-inline">
+            		<input class="layui-input" name="domain" placeholder="域名"/>
+            	</div>
+            	<div class="layui-inline">
+                    <input class="layui-input" name="owner_uid" placeholder="副站长" />	
+                    <span style="position: absolute; top:0px; right:0;">
+                		<button class="layui-btn layui-btn-primary" type="button" onclick="ViceFounderSelector(this);">选择</button>
+                	</span>
+                </div>
+                <!--
+                <div class="layui-inline">
+            		<select name="status">
+                    	<option value="">状态</option>
+                    	<option value="0">
+                    		关闭
+                    	</option>
+                    	<option value="1">
+                    		启用
+                    	</option>
+                    </select>
+            	</div>
+                -->
+            	<button class="layui-btn onclick search-btn" id="search" data-type="search" style="margin-left: 10px;">搜索</button>
+                <button class="layui-btn onclick layui-btn-primary" data-type="reload">重置</button>
+                    <button class="layui-btn pull-right onclick" data-type="add"><i class="layui-icon">&#xe608;</i> 新增</button>
+            </div>
+            
+            <table id="domain_vicefounder_list" lay-filter="domain_vicefounder_list"></table>
+            <script type="text/html" id="toolbar">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <script type="text/html" id="statusTpl">
+                {{#  if(d.status === '1'){ }}
+                <span style="color: #5FB878;">启用</span>
+                {{#  } else { }}
+                <span style="color: #FFB800;">关闭</span>
+                {{#  } }}
+            </script>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer', 'form', 'table'], function(){
+        var form = layui.form
+        ,table = layui.table
+        ,layer = layui.layer;
+        
+        var First_Open_List_ViceFounderDomain = 0,
+        layer_postDomainVicefounder = "";
+        
+        $("#set_register_content").find('#set_registerTab a').click(function(e) {
+            $('#tab').val($(this).attr('href'));
+            e.preventDefault();
+            $(this).tab('show');
+            
+            if($(this).attr('href') == '#set_vicefounder_domain'){
+                {if IMS_FAMILY != 'x'}util.message('该功能仅商业版可用', '', 'error');{/if}
+                if(First_Open_List_ViceFounderDomain == 0){
+                    table.render({
+                        elem: '#domain_vicefounder_list'
+                        ,height: 656
+                        ,cellMinWidth: 80
+                        ,url: "{php echo webUrl('pcsite/setting/register/getDomainVicefounder')}"
+                        ,method: 'post'
+                        ,page: true
+                        ,request: {
+                            limitName: 'psize'
+                        }
+                        ,cols: [[
+                            {field: 'id', title: 'ID', sort: true, align: 'center', fixed: 'left'}
+                            ,{field: 'username', title: '副站长名称', align: 'center'}
+                            ,{field: 'group', title: '副站长用户组', align: 'center', sort: true}
+                            ,{field: 'domain', title: '绑定域名', align: 'center'}
+                            ,{field: 'status', title: '状态', sort: true, align: 'center', templet: '#statusTpl', event: 'changeStatus', style:'cursor: pointer;'}
+                            ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+                        ]]
+                    });
+                    First_Open_List_ViceFounderDomain = 1;
+                    
+                    /** 副站长设置 */
+                    //监听工具条
+                	table.on('tool(domain_vicefounder_list)', function(obj) {
+                        var data = obj.data;
+                        if (obj.event === 'edit') {
+                        	$.post("{php echo webUrl('pcsite/setting/register/getDomainVicefounder')}"
+                                ,{id:data.id}
+                                ,function(d){
+                                    if(d.errno == 0){
+                                        postDomainVicefounder(d.data[0]);
+                                    }else{
+                                        layer.msg(d.message, {icon: 2});
+                                    }
+                                },'json'
+                            ); 
+                        } else if (obj.event === 'del') {
+                        	layer.confirm('确定删除吗？删除后不可恢复', function(index) {
+                        	   $.post("{php echo webUrl('pcsite/setting/register/delDomainVicefounder')}"
+                                    ,{id:data.id}
+                                    ,function(d){
+                                        if(d.errno == 0){
+                                            layer.msg(d.message, {
+                                                icon: 1
+                                                ,time: 1000
+                                            }, function(){
+                                                obj.del();
+                                                layer.close(layer.index);
+                                            });
+                                        }else{
+                                            console.log(d);
+                                            layer.msg(d.message, {icon: 2});
+                                        }
+                                    },'json'
+                                );
+                        	});
+                        } else if (obj.event === 'changeStatus') {
+                    		$.post("{php echo webUrl('pcsite/setting/register/changeDomainVicefounderStatus')}"
+                                ,{id:data.id,status:data.status}
+                                ,function(d){
+                                    if(d.errno == 0){
+                                        layer.msg(d.message, {
+                                            icon: 1
+                                            ,time: 1000
+                                        }, function(){
+                            				table.reload('domain_vicefounder_list');
+                                        });
+                                    }else{
+                                        layer.msg(d.message, {icon: 2});
+                                    }
+                                },'json'
+                            ); 
+                    	}
+                	});
+                    
+                    var postDomainVicefounder = function(d){
+                        if(!d){
+                            d = {
+                                id:""
+                                ,status: 0
+                                ,displayorder: 0
+                                ,domain: ""
+                                ,owner_uid: ""
+                                ,remark: ""
+                            };
+                        }
+                        
+                        layer_postDomainVicefounder = layer.open({
+                            type: 1
+                            ,title: '新增'
+                            ,id: 'post_domain'
+                            ,area: '630px'
+                            ,shadeClose: true
+                            ,content: ''+
+                                    '<form class="layui-form" style="padding:16px 16px 30px 16px;">'+
+                                        '<input type="text" class="hidden " name="id" value="'+d.id+'"/>'+
+                                        '<input type="text" class="hidden " name="status" value="'+d.status+'"/>'+
+                                        '<div class="form-group">'+
+                                            '<label>排序</label>'+
+                        					'<input type="text" class="form-control " name="displayorder" value="'+d.displayorder+'" />'+
+                                        '</div>'+
+                                        
+                                        '<div class="form-group">'+
+                                            '<label>域名</label>'+
+                        					'<input type="text" class="form-control " name="domain" value="'+d.domain+'" />'+
+                                            '<span class="help-block">不带http或者https，并且不以"/"结尾。如：http://www.we7pc.com/只填<code>www.we7pc.com</code></span>'+
+                                        '</div>'+
+                                        
+                                        '<div class="form-group">'+
+                                            '<label>副站长ID</label>'+
+                                            '<div class="input-group ">'+
+                                                '<input type="text" name="owner_uid" value="'+d.owner_uid+'" class="form-control " autocomplete="off" />'+
+                                      			'<span class="input-group-btn">'+
+                                                    '<button class="btn btn-default" type="button" onclick="ViceFounderSelector(this);">搜索副站长</button>'+
+                                      			'</span>'+
+                                       		'</div>'+
+                                        '</div>'+
+                                        
+                                        '<div class="form-group">'+
+                                            '<label>备注</label>'+
+                        					'<textarea class="form-control " style="height: 100px;" id="remark" name="remark" >'+d.remark+'</textarea>'+
+                                        '</div>'+
+                                        
+                                        '<div class="layui-form-item">'+
+                                            '<div class="layui-input-block">'+
+                                                '<button class="layui-btn" lay-submit lay-filter="postDomain">'+
+                                                    '立即提交'+
+                                                '</button>'+
+                                                '<button type="reset" class="layui-btn layui-btn-primary">'+
+                                                    '重置'+
+                                                '</button>'+
+                                            '</div>'+
+                                        '</div>'+
+                                        
+                                    '</form>'
+                             //,btn: '关闭'
+                        });
+                    }
+                    
+                    form.on('submit(postDomain)', function(data){
+                        $.post("{php echo webUrl('pcsite/setting/register/postDomainVicefounder')}"
+                            ,data.field
+                            ,function(d){
+                                if(d.errno == '0'){
+                                    layer.msg(d.message, {
+                                        icon: 1
+                                        ,time: 1500
+                                    }, function(){
+                                        layer.close(layer_postDomainVicefounder);
+                                        active['reload'].call(this)
+                                    });
+                                }else{
+                                    layer.msg(d.message, {icon: 2});
+                                    return false;
+                                }
+                            }
+                            ,'json'
+                        );
+                        return false;
+                    });
+                    
+                    var active = {
+                    	search: function() {
+                    		var domain = $('input[name="domain"]');
+                            var owner_uid = $('input[name="owner_uid"]');
+                            //var status = $('select[name="status"]');
+                            //console.log(status.val())
+                    		//执行重载
+                    		table.reload('domain_vicefounder_list', {
+                    			page: {
+                    				curr: 1
+                    			},
+                    			where: {
+                                    domain: domain.val()
+                                    ,owner_uid: owner_uid.val()
+                                    //,status: status.val()
+                    			}
+                    		});
+                    	}
+                        ,reload: function() {
+                            $('input[name="domain"]').val('');
+                            $('input[name="owner_uid"]').val('');
+                            //$('select[name="status"]').val('');
+                            $("#search").click();
+                    	},add:function() {
+                    	   postDomainVicefounder();
+                    	}
+                    };
+                    
+                    $('.onclick').on('click', function() {
+                    	var type = $(this).data('type');
+                    	active[type] ? active[type].call(this) : '';
+                    });
+                }
+                
+            }
+            
+        });
+        
+        /** 基础设置 */
+        form.on('switch(isopen)', function(data){
+            if(data.elem.checked == false){
+                $('.type_set').hide();
+            }else{
+                $('.type_set').show();
+                var register_open_type = $('input[name="register_open_type"]')
+                if(register_open_type.val() != 0){
+                    $('.type_set_default').hide();
+                }
+            }
+        });
+        
+        form.on('radio(register_open_type)', function(data){
+            if(data.value != 0){
+                if(data.value == 1){
+                    $("input[name='register_default_type'][value='system']").prop("checked",true);
+                }else if(data.value == 2){
+                    $("input[name='register_default_type'][value='mobile']").prop("checked",true);
+                }
+                form.render('radio', 'set_base');
+                $('.type_set_default').hide();
+            }else{
+                $('.type_set_default').show();
+            }
+        });
+        
+        form.on('switch(isthirdlogin)', function(data){
+            if(data.elem.checked != false){
+                $.post("{php echo webUrl('pcsite/setting/getPcsiteSet')}",{}
+                    ,function(d){
+                        if(d.errno == '0'){
+                            var set_login = d.data.login;
+                            if(set_login.isthirdlogin != 1){
+                                layer.msg("登录设置中尚未打开 第三方登录。请先在登录设置中打开相关功能", {icon: 2, time: 5000});
+                                $(':checkbox[name="isthirdlogin"]').prop("checked", false);
+                                return form.render();
+                            }
+                        }else{
+                            $(':checkbox[name="isthirdlogin"]').prop("checked", false);
+                            layer.msg(d.message, {icon: 2});
+                            return form.render();
+                        }
+                    }
+                    ,'json'
+                );
+            }
+        });
+        
+        form.on('submit(postSetBase)', function(data){
+            $.post("{php echo webUrl('pcsite/setting/register/postSetBase')}"
+                ,data.field
+                ,function(d){
+                    if(d.errno == '0'){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(d.message, {icon: 2});
+                        return false;
+                    }
+                }
+                ,'json'
+            );
+            return false;
+        });
+        
+        
+    });
+</script>
+
+{php include $this->mytemplate('common/footer', 'web')}

@@ -1,0 +1,100 @@
+
+<header role="heading" class="{if empty($_GET['r'])}current{else}active{/if}">
+	<div class="head-box">
+		<div class="head-top">
+            {if $settings['global']['logo2']}
+			<div class="logo-box">
+				<a href="{php echo foregUrl()}" title="{$settings['global']['title']}" style="{if $settings['global']['style']['logo2']['margin_top']}margin-top: {$settings['global']['style']['logo2']['margin_top']}px;{/if}">
+				    <img src="{php echo tomedia($settings['global']['logo2'])}" title="{$settings['global']['title']}" alt="{$settings['global']['title']}">
+				</a>
+			</div>
+            {/if}
+			<div class="jodo-box">
+				<p>
+					<img src="{php echo tomedia($settings['global']['qr'])}" alt="微信扫一扫"/>
+				</p>
+				<p>
+					微信扫一扫<em class="fa fa-mobile-phone"></em>
+				</p>
+			</div>
+		</div>
+		<div class="nav-cut">
+			<ul>
+                {php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+                {loop $topnavs $tn}
+                {if $tn['status'] == '1'}
+                    <!-- 1 -->
+                    <li class="nav1 {if $tn['sign'] && $tn['sign'] == $sign} active{/if}">
+    					<a href="{$tn['url']}" title="{$tn['title']}" data-alert="全部" target="{$tn['target']}">{$tn['title']}</a>
+                        {if count($children[$tn['id']]) > 0}
+    					<ul>
+                            {loop $children[$tn['id']] $tn_s}
+                            {if $tn_s['status'] == '1'}
+                            <!-- 2 -->
+    						<li class="nav2">
+    							<a href="{$tn_s['url']}" title="{$tn_s['title']}" target="{$tn_s['target']}" data-alert="全部">{$tn_s['title']}</a>
+    							{if count($children[$tn_s['id']]) > 0}
+                                <ul>
+                                    {loop $children[$tn_s['id']] $tn_t}
+                                    {if $tn_t['status'] == '1'}
+                                    <!-- 3 -->
+    								<li class="nav3">
+    									<a href="{$tn_t['url']}" title="{$tn_t['title']}" target="{$tn_t['target']}">{$tn_t['title']}</a>
+    								</li>
+                                    <!-- 3 -->
+                                    {/if}
+                                    {/loop}
+    							</ul>
+                                {/if}
+    						</li>
+                            <!-- 2 -->
+                            {/if}
+    						{/loop}
+    					</ul>
+                        {/if}
+    				</li>
+                    <!-- 1 -->
+                {/if}
+                {/loop}
+                
+                {if $_GET['r'] == 'search'}
+                    <li class="nav1 active">
+    					<a href="../app/index.php?i=14&c=entry&m=bowen_site&do=foreg&r=search" title="搜索" >搜索</a>
+    				</li>
+                {/if}
+                
+				<li class="background"></li>
+			</ul>
+		</div>
+		<div class="head-bottom">
+			<div class="foto-box">
+				<div class="social-box">
+                    {if !empty($settings['global']['contact']['qq'])}
+				    <a href="http://wpa.qq.com/msgrd?v=3&uin={$settings['global']['contact']['qq']}&site=qq&menu=yes" rel="nofollow" target="_blank">
+                        <i class="fa fa-qq"></i>
+				    </a>
+                    {/if}
+                    
+                    {if !empty($settings['global']['contact']['weibo'])}
+                    <a href="{$settings['global']['contact']['weibo']}" rel="nofollow" target="_blank">
+                        <i class="fa fa-weibo"></i>
+                    </a>
+                    {/if}
+                    
+                    {if !empty($settings['global']['contact']['wechat'])}
+                    <a id="met-weixin"><i class="fa fa-weixin"></i></a>
+                    <div id="met-weixin-content" class="hide">
+                        <div class="text-center met-weixin-img">
+                            <img src="{php echo tomedia($settings['global']['contact']['wechat'])}" />
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+                <div class="foto-cut">
+                    {php $copyright2 = str_replace('#年#',date('Y'),$settings['global']['copyright2'])}
+                    {php echo html_entity_decode($copyright2, ENT_QUOTES)}
+                </div>
+			</div>
+		</div>
+	</div>
+</header>

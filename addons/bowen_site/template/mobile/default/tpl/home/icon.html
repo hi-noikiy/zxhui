@@ -1,0 +1,48 @@
+
+        <!-- 我们的优势 -->
+		<section class="main">
+			<div id="a1portalSkin_mainArea" class="full-screen">
+				<div class="module-full-screen" style="{if $settings['home']['default']['background_color'][$mid]}background-color: {$settings['home']['default']['background_color'][$mid]};{/if}">
+					<div class="module-inner not-animated" data-animate="fadeInUp" data-delay="200">
+						<div class="page-width">
+							<div class="module-full-screen-title">
+								<h2>{$settings['home']['default']['title'][$mid]}</h2>
+								<div class="module-title-content">
+									<i class="mark-left"></i>
+									<h3>{$settings['home']['default']['title_en'][$mid]}</h3>
+									<i class="mark-right"></i>
+								</div>
+								<em class="module-full-screen-title-line"></em>
+							</div>
+							<div id="a1portalSkin_ctr225311225311_mainArea" class="module-full-screen-content">
+								<div class="qhd-content">
+									<div class="column">
+                                        
+                                        <?php for($i = 0; $i <= 3; $i++){ ?>
+                                        {php $a_i = $i+1;}
+										<div class="col-4-1 {if $a_i%4 == 0}last{/if}">
+											<p style="text-align: center;">
+												<img alt="" class="lazyload no-lightGallery" lay-src="{php echo tomedia($settings['home']['default']['advimg'][$i])}" style="width: {if $settings['home']['default']['size'][$mid]}{$settings['home']['default']['size'][$mid]}{else}84{/if}px;" />
+											</p>
+											<p style="text-align: center;">
+												<span style="font-size:16px;">
+													<span style="color:{if $settings['global']['color']['1']}{$settings['global']['color']['2']}{else}#21bbc7{/if};">{$settings['home']['default']['advtitle'][$i]}</span>
+												</span>
+											</p>
+											<p style="text-align: center;">
+												<span style="color: rgb(128, 128, 128); font-size: 12px; line-height: 1.8;">
+													{$settings['home']['default']['advdesc'][$i]}
+												</span>
+											</p>
+										</div>
+                                        <?php } ?>
+                                        
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- 我们的优势 -->

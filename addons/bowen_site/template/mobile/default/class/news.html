@@ -1,0 +1,103 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+	{php include $this->mytemplate('common/top-nav')}
+	{php include $this->mytemplate('common/banner2')}
+	<!--====================S main====================-->
+<section class="main">
+	<section class="full-page-title-wrap clearfix" skinobjectzone="menu_2532">
+		<h2>
+			{$lastclass['title']}
+		</h2>
+		<em class="full-page-title-line"></em>
+	</section>
+	<!-- S page-menu -->
+	<section class="full-page-menu" skinobjectzone="menu_2617">
+		<div class="full-page-menu-content">
+			<div class="page-width">
+				<ul class="clearfix">
+					{loop $navs $n}
+                    {if $n['status'] == '1'}
+					<li class="{if $id == $n['id']}current{/if}">
+						<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+					</li>
+                    {/if}
+					{/loop}
+				</ul>
+				<!-- 没有子菜单时输出 -->
+			</div>
+		</div>
+	</section>
+	<!-- S page-menu -->
+	<div class="page-width clearfix">
+		<!-- S full-page-content -->
+		<div class="full-page-content">
+			<div id="a1portalSkin_mainArea" class="full-page-content-wrapper">
+				<!-- Start_Module_225333 -->
+				<a name="34197" id="34197"></a>
+				<div class="module-default">
+					<div class="module-inner">
+						<div id="a1portalSkin_ctr225333225333_mainArea" class="module-content">
+							<!-- Start_Module_225333 -->
+							<!-- S portfolio-list -->
+							<div class="portfolio-list portfolio-list-summary article-list">
+								<ul class="column marg-per2 clearfix">
+                                    
+                                    {php $ca = 0;}
+                                    {loop $articles $item}
+                                    {php $ca++;}
+                                    {if $item['status'] == '1'}
+									<li class='col-4-1 not-animated {if $ca%4 == 0}last{/if}' data-animate='fadeInUp' >
+										<div class="portfolio-item">
+											<div class="portfolio-img">
+												<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" target="_blank">
+                                                    {if $item['thumb']}
+                                                        {php $item['thumb'] = tomedia($item['thumb'])}
+                                                    {else}
+                                                        {php $item['images'] = iunserializer($item['images']);}
+                                                        {php $item['thumb'] = tomedia($item['images'][0])}
+                                                    {/if}
+                                                    <img lay-src="{php echo m('image')->image_crop($item['thumb'], 400, 300)}" alt="{$item['title']}"/>
+                                                </a>
+											</div>
+											<div class="portfolio-title">
+												<h2>
+													<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" target="_blank"><script>document.write(cutcontent("{$item['title']}","18"));</script></a>
+												</h2>
+											</div>
+											<div class="portfolio-summary">
+												<div class="qhd-content">
+													<p>
+                                                    {if $item['description']}
+                                                        {php $item['description'] = deleteRN($item['description'])}
+                                                    {else}
+                                                        {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                                    {/if}
+                                                    {php echo m('common')->msubstr($item['description'], 0, 65)}
+                                                    </p>
+												</div>
+											</div>
+											<em></em>
+										</div>
+									</li>
+                                    {/if}
+									{/loop}
+                              
+								</ul>
+							</div>
+							<!-- E portfolio-list -->
+							<!-- S pagination -->
+							{php echo pagination_foreg($count, $pindex, $psize);}
+							<!-- /pages -->
+							<!-- E pagination -->
+							<!-- End_Module_225333 -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- E full-page-content -->
+	</div>
+</section>
+<!--====================E main====================-->
+
+{php include $this->mytemplate('common/footer')}

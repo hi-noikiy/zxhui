@@ -1,0 +1,245 @@
+<title>导航管理</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>内容</cite></a>
+		<a><cite>导航管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card">
+		<div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                <p>补充说明：①导航最多为三级（但部分模板仅支持二级导航）；②当前页面的导航状态，可直接点击切换</p>
+            </blockquote>
+        </div>
+    </div>
+
+	<div class="layui-card">
+    
+		<div class="layui-card-header layuiadmin-card-header-auto">
+			
+		</div>
+        
+		<div class="layui-card-body">
+            <div style="padding-bottom: 20px;" class="btnGroup">
+                <div class="layui-btn-group">
+                    <button class="layui-btn layui-btn-primary  layui-btn-sm" id="BOWEN_app-content-nav-btn-expand">全部展开</button>
+                    <button class="layui-btn layui-btn-primary  layui-btn-sm" id="BOWEN_app-content-nav-btn-fold">全部折叠</button>
+                </div>
+                <div style="float: right;">
+                    <button class="layui-btn onclick" data-type="batchdel">删除</button>
+                    <button class="layui-btn" lay-href="/content/nav/post/op=add">新增导航</button>
+                </div>
+            </div>
+			<table id="BOWEN_app-content-nav-table" lay-filter="BOWEN_app-content-nav-table"></table>
+		</div>
+        <script type="text/html" id="targetTpl">
+            {{#  if(d.target == '_self'){ }}
+            当前窗口
+            {{#  } else if(d.target == '_blank') { }}
+            新窗口
+            {{#  } else { }}
+            默认方式
+            {{#  } }}
+        </script>
+        <script type="text/html" id="statusTpl">
+            {{#  if(d.status == '1'){ }}
+            <span style="color: #5FB878;">显示</span>
+            {{#  } else { }}
+            <span style="color: #FFB800;">隐藏</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="toolbar">
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="preview" lay-tips="预览"><i class="fa fa-search"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/nav/post/op=add/id={{ d.id }}" lay-tips="添加下级导航"><i class="fa fa-plus"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" lay-event="clip" lay-tips="复制链接" data-id="{{ d.id }}" data-clip=""><i class="fa fa-link"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/nav/post/op=edit/id={{ d.id }}" lay-tips="编辑"><i class="fa fa-edit"></i></a>
+        </script>
+	</div>
+</div>
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'table', 'myutil', 'clip', 'treetable'], function(){
+        var $ = layui.jquery
+        ,admin = layui.admin
+        ,table = layui.table
+        ,myutil = layui.myutil
+        ,layer = layui.layer
+        ,clip = layui.clip
+        ,treetable = layui.treetable;
+        
+        var The_width = $('.btnGroup').width();
+        if(admin.screen() > 1)The_width = The_width-17;
+        // 渲染表格
+        treetable.render({
+            method: 'post',
+            treeColIndex: 2,
+            treeSpid: 0,
+            treeIdName: 'id',
+            treePidName: 'parid',
+            elem: '#BOWEN_app-content-nav-table',
+            url: myutil.webUrl('content/nav/getList'),
+            cellMinWidth: 170,
+            width: The_width,
+            page: false,
+            cols: [[
+                {type:'checkbox'}
+                ,{field: 'id', width:40, align: 'center', title: 'ID'}
+                ,{field: 'title', title: '导航'}
+                ,{field: 'displayorder', width:60,title: '排序', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'title', title: '导航标题', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'sign', title: '导航标识', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'url', title: '链接', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'target', title: '跳转方式', align: 'center', templet: '#targetTpl', event: 'changeTarget', style:'color: #01AAED; cursor: pointer;'}
+                ,{field: 'status', title: '状态', align: 'center', templet: '#statusTpl', event: 'changeStatus', style:'cursor: pointer;'}
+                ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+            ]],
+            done: function () {
+                $(".onclick").each(function() {
+                    if(($(this).attr('lay-event') == 'clip' || $(this).data('type') == 'clip')){
+                        if(!$(this).attr("data-clip") && $(this).data('id'))$(this).attr("data-clip", myutil.foregUrl('class', {'id': $(this).data('id')}, true))
+                        clip(this, $(this).attr("data-clip"))
+                    }
+            	})
+            }
+        });
+        
+        //监听单元格编辑
+        table.on('edit(BOWEN_app-content-nav-table)', function(obj){
+            var value = obj.value
+            ,data = obj.data
+            ,field = obj.field;
+            if(value == ''){
+                layer.msg('修改内容不能为空', {
+                    icon: 2
+                    ,time: 1000
+                }, function(){
+                    admin.events.refresh();
+                });
+                return false;
+            }
+            admin.req({
+                url: myutil.webUrl('content/nav/updateField')
+                    ,type: 'post'
+                    ,data: {id:data.id, field:field, value:value}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1000
+                            }, function(){
+                                admin.events.refresh()
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+        });
+        
+        //监听工具条
+        table.on('tool(BOWEN_app-content-nav-table)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'changeStatus') {
+                admin.req({
+                    url: myutil.webUrl('content/nav/changeStatus')
+                    ,type: 'post'
+                    ,data: {id:data.id,status:data.status}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                status: d.data.status
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            } else if(obj.event === 'preview') {
+                var url = myutil.foregUrl('class', {'id': data.id}, true);
+                window.open(url);
+            } else if(obj.event === 'changeTarget'){
+                admin.req({
+                    url: myutil.webUrl('content/nav/changeTarget')
+                    ,type: 'post'
+                    ,data: {id:data.id,target:data.target}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                target: d.data.target
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            }
+        });
+        
+        $('#BOWEN_app-content-nav-btn-expand').click(function () {
+            treetable.expandAll('#BOWEN_app-content-nav-table');
+        });
+
+        $('#BOWEN_app-content-nav-btn-fold').click(function () {
+            treetable.foldAll('#BOWEN_app-content-nav-table');
+        });
+        
+        var active = {
+            batchdel: function(){
+                var checkData = table.checkStatus('BOWEN_app-content-nav-table').data;
+                
+                if(checkData.length === 0){
+                  return layer.msg('请选择数据');
+                }
+                
+                var domain_del_confirm = layer.confirm('确定删除勾选分类及其下级分类吗？删除后不可恢复', function(index) {
+                    admin.req({
+                        url: myutil.webUrl('content/nav/delete')
+                        ,type: 'post'
+                        ,data: {checkData:checkData}
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno == 0){
+                                layer.close(domain_del_confirm);
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    admin.events.refresh();
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        }
+                    });
+               	});
+            }
+            ,clip: function(){
+                if($(this).data('type') == 'clip'){
+                    clip(this, $(this).attr("data-clip"))
+                }
+            }
+        };
+        $('.onclick').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        }); 
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/26 10:32:41] -->

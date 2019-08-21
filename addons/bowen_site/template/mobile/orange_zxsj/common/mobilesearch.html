@@ -1,0 +1,61 @@
+
+            <div class="hidden-lg hidden-md">
+            	<div class="met-column-nav product-search-body bordernone">
+            		<div class="container">
+            			<div class="row">
+            				<div class="col-md-9 sidebar_tile">
+            					<div class="row">
+            						<ul class="met-column-nav-ul">
+                                        
+            							<li>
+            								<a href="{php echo foregUrl('class',array('id'=>$all['id']))}" class="link {if $id == $all['id']}active{/if}" title="{$lastclass['title']}">全部</a>
+            							</li>
+                                        {loop $navs $n}
+                                            {if $n['status'] == '1'}
+                							<li class="dropdown">
+                								<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}" class="link {if $id == $n['id'] || $lastclass['id'] == $n['id']}active{/if}" {if !empty($n['t'])}data-toggle="dropdown"{/if}>{$n['title']} {if !empty($n['t'])}<span class="caret"></span>{/if}</a>
+                                                {if !empty($n['t'])}
+                                                <ul  class="dropdown-menu bullet">
+                                                    {loop $n['t'] $n_t}
+                                                        {if $n_t['status'] == '1'}
+                                                        <li>
+                                                			<a href="{php echo foregUrl('class',array('id'=>$n_t['id']))}" title="{$n_t['title']}">{$n_t['title']}</a>
+                                                		</li>
+                                                        {/if}
+                                                    {/loop}
+                                                </ul>
+                                                {/if}
+                                            </li>
+                                            {/if}
+                                        {/loop}
+                                        
+            						</ul>
+            					</div>
+            				</div>
+                            
+                            {if $needsearch}
+							<div class="col-md-3 product_search ">
+								<div class="row">
+									<form method="get" action="{$_W['siteroot']}app/index.php">
+                                        <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                                        <input type="hidden" name="c" value="entry" />
+                                        <input type="hidden" name="m" value="bowen_site" />
+                                        <input type="hidden" name="do" value="foreg" />
+                                        <input type="hidden" name="r" value="search" />
+										<div class="form-group">
+											<div class="input-search">
+												<button type="submit" class="input-search-btn">
+													<i class="icon wb-search" aria-hidden="true"></i>
+												</button>
+												<input type="text" class="form-control" name="kw" value="" placeholder="Search" />
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+                            {/if}
+                            
+            			</div>
+            		</div>
+            	</div>
+            </div>

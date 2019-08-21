@@ -1,0 +1,22 @@
+{mytemplate 'common/header'}
+<?php
+/**
+$_B['setting']['home']['met_368']['mtype'] = !empty($_B['setting']['home']['met_368']['mtype'])?$_B['setting']['home']['met_368']['mtype']:array('banner', 'product', 'team', 'service', 'news', 'show');
+
+for($mid = 0; $mid < count($_B['setting']['home']['met_368']['mtype']); $mid++){
+    include $this->mytemplate("tpl/home/".$_B['setting']['home']['met_368']['mtype'][$mid], 'mobile');             
+}
+*/
+unset($_B['setting']['home']['met_368']['the_product_class']);
+$mid = 0;
+$_B['setting']['home']['met_368'] = !empty($_B['setting']['home']['met_368'])?$_B['setting']['home']['met_368']:array(
+    array('mtype' => 'banner'),array('mtype' => 'product'),array('mtype' => 'team'),array('mtype' => 'service'),array('mtype' => 'news'),array('mtype' => 'show')
+);
+foreach($_B['setting']['home']['met_368'] as $k1 => $v1){
+    $mtype = $v1['mtype'];
+    include $this->mytemplate("tpl/home/".$mtype, 'mobile'); 
+    $mid++;
+}
+
+?>
+{mytemplate 'common/footer'}

@@ -1,0 +1,134 @@
+<!--footer-->
+		<footer>
+			<div class="layout">
+				<div class="container">
+					<div class="line foot-top hidden-l">
+						<div class="xl12 xs9 xm9 margin-large-bottom">
+                            <!-- S footer nav -->
+							<div class="foot-nav">
+                                {loop $topnavs $tn}
+                                {if $tn['status'] == '1'}
+                                <a href="{$tn['url']}">{$tn['title']}</a>
+                                {/if}
+                                {/loop}
+							</div>
+                            <!-- E footer nav -->
+                            
+                            {loop $settings['global']['bt_contact'] $bc}
+                            {if $bc['url'] == '粗'}
+                            <h6>{$bc['title']}</h6>
+                            {else}
+                            <p>{$bc['title']}</p>
+                            {/if}
+                            {/loop}
+						</div>
+						<div class="xl12 xs3 xm3 margin-large-bottom">
+							<div class="brode-img float-right">
+								<img class="onclick" data-type="show_qr_wechat" src="{php echo tomedia($settings['global']['qr'])}" alt="" width="150px" />
+							</div>
+						</div>
+					</div>
+					<div class="line foot-bot">
+						<div class="block-item text-center">
+							<div class="copy">
+								{php $copyright = str_replace('#年#',date('Y'),$settings['global']['copyright'])}
+                                {php echo html_entity_decode($copyright, ENT_QUOTES)}
+								{mcommon 'copyright'}
+							</div>
+                            {if $settings['global']['flink']}
+							<div class="foot-link">
+								友情链接：
+                                {loop $settings['global']['flink'] $fl}
+								<a rel="nofollow" href="{$fl['url']}" target='_blank'>{$fl['title']}</a>
+                                {/loop}
+							</div>
+                            {/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!--footer-->
+		<div class="blank55"></div>
+		<div id="toolbar" class="layout text-center">
+			<div class="x3">
+				<a href="{if $settings['home']['advertising_design']['tabar_1_url']}{$settings['home']['advertising_design']['tabar_1_url']}{else}{php echo foregUrl()}{/if}"><span class="icon-home"></span>{if $settings['home']['advertising_design']['tabar_1_title']}{$settings['home']['advertising_design']['tabar_1_title']}{else}首页{/if}</a>
+			</div>
+			<div class="x3">
+				<a href="{$settings['home']['advertising_design']['tabar_2_url']}"><span class="icon-phone"></span>{if $settings['home']['advertising_design']['tabar_2_title']}{$settings['home']['advertising_design']['tabar_2_title']}{else}电话{/if}</a>
+			</div>
+			<div class="x3">
+				<a href="{$settings['home']['advertising_design']['tabar_3_url']}"><span class="icon-envelope-o"></span>{if $settings['home']['advertising_design']['tabar_3_title']}{$settings['home']['advertising_design']['tabar_3_title']}{else}短信{/if}</a>
+			</div>
+			<div class="x3">
+				<a href="{if $settings['home']['advertising_design']['tabar_4_url']}{$settings['home']['advertising_design']['tabar_4_url']}{else}{php echo foregUrl('article',array('id'=>$settings['home']['advertising_design']['about_article']))}{/if}"><span class="icon-user"></span>{if $settings['home']['advertising_design']['tabar_4_title']}{$settings['home']['advertising_design']['tabar_4_title']}{else}联系{/if}</a>
+			</div>
+		</div>
+		<script src="{M_URL}template/mobile/t2static/js/email-decode.min.js"></script>
+		<script src="{M_URL}template/mobile/t2static/js/animate.min.js"></script>
+		<script src="{M_URL}template/mobile/t2static/js/jquery.lazyload.js"></script>
+		<script type="text/javascript">
+        $("img.lazy").lazyload({
+    		effect : "fadeIn"
+    	});
+		</script>
+        <!-- S 全局统计 -->
+        <div style="display: none;">
+        {php echo html_entity_decode(base64_decode($settings['global']['diycode']), ENT_QUOTES)}
+        </div>
+        <!-- E 全局统计 -->
+	</body>
+    <script type="text/javascript" src="{$_W['siteroot']}app/index.php?i={$_W['uniacid']}&c=utility&a=visit&do=showjs&m={$_W['current_module']['name']}"></script>
+    
+    <script type="text/javascript">
+    {if !empty($settings['global']['isrewrite']) && $_W['core_settings']['is_rewrite'] == 1}
+    var siteurl = window.location.href; 
+    if(siteurl.indexOf(".php") >= 0){
+        if(siteurl.indexOf("r=article") >= 0){
+            window.location.href="{php echo foregUrl('article', array('id' => $id))}";
+        }else if(siteurl.indexOf("r=class") >= 0){
+            window.location.href="{php echo foregUrl('class', array('id' => $id))}";
+        }else{
+            window.location.href="{php echo foregUrl()}";
+        }
+        
+    }
+    {/if}
+    
+    
+    window.global = {
+        uniacid: "{$_W['uniacid']}"
+        ,os : "{$_W['os']}"
+        ,qr_wechat: "{media $_B['setting']['global']['qr']}"
+        
+		{if !empty($_W['openid'])},'openid': '{$_W['openid']}'{/if}
+		,'family': '{IMS_FAMILY}'
+		,'siteroot': '{$_W['siteroot']}'
+		,'siteurl': '{$_W['siteurl']}'
+		,'attachurl': '{$_W['attachurl']}'
+		,'attachurl_local': '{$_W['attachurl_local']}'
+		,'attachurl_remote': '{$_W['attachurl_remote']}'
+		,'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'}
+		,'account_type' : {$_W['account']['type']}
+        ,'uni_is_multi_acid': {if uni_is_multi_acid()}true{else}false{/if}
+        ,'isrewrite' : {if !empty($_B['setting']['global']['isrewrite'])}1{else}0{/if}
+        ,'route': "{if !empty($_GET['r'])}{php echo trim($_GET['r'])}{else}null{/if}"
+        ,'op': "{if !empty($_GET['op'])}{php echo trim($_GET['op'])}{else}null{/if}"
+        ,apptheme: "{$_B['setting']['global']['mobilethemes']}"
+        ,version: "{VERSION}"
+        ,release: "{RELEASE}"
+        
+    };
+    
+    layui.config({
+        base: '{M_URL}static/layui/lay/mymodules/',
+        version: '{RELEASE}'
+    });
+    
+    layui.extend({
+        global: '{/}{M_URL}template/mobile/t2static/js/global'
+    }).use('global');
+    </script>
+    {mcommon 'share'}
+    {mcommon 'baidu_js_push'}
+</html>

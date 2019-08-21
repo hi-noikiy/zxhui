@@ -1,0 +1,178 @@
+{mytemplate 'common/header-base'}
+
+<div id="met_mob_nav_container">
+    <ul class="ul1">
+        {php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+        {if $tnavs[0]['sign'] != 'home'}
+        <li class="search clearfix">
+            <div id="met_mob_nav_close">
+                <img class="hover" alt="Menu" src="../addons/bowen_site/template/mobile/met_364/static/images/mobile_menu_closes.png" id="need_help_mobile">
+            </div>
+        </li>
+        {/if}
+        {php $ctop_n = 0;}
+        {loop $topnavs $tn}
+        {if $tn['status'] == '1'}
+
+        {if $ctop_n == 0 && $tn['sign'] == 'home' && $tnavs[0]['sign'] == 'home' && $tnavs[1]['sign'] != 'home'}
+        <li class="search clearfix">
+            <span class="prev w080">
+                <a href="{$tn['url']}" title="{$tn['title']}" target="{$tn['target']}" >{$tn['title']}</a>
+            </span>
+            <div id="met_mob_nav_close">
+                <img class="hover" alt="Menu" src="../addons/bowen_site/template/mobile/met_364/static/images/mobile_menu_closes.png" id="need_help_mobile">
+            </div>
+        </li>
+        {else}
+        <li class="met_hasmore min_nav" data-index="{$ctop_n}">
+            <span class="min_nav_a" onclick="{if count($children[$tn['id']]) == 0}window.location.href='{$tn['url']}'{/if}">{$tn['title']}</span>
+            <a href="{$tn['url']}" title="{$tn['title']}">{$tn['title']}<em class="jiantou">&nbsp;</em></a>
+            {if count($children[$tn['id']]) > 0}
+            <ul class="ul2">
+                {loop $children[$tn['id']] $tn_s}
+                {if $tn_s['status'] == '1'}
+                <li><a href="{$tn_s['url']}" target="{$tn_s['target']}" title="{$tn_s['title']}">{$tn_s['title']}</a></li>
+                {/if}
+                {/loop}
+            </ul>
+            {/if}
+        </li>
+        {/if}
+        {php $ctop_n++;}
+
+        {/if}
+        {/loop}
+    </ul>
+
+    {if $_B['setting']['global']['login']['link']}
+    {if stripos($_B['setting']['global']['login']['link'], '../') !== false}
+    {php $_B['setting']['global']['login']['link'] = $_W['siteroot'] . 'web/' . $_B['setting']['global']['login']['link']}
+    {/if}
+    {if stripos($_B['setting']['global']['register']['link'], '../') !== false}
+    {php $_B['setting']['global']['register']['link'] = $_W['siteroot'] . 'web/' . $_B['setting']['global']['register']['link']}
+    {/if}
+    <div style="text-align:center; padding-top:20px;">
+
+        <div class="navbar-right vertical-align met-nav-login animation-slide-top">
+            {if $_B['setting']['global']['register']['link']}
+            <div class="vertical-align-middle margin-right-10">
+                <a href="{$_B['setting']['global']['register']['link']}" class="btn btn-squared btn-primary">
+                    {if $_B['setting']['global']['register']['text']}{$_B['setting']['global']['register']['text']}{else}注册{/if}
+                </a>
+            </div>
+            {/if}
+            <div class="vertical-align-middle">
+                <a href="{$_B['setting']['global']['login']['link']}" class="btn btn-squared btn-primary btn-outline">
+                    {if $_B['setting']['global']['login']['text']}{$_B['setting']['global']['login']['text']}{else}登录{/if}
+                </a>
+            </div>
+        </div>
+
+    </div>
+    {/if}
+
+</div>
+
+
+<div id="container">
+
+    <div id="met_masthead" class="clearfix">
+        <div id="met_masthead_wrap">
+            <div id="met_subinfo" class="lg-container clearfix hidden-sm hidden-xs">
+
+            </div>
+            <div id="met_global_nav" class="lg-container" style="min-height:40px; height:auto;">
+                <nav class="clearfix">
+                    <div id="met_logo">
+                        <a href="{foregUrl ''}" title="{$_B['setting']['global']['title']}">
+                            <img src="{if $_B['setting']['global']['tn_logo']}{media $_B['setting']['global']['tn_logo']}{else}{M_URL}template/mobile/met_364/static/images/1491791225.jpg{/if}"
+                                 alt="{$_B['setting']['global']['title']}">
+                        </a>
+                    </div>
+                    <ul class="nav_ul met_masthead_cata hidden-sm hidden-xs">
+
+                        {php $ctop_n = 0;}
+                        {loop $topnavs $tn}
+                        {if $tn['status'] == '1'}
+                        <li>
+                            <a {if !empty($tn['sign']) && $tn['sign'] != 'home'}data-menutype="megamenu" data-section="metmm{$ctop_n}"{php $ctop_n++;}{/if}
+                                href="{$tn['url']}" title="{$tn['title']}" target="{$tn['target']}">
+                            {if $tn['sign'] && $tn['sign'] == $sign}
+                                <span>{$tn['title']}</span>
+                            {else}
+                                {$tn['title']}
+                            {/if}
+                            </a>
+                        </li>
+                        {/if}
+                        {/loop}
+
+                    </ul>
+                    <div class="met_masthead_rightside">
+                        <ul class="pull-left">
+
+                            <li class="met_search dropdown">
+                                <a class="dropdown-toggle met-index-toggle" data-toggle="dropdown" id="searchdropmenu"></a>
+                                <div id="met_search_box" aria-labelledby="searchdropmenu">
+                                    <div class="triangle"></div>
+                                    <form method="get" name="myform1"
+                                          action="{$_W['siteroot']}app/index.php"
+                                          target="_blank">
+                                        <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                                        <input type="hidden" name="c" value="entry" />
+                                        <input type="hidden" name="m" value="bowen_site" />
+                                        <input type="hidden" name="do" value="foreg" />
+                                        <input type="hidden" name="r" value="search" />
+                                        <input type="text" name="kw" class="pull-left" id="search-box-h" placeholder="搜索" value="{$_GPC['kw']}">
+                                        <input class="pull-left" type='submit' name='Submit' value="">
+
+                                    </form>
+                                </div>
+                            </li>
+
+                            <li class="met_show_more visible-sm visible-xs" id="mob_menuitem"><a href="#"></a></li>
+                        </ul>
+
+                        {if $_B['setting']['global']['login']['link']}
+                        <div class="clearfix hidden-sm hidden-xs pull-left" style="margin-left:10px">
+
+                            <div class="navbar-right vertical-align met-nav-login animation-slide-top">
+                                {if $_B['setting']['global']['register']['link']}
+                                <div class="vertical-align-middle margin-right-10">
+                                    <a href="{$_B['setting']['global']['register']['link']}"
+                                        class="btn btn-squared btn-primary">
+                                        {if $_B['setting']['global']['register']['text']}{$_B['setting']['global']['register']['text']}{else}注册{/if}
+                                    </a>
+                                </div>
+                                {/if}
+                                <div class="vertical-align-middle">
+                                    <a href="{$_B['setting']['global']['login']['link']}"
+                                        class="btn btn-squared btn-primary btn-outline">
+                                        {if $_B['setting']['global']['login']['text']}{$_B['setting']['global']['login']['text']}{else}登录{/if}
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        {/if}
+
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div id="met_global_nav_content">
+            <div class="lg-container">
+
+                <div class="met_menu_section" data-section="metmm0">
+                    <div class="row">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- phpDesigner :: Timestamp [2018/10/04 11:35:06] -->

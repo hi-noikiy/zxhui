@@ -1,0 +1,96 @@
+
+    <div class="layui-header">
+		<div class="layui-logo">
+			{$_W['current_module']['title']}
+		</div>
+        
+        <!-- -->
+		<ul class="layui-nav layui-layout-left">
+            {php $controller__ = array('setting', 'system', 'plugins');}
+			<li class="layui-nav-item {if !in_array($_W['controller'], $controller__) && !$_W['isplugin']}layui-this{/if}">
+				<a href="{php echo webUrl('content/articles')}">网站</a>
+			</li>
+            <li class="layui-nav-item {if $_W['isplugin'] || $_W['controller'] == 'plugins'}layui-this{/if}">
+                <a href="{php echo webUrl('plugins')}">应用</a>
+			</li>
+			<li class="layui-nav-item {if $_W['controller'] == 'setting' && !$_W['isplugin']}layui-this{/if}">
+				<a href="javascript:;">设置</a>
+				<dl class="layui-nav-child">
+					<dd>
+						<a href="{php echo webUrl('setting/global')}">参数设置</a>
+					</dd>
+					<dd>
+						<a href="{php echo webUrl('setting/navs')}">导航设置</a>
+					</dd>
+					<dd>
+						<a href="{php echo webUrl('setting/home')}">主题设置</a>
+					</dd>
+                    <dd>
+						<a href="{php echo webUrl('setting/themes')}">主题切换</a>
+					</dd>
+                    <dd>
+						<a href="{php echo webUrl('setting/cover')}">入口</a>
+					</dd>
+				</dl>
+			</li>
+		</ul>
+		<ul class="layui-nav layui-layout-right">
+			<li class="layui-nav-item layui-bg-blue" style="left: -20px;">
+				<a href="{php echo webUrl()}" style="color: white;">
+					前往新版
+					<span class="layui-badge-dot" style="margin: -13px 60px 0;"></span>
+				</a>
+			</li>
+            {if $_W['role'] == 'founder'}
+            <li class="layui-nav-item {if $_W['controller'] == 'system'}layui-this{/if}">
+				<a href="javascript:;">
+                    系统
+				</a>
+				<dl class="layui-nav-child">
+					<dd>
+						<a href="{php echo webUrl('system/domain')}" target="_blank">域名管理</a>
+					</dd>
+					<dd>
+						<a href="{php echo webUrl('system/setting')}" target="_blank">系统设置</a>
+					</dd>
+                    <dd>
+						<a href="{php echo webUrl('system/auth/upgrade')}" target="_blank">云服务</a>
+					</dd>
+				</dl>
+			</li>
+            {/if}
+			<li class="layui-nav-item">
+				<a href="javascript:;">
+                    <img src="https://w.url.cn/s/AmmlkD4" class="layui-nav-img">
+                    {$_W['uniaccount']['name']}({$_W['user']['username']})
+				</a>
+				<dl class="layui-nav-child">
+					<!--dd>
+						<a href="{url 'user/profile'}" target="_blank"><i class="wi wi-account color-gray"></i> 我的账号</a>
+					</dd-->
+                    <dd>
+						<a href="{php echo webUrl('pcsite/account/display')}" target="_blank"><i class="wi wi-changing-over"></i> 站点切换</a>
+					</dd>
+					{if $_W['role'] == 'founder'}
+    					{if uni_user_see_more_info(ACCOUNT_MANAGE_NAME_VICE_FOUNDER, false)}
+                        <dd><a href="{php echo webUrl('system/auth/upgrade')}" target="_blank"><i class="wi wi-update color-gray"></i> 系统升级</a></dd>
+                        {/if}
+					{/if}
+                    <dd>
+                        <a href="{php echo webUrl('tools/fix/cache_clean')}" ><i class="wi wi-cache color-gray"></i> 更新缓存</a>
+                    </dd>
+                    {if !$_GPC['__ispcsite'] || $_W['role'] == 'founder'}
+        			<dd>
+        				<a href="{php echo url('home/display&')}" target="_self"><i class="fa fa-chevron-left color-gray"></i> 返回系统</a>
+        			</dd>
+                    {/if}
+				</dl>
+			</li>
+            
+			<li class="layui-nav-item">
+				<a href="{php echo webUrl('pcsite/user/logout')}"><i class="fa fa-sign-out color-gray"></i> 退出</a>
+			</li>
+		</ul>
+        
+	</div>
+<!-- phpDesigner :: Timestamp [2018/8/22 15:41:45] -->

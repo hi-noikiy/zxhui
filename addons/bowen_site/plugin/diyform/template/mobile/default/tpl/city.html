@@ -1,0 +1,9 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+    {php $level = (empty($v1['tp_area']))?"2":"3"}
+    {php $verify = ($v1['tp_must'] == 1)?"required":""}
+	{php echo mytpl_citypicker('field_data'.$kw, '', $level, $verify)}
+</div>
+<!-- phpDesigner :: Timestamp [2018/7/7 15:57:21] -->

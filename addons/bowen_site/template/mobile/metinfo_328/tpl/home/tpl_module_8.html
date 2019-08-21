@@ -1,0 +1,71 @@
+                        {php $mid = 7;}
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module008 S -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" data-background="{M_URL}template/mobile/metinfo_328/static/images/1481719302.jpg">
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="hidden visible-lg-block">
+											<div class="contact-box">
+                                                {php $contact_article[$mid] = $this->getArticleInfo($settings['home']['metinfo_328']['article'][$mid]);}
+												<div class="contact-left">
+													<img src="{php echo tomedia($settings['global']['qr'])}" width="150px" />
+												</div>
+												<div class="contact-center">
+                                                    <p class="t">{$phone_num}</p>
+													{php echo html_entity_decode($contact_article[$mid]['description'])}
+												</div>
+												<div class="contact-right">
+													{php echo html_entity_decode($contact_article[$mid]['content'])}
+												</div>
+											</div>
+											<div class="contact-text">
+												<p>
+													{php echo html_entity_decode($settings['home']['metinfo_328']['bottom_title'][$mid])}
+												</p>
+												<div>
+													{php echo html_entity_decode($settings['home']['metinfo_328']['bottom_url'][$mid])}
+												</div>
+											</div>
+										</div>
+										<div class="hidden visible-sm-block visible-md-block">
+											<div class="contact-box">
+												<div class="contact-left">
+													<img src="{php echo tomedia($settings['global']['qr'])}" />
+												</div>
+												<div class="contact-center">
+                                                    <p class="t">{$phone_num}</p>
+													{php echo html_entity_decode($contact_article[$mid]['description'])}
+												</div>
+												<div class="contact-right">
+													{php echo html_entity_decode($contact_article[$mid]['content'])}
+												</div>
+											</div>
+                                            
+											<div class="contact-text">
+												<p>
+													{php echo html_entity_decode($settings['home']['metinfo_328']['bottom_title'][$mid])}
+												</p>
+												<div>
+													{php echo html_entity_decode($settings['home']['metinfo_328']['bottom_url'][$mid])}
+												</div>
+											</div>
+                                            
+										</div>
+										<div class="hidden visible-xs-block">
+											<div class="contact-box">
+												<div class="contact-left">
+													<img src="{php echo tomedia($settings['global']['qr'])}" />
+												</div>
+												<div class="contact-center">
+                                                    <p class="t">{$phone_num}</p>
+													{php echo html_entity_decode($contact_article[$mid]['description'])}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module008 E -->
+                        {/if}                                                                                               

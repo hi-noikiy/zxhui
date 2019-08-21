@@ -1,0 +1,287 @@
+
+		<!--====================S 轮播图====================-->
+		<div id="a1portalSkin_headerAreaA" class="header">
+			<!-- Start_Module_225310 -->
+			<a name="34202" id="34202"></a>
+			<div class="module-default">
+				<div class="module-inner">
+					<div id="a1portalSkin_ctr225310225310_mainArea" class="module-content">
+						<!-- Start_Module_225310 -->
+						<!-- S slideshow -->
+						<div class="slideshow carousel clearfix" style="height:650px; overflow:hidden;">
+							<div id="carousel-225310">
+                                {php $cb = 0;}
+                                {loop $settings['home']['banner'] $item}
+                                {php $cb++;}
+								<div class="carousel-item">
+									<div class="carousel-img">
+										<a href="{$item['bannerurl']}" target="{$item['bannertitle']}">
+                                            <img src="{if $cb == 1}{M_URL}/template/mobile/default/static/img/lazy-1680x650.jpg" class="lazyload" data-src="{/if}{php echo tomedia($item['bannerimg'])}" height="650px" alt="{$item['bannertitle']}" />
+                                        </a>
+									</div>
+								</div>
+                                {/loop}
+							</div>
+							<div class="carousel-btn carousel-btn-fixed" id="carousel-page-225310">
+							</div>
+						</div>
+						<script type="text/javascript">
+						$(window).bind("load resize", function() {
+                        	$("#carousel-225310").carouFredSel({
+                        		width: '100%',
+                        		items: {
+                        			visible: 1
+                        		},
+                        		auto: {
+                        			pauseOnHover: true,
+                        			timeoutDuration: 5000
+                        		},
+                        		swipe: {
+                        			onTouch: true,
+                        			onMouse: true
+                        		},
+                        		pagination: "#carousel-page-225310"
+                        	});
+                        });
+						</script>
+						<!-- E slideshow -->
+						<!-- End_Module_225310 -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--====================E 轮播图====================-->
+        
+        <!-- 我们的优势 -->
+		<section class="main">
+			<div id="a1portalSkin_mainArea" class="full-screen">
+				<div class="module-full-screen" style="">
+					<div class="module-inner not-animated" data-animate="fadeInUp" data-delay="200">
+						<div class="page-width">
+							<div class="module-full-screen-title">
+								<h2>{$settings['home']['default']['advtitle_title']}</h2>
+								<div class="module-title-content">
+									<i class="mark-left"></i>
+									<h3>{$settings['home']['default']['advtitle_en']}</h3>
+									<i class="mark-right"></i>
+								</div>
+								<em class="module-full-screen-title-line"></em>
+							</div>
+							<div id="a1portalSkin_ctr225311225311_mainArea" class="module-full-screen-content">
+								<div class="qhd-content">
+									<div class="column">
+                                        
+                                        <?php for($i = 0; $i <= 3; $i++){ ?>
+                                        {php $a_i = $i+1;}
+										<div class="col-4-1 {if $a_i%4 == 0}last{/if}">
+											<p style="text-align: center;">
+												<img alt="" class="lazyload" src="{M_URL}/template/mobile/default/static/img/lazy.png" data-src="{php echo tomedia($settings['home']['default']['advimg'][$i])}" style="width: 84px; height: 84px;" />
+											</p>
+											<p style="text-align: center;">
+												<span style="font-size:16px;">
+													<span style="color:{if $settings['global']['color']['1']}{$settings['global']['color']['2']}{else}#21bbc7{/if};">{$settings['home']['default']['advtitle'][$i]}</span>
+												</span>
+											</p>
+											<p style="text-align: center;">
+												<span style="color: rgb(128, 128, 128); font-size: 12px; line-height: 1.8;">
+													{$settings['home']['default']['advdesc'][$i]}
+												</span>
+											</p>
+										</div>
+                                        <?php } ?>
+                                        
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- 我们的优势 -->
+        
+        <!-- 了解我们 -->
+        {php $profile_article = $this->getArticleInfo($settings['home']['default']['profile_article']);}
+        <section class="main">
+			<div class="module-full-screen module-full-screen-gray" style="">
+				<div class="module-inner not-animated" data-animate="fadeInDown" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['profile_title']}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['profile_title_en']}</h3>
+								<i class="mark-right">
+								</i>
+							</div>
+							<em class="module-full-screen-title-line">
+							</em>
+						</div>
+						<div id="a1portalSkin_ctr225312225312_mainArea" class="module-full-screen-content">
+                            
+							<div class="qhd-content">
+                                <div style="text-indent: 2rem;">
+                                    <p>
+								    {$profile_article['description']}
+                                    </p>
+                                </div>
+                                
+								<p style="text-align: center;">
+									<br />
+									<a href="{php echo foregUrl('article',array('id'=>$settings['home']['default']['profile_article']))}" target="_blank">
+                                        <img src="{M_URL}/template/mobile/default/static/img/lazy-689x131.jpg" alt="{$profile_article['title']}" class="lazyload" data-src="{php echo tomedia($settings['home']['default']['profile_thumb'])}" style="width: 689px; height: 131px;" />
+									</a>
+								</p>
+							</div>
+                            
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- 了解我们 -->
+        
+        <!-- S 产品中心 -->
+        {php $cases_articles = $this->getClasseArticles($settings['home']['default']['cases_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));}
+        <section class="main">
+			<div class="module-full-screen" style="">
+				<div class="module-inner not-animated" data-animate="fadeInUp" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['cases_title']}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['cases_title_en']}</h3>
+								<i class="mark-right"></i>
+							</div>
+							<em class="module-full-screen-title-line">
+							</em>
+						</div>
+						<div id="a1portalSkin_ctr225313225313_mainArea" class="module-full-screen-content">
+							<div class="portfolio-list product-list">
+								<ul class="column clearfix">
+                                    
+                                    {php $c_cases = 0;}
+                                    {loop $cases_articles $c_i}
+                                    {php $c_cases++}
+									<li class='col-4-1 {if $c_cases%4 == 0}last{/if} not-animated' data-animate='fadeInUp'>
+										<div class="product-item">
+											<div class="portfolio-img">
+												<a href="{php echo foregUrl('article',array('id'=>$c_i['id']))}" target="_blank">
+                                                    <img class="lazyload" src="{M_URL}/template/mobile/default/static/img/lazy.png" data-src="{php echo tomedia($c_i['thumb'])}" alt="{$c_i['title']}" width="273" />
+                                                </a>
+											</div>
+											<div class="portfolio-title">
+												<h2>
+													<a href="{php echo foregUrl('article',array('id'=>$c_i['id']))}" target="_blank">{$c_i['title']}</a>
+												</h2>
+											</div>
+										</div>
+									</li>
+                                    {/loop}
+                                    
+								</ul>
+							</div>
+						</div>
+						<div class="module-full-screen-more">
+							<a href="{php echo foregUrl('class',array('id'=>$settings['home']['default']['cases_class']))}" target="_blank">查看更多 ></a>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- E产品中心 -->
+            
+        <!-- S 新闻资讯 -->
+        {php $news_articles = $this->getClasseArticles($settings['home']['default']['news_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4));$news_article = $news_articles[0];}
+        <section class="main">
+			<div class="module-full-screen module-full-screen-gray" style="">
+				<div class="module-inner not-animated" data-animate="fadeInDown" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['news_title']}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['news_title_en']}</h3>
+								<i class="mark-right"></i>
+							</div>
+							<em class="module-full-screen-title-line"></em>
+						</div>
+						<div id="a1portalSkin_ctr225314225314_mainArea" class="module-full-screen-content">
+                            
+							<div class="headlines-list-2col clearfix">
+                            
+								<div class="headlines-content not-animated" data-animate="fadeInUp" data-delay="200">
+                                    <style>
+                                        .headlines-p{
+                                            height: 233px;
+                                            overflow:hidden;
+                                            position: relative;
+                                        }
+                                        @media screen and (min-width: 768px){
+                                            .headlines-p img{
+                                                {if $settings['home']['default']['news_margin_top']}margin-top: {$settings['home']['default']['news_margin_top']}px;{/if}
+                                            }
+                                        }
+                                    </style>
+									<p class="headlines-p">
+										<a href="{php echo foregUrl('article',array('id'=>$news_article['id']))}" target="_blank">
+                                            <img class="lazyload" src="{M_URL}/template/mobile/default/static/img/lazy.png" data-src="{php echo tomedia($news_article['thumb'])}"  alt="{$news_article['title']}" style="" />
+                                        </a>
+									</p>
+									<h2>
+										<a href="{php echo foregUrl('article',array('id'=>$news_article['id']))}" target="_blank">{$news_article['title']}</a>
+									</h2>
+									<div class="headlines-content-summary">
+										<div class="qhd-content">
+                                            <script>document.write(cutcontent("{$news_article['description']}","82"));</script>
+                                        </div>
+									</div>
+								</div>
+                                
+								<div class="headlines-others not-animated" data-animate="fadeInUp" data-delay="400">
+                                    
+									<div class="entry-list entry-list-time-hl entry-set-time-hl">
+                                        {loop $news_articles $n_i}
+                                        {if $n_i['id'] != $news_article['id']}
+                                        
+										<div class="entry-item">
+											<div class="time">
+												<p class="time-day">{php echo date('d',$n_i['createtime'])}</p>
+												<p class="time-date">{php echo date('Y-m',$n_i['createtime'])}</p>
+											</div>
+											<div class="entry-title">
+												<h2>
+													<a href="{php echo foregUrl('article',array('id'=>$n_i['id']))}" target="_blank">{$n_i['title']} </a>
+												</h2>
+											</div>
+											<div class="entry-summary">
+												<div class="qhd-content">
+													<p>
+                                                        {if $n_i['description']}
+                                                            {php $n_i['description'] = deleteRN($n_i['description'])}
+                                                        {else}
+                                                            {php $n_i['description'] = m('ui')->html_to_text($n_i['content'])}
+                                                        {/if}
+                                                        {php echo m('common')->msubstr($n_i['description'], 0, 86)}
+                                                    </p>
+												</div>
+											</div>
+										</div>
+                                        
+                                        {/if}
+										{/loop}
+									</div>
+                                    
+								</div>
+							</div>
+                            
+						</div>
+						<div class="module-full-screen-more">
+							<a href="{php echo foregUrl('class',array('id'=>$settings['home']['default']['news_class']), true)}" target="_blank">查看更多 ></a>
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- E新闻资讯 -->

@@ -1,0 +1,210 @@
+{php include $this->mytemplate('common/header-base')}
+<body id="index_box_id">
+<div class="main-top">
+	{php include $this->mytemplate('common/top-nav')}
+	<!-- 轮播图片 begin-->
+	<div class="layout" id="fh5co-hero">
+		<div class="line">
+			<div class="flexslider">
+				<ul class="slides">
+					{loop $settings['home']['banner'] $item}
+					<li style="background: transparent url({php echo tomedia($item['bannerimg'])}) no-repeat scroll center center / cover ; width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;">
+						<a href="{$item['bannerurl']}" title="{$item['bannertitle']}"></a>
+					</li>
+					{/loop}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- 轮播图片 end-->
+</div>
+<!-- 我们的服务 begin-->
+{php include $this->mytemplate('common/ourservices')}
+<!-- 我们的服务 end-->
+<!-- 关于我们 begin-->
+{php $article = $this->getArticleInfo($settings['home']['advertising_design']['about_article']);}
+{php include $this->mytemplate('common/about')}
+<!-- 关于我们 end-->
+<!-- 成功案例 begin-->
+<div id="fh5co-product-list" class="layout">
+	<div class="bg-product"></div>
+	<div class="container">
+		<div class="line show-list show-product">
+			<div class="xl12 xs7 xm7 xs5-move xm5-move">
+				<div class="line-middle  not-animated" data-animate="bounceIn" data-delay="200">
+                    <!-- S case -->
+                    {php $cases_articles = $this->getClasseArticles($settings['home']['advertising_design']['cases_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,6))}
+                    {loop $cases_articles $c_i}
+					<div class="xm6 xs6 xl6 margin-bottom text-center">
+						<a href="{php echo foregUrl('article',array('id'=>$c_i['id']))}" title="{$c_i['title']}">
+    						<div class="media-img">
+        						<div class="zoomimgs" style="background-image:url({php echo tomedia($c_i['thumb'])})"></div>
+        						<div class="overlay">
+            						<div class="vertical-middle">
+                                        <div>
+                    						<h3>{$c_i['title']}</h3>
+                    						<i class="icon-search-plus"></i>
+                                        </div>
+            						</div>
+        						</div>
+    						</div>
+						</a>
+					</div>
+                    {/loop}
+                    <!-- E case -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 成功案例 end-->
+<!-- 为什么选择我们 begin-->
+{php $wcu_article = $this->getArticleInfo($settings['home']['advertising_design']['wcu_article'])}
+{if $settings['home']['advertising_design']['wcu_background']}
+<style type="text/css">
+#fh5co-choose-us .bg-choose{ background: url({media $settings['home']['advertising_design']['wcu_background']}) no-repeat center center;background-size: cover;}
+@media screen and (max-width: 760px){ #fh5co-choose-us .bg-choose { background-image: url({media $settings['home']['advertising_design']['wcu_mbackground']}); background-position: left top; padding: 0px 0 60px;}}
+</style>
+{/if}
+<div id="fh5co-choose-us" class="layout">
+	<div class="bg-choose">
+		<div class="line content">
+			<div class="xl12 xs6 xm6 xs6-move xm6-move">
+				<div class="intro not-animated" data-animate="fadeInRight" data-delay="200">
+					<div class="inner-content">
+						<h3>{$wcu_article['title']}</h3>
+						<p>{$wcu_article['description']}</p>
+					</div>
+					<p class="more not-animated" data-animate="fadeInRight" data-delay="200">
+						<a href="{php echo foregUrl('article',array('id'=>$wcu_article['id']))}">了解详情</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 为什么选择我们 end-->
+<!-- 新闻动态 begin-->
+<div id="fh5co-news-list" class="layout">
+	<div class="bg-news">
+		<div class="container">
+			<div class="line show-list not-animated" data-animate="fadeInUp" data-delay="200">
+                <!-- 公司新闻 begin -->
+				<div class="xl6 xs4 xm4  margin-large-bottom">
+					<div class="item item1">
+						<div class="item-top">
+							<img src="{M_URL}template/mobile/t2static/images/new-t1.jpg" />
+						</div>
+						<div class="item-middle">
+							<h3>
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newsone_class']))}" targer="_blank">{$settings['home']['advertising_design']['newsone_title']}</a>
+							</h3>
+							<ul>
+                                {php $newsone_articles = $this->getClasseArticles($settings['home']['advertising_design']['newsone_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,6))}
+                                {loop $newsone_articles $noi}
+								<li>
+									<a href="{php echo foregUrl('article',array('id'=>$noi['id']))}" title="{$noi['title']}">{$noi['title']}</a>
+								</li>
+								{/loop}
+							</ul>
+							<p class="more">
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newsone_class']))}" targer="_blank">查看更多</a>
+							</p>
+						</div>
+						<div class="item-bottom">
+							<img src="{M_URL}template/mobile/t2static/images/new-b1.jpg" />
+						</div>
+					</div>
+				</div>
+                <!-- 公司新闻 end -->
+                <!-- 国内资讯 begin -->
+				<div class="xl6 xs4 xm4  margin-large-bottom">
+					<div class="item item2">
+						<div class="item-top">
+							<img src="{M_URL}template/mobile/t2static/images/new-t2.jpg" />
+						</div>
+						<div class="item-middle">
+							<h3>
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newstwo_class']))}" targer="_blank">{$settings['home']['advertising_design']['newstwo_title']}</a>
+							</h3>
+							<ul>
+                                {php $ntw_articles = $this->getClasseArticles($settings['home']['advertising_design']['newstwo_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,6))}
+								{loop $ntw_articles $ntwi}
+                                <li>
+									<a href="{php echo foregUrl('article',array('id'=>$ntwi['id']))}" title="{$ntwi['title']}">{$ntwi['title']}</a>
+								</li>
+								{/loop}
+							</ul>
+							<p class="more">
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newstwo_class']))}" targer="_blank">查看更多</a>
+							</p>
+						</div>
+						<div class="item-bottom">
+							<img src="{M_URL}template/mobile/t2static/images/new-b2.jpg" />
+						</div>
+					</div>
+				</div>
+                <!-- 国内资讯 end -->
+                <!-- 国外资讯 begin -->
+				<div class="xl6 xs4 xm4  margin-large-bottom">
+					<div class="item item3">
+						<div class="item-top">
+							<img src="{M_URL}template/mobile/t2static/images/new-t3.jpg" />
+						</div>
+						<div class="item-middle">
+							<h3>
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newsthree_class']))}" targer="_blank">{$settings['home']['advertising_design']['newsthree_title']}</a>
+							</h3>
+							<ul>
+                                {php $nth_articles = $this->getClasseArticles($settings['home']['advertising_design']['newsthree_class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,6))}
+								{loop $nth_articles $nthi}
+                                <li>
+									<a href="{php echo foregUrl('article',array('id'=>$nthi['id']))}" title="{$nthi['title']}">{$nthi['title']}</a>
+								</li>
+								{/loop}
+							</ul>
+							<p class="more">
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['advertising_design']['newsthree_class']))}" targer="_blank">查看更多</a>
+							</p>
+						</div>
+						<div class="item-bottom">
+							<img src="{M_URL}template/mobile/t2static/images/new-b3.jpg" />
+						</div>
+					</div>
+				</div>
+                <!-- 国外资讯 end -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 新闻动态 end-->
+<!-- 联系我们 begin-->
+{if $settings['home']['advertising_design']['contact_background']}
+<style type="text/css">
+#fh5co-contact-us .bg-contact { background: url({media $settings['home']['advertising_design']['contact_background']}) no-repeat center center;background-size: cover;}
+@media screen and (max-width: 760px){ #fh5co-contact-us .bg-contact { background: #b10000;}}
+{/if}
+</style>
+<div id="fh5co-contact-us" class="layout">
+	<div class="bg-contact contact-boxs">
+		<div class="container">
+			<div class="line">
+				<div class="xl12 xs6 xm6 margin-large-bottom content">
+					<div class="intro  not-animated" data-animate="fadeInLeft" data-delay="200">
+						<h3>{$settings['home']['advertising_design']['contact_title']}</h3>
+						<div class="inner-content">
+                            {php echo html_entity_decode(replaceRN($settings['home']['advertising_design']['contact_content']), ENT_QUOTES)}
+						</div>
+						<p class="more not-animated" data-animate="fadeInLeft" data-delay="200">
+							<a href="{php echo foregUrl('article',array('id'=>$settings['home']['advertising_design']['about_article']))}">联系我们</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 联系我们 end-->
+
+{php include $this->mytemplate('common/footer')}
+		

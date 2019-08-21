@@ -1,0 +1,52 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+    {php include $this->mytemplate('common/top-nav')}
+    {php include $this->mytemplate('common/banner2')}
+		<!--====================S main====================-->
+		<section class="main">
+			<!--section class="full-page-title-wrap clearfix" skinobjectzone="menu_2532">
+				<h2>{$article['title']}</h2>
+				<em class="full-page-title-line"></em>
+			</section-->
+            <!-- S page-menu -->
+			<section class="full-page-menu" skinobjectzone="menu_2617">
+				<div class="full-page-menu-content">
+					<div class="page-width">
+						<ul class="clearfix">
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+							<li class="{if $article['secondclass'] == $n['id'] || $article['thirdclass'] == $n['id']}current{/if}">
+								<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+							</li>
+                            {/if}
+                            {/loop}
+						</ul>
+						<!-- 没有子菜单时输出 -->
+					</div>
+				</div>
+			</section>
+			<!-- S page-menu -->
+			<div class="page-width clearfix">
+				<!-- S full-page-content -->
+				<div class="full-page-content">
+					<div id="a1portalSkin_mainArea" class="full-page-content-wrapper">
+						<!-- Start_Module_225321 -->
+						<a name="34185" id="34185"></a>
+						<div class="module-default">
+							<div class="module-inner">
+								<div id="a1portalSkin_ctr225321225321_mainArea" class="module-content">
+									<!-- Start_Module_225321 -->
+									<div class="qhd-content">
+										{php echo m('ui')->html_lazy($article['content'])}
+									</div>
+									<!-- End_Module_225321 -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- E full-page-content -->
+			</div>
+		</section>
+		<!--====================E main====================-->
+{php include $this->mytemplate('common/footer')}

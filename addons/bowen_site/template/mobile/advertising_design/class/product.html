@@ -1,0 +1,64 @@
+{php include $this->mytemplate('common/header-base')}
+<body class="inner-box-body">
+	<!-- 顶部导航 begin-->
+	{php include $this->mytemplate('common/top-nav')}
+	<!-- 顶部导航 end-->
+	<!-- 轮播图片 begin-->
+	{php include $this->mytemplate('common/banner2')}
+	<!-- 轮播图片 end-->
+	<!-- 内容展示 begin-->
+	<div class="layout" id="fh5co-content_show">
+		<div class="layout inner-nav margin-big-bottom">
+			<div class="container">
+				<h2 class="text-center">
+					{$lastclass['title']}
+				</h2>
+				<ul class="nav submenu" id="subnav">
+					{loop $navs $n}
+                    {if $n['status'] == '1'}
+					<li class="{if $id == $n['id']}active{/if}">
+						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}">{$n['title']}</a>
+					</li>
+					{/if}
+                    {/loop}
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<div class="show_content padding-large-bottom">
+				<div class="show_list product_list_box padding-big-top">
+					<div class="show-product">
+						<div class="line-middle">
+							<!-- S articles -->
+                            {loop $articles $ai}
+                            {if $ai['status'] == '1'}
+							<div class="xm4 xs4 xl6 margin-bottom text-center">
+								<a href="{php echo foregUrl('article',array('id'=>$ai['id']))}" title="{$ai['title']}">
+    								<div class="media-img">
+        								<div class="zoomimgs" style="background-image:url({php echo tomedia($ai['thumb'])})"></div>
+            								<div class="overlay">
+            								    <div class="vertical-middle"><div>
+            								    <h3><script>document.write(cutcontent("{$ai['title']}","18"));</script></h3>
+            								    <i class="icon-search-plus"></i></div>
+            								</div>
+        								</div>
+    								</div>
+								</a>
+							</div>
+                            {/if}
+							{/loop}
+							<!-- E articles -->
+						</div>
+					</div>
+				</div>
+                <style type="text/css">
+                    .thisclass a{ color: white;}
+                </style>
+				<div class="text-center padding-big-top padding-big-bottom">
+					{php echo pagination_foreg($count, $pindex, $psize);}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 内容展示 end-->
+	{php include $this->mytemplate('common/footer')}

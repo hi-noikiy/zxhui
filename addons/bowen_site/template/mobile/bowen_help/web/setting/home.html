@@ -1,0 +1,69 @@
+<style>
+    .dragged { position: absolute; opacity: 0.5; z-index: 2000;}
+    .input-group-addon{ cursor: move;}
+    .mmove{ cursor: move;}
+    .tm .btn { margin-bottom:5px; margin-right: 5px;}
+</style>
+
+<form action="" method="post" class="form-horizontal form">
+    
+    <div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('info');">
+				<h5 class="panel-title">
+					<div>
+						主题参数
+                        <span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="info" >
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >首页跳转链接</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('tourl', $settings['home']['bowen_help']['tourl'])}
+                        <div class="help-block">注：直接设置一个分类链接</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >社区链接</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('bbsurl', $settings['home']['bowen_help']['bbsurl'])}
+                        <div class="help-block">注：右下角第一个浮窗链接</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >code标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="code_title" class="form-control" value="{$settings['home']['bowen_help']['code_title']}" placeholder="任意字符，可留空" />
+                        <div class="help-block">注：代码上方统一标题；</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >左侧三级导航</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <label class="radio-inline"><input type="radio" name="leftNavFold" value="3" lay-ignore {if $settings['home']['bowen_help']['leftNavFold'] == '3'}checked="checked"{/if}/> 仅PC端折叠</label>
+                        <label class="radio-inline"><input type="radio" name="leftNavFold" value="2" lay-ignore {if $settings['home']['bowen_help']['leftNavFold'] == '2'}checked="checked"{/if}/> 全部默认折叠</label>
+                        <label class="radio-inline"><input type="radio" name="leftNavFold" value="0" lay-ignore {if empty($settings['home']['bowen_help']['leftNavFold'])}checked="checked"{/if}/> 关闭</label>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+				<input id="submit" type="submit" name="submit" value="提  交" class="layui-btn col-lg-2" />
+			</div>
+		</div>
+	</div>
+</form>

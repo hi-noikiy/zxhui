@@ -1,0 +1,14 @@
+{php $routes = $_W['routes_array'];}
+<ul class="we7-page-tab">
+    <li class="{if $routes['1'] == 'global'}active{/if}">
+        <a href="{php echo webUrl('setting/global')}">全局参数</a>
+	</li>
+    <li class="{if $routes['1'] == 'home'}active{/if}">
+        <a href="{php echo webUrl('setting/home')}">主题参数</a>
+	</li>
+    
+    <li class="{if $routes['1'] == 'themes'}active{/if}">
+        <a href="{php echo webUrl('setting/themes')}">主题切换</a>
+	</li>
+</ul>
+<!-- phpDesigner :: Timestamp [2018/8/18 17:42:15] -->

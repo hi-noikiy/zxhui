@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <!-- we7 Begin -->
+        <title>{if $_W['page']['copyright']['title']}{$_W['page']['copyright']['title']}{else}企业官网{/if}</title>
+    	<meta name="keywords" content="{$_W['page']['copyright']['keywords']}" />
+    	<meta name="description" content="{$_W['page']['copyright']['description']}" />
+    	<link rel="shortcut icon" href="{if !empty($_W['setting']['copyright']['icon'])}{media $_W['setting']['copyright']['icon']}{/if}" />
+        <!-- we7 End-->
+        <link rel="stylesheet" href="{M_STATIC}css/font-awesome.min.css?v=4.7.0" media="all">
+		<link rel="stylesheet" href="{M_STATIC}layui/css/layui.css?v=201807152318" media="all">
+	</head>
+	<body>
+		<div id="BOWEN_app"></div>
+		<script src="{M_STATIC}layui/layui.js?v=201807152318"></script>
+		<script>
+        window.global = {
+    		{if !empty($_W['uniacid'])}'uniacid': '{$_W['uniacid']}',{/if}
+    		{if !empty($_W['acid'])}'acid': '{$_W['acid']}',{/if}
+    		{if !empty($_W['openid'])}'openid': '{$_W['openid']}',{/if}
+    		{if !empty($_W['uid'])}'uid': '{$_W['uid']}',{/if}
+    		'isfounder': {if !empty($_W['isfounder'])}1{else}0{/if},
+            'role': "{$_W['role']}",
+    		'ims_family': '{IMS_FAMILY}',
+    		'ims_siteroot': '{$_W['siteroot']}',
+            'siteurl': '{$_W['siteurl']}',
+    		'attachurl': '{$_W['attachurl']}',
+    		'attachurl_local': '{$_W['attachurl_local']}',
+    		'attachurl_remote': '{$_W['attachurl_remote']}',
+    		'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'},
+    		'cookie' : {'pre': '{$_W['config']['cookie']['pre']}'},
+    		'account' : {php echo json_encode($_W['account'])},
+    		'server' : {'php' : '{php echo phpversion()}'}
+            
+            ,'siteroot': '{if $_B['siteroot']}{$_B['siteroot']}{else}{$_W['siteroot']}{/if}'
+            ,'foregUrl': "{php echo foregUrl('', '', true)}"
+            ,'uni_is_multi_acid': {if uni_is_multi_acid()}true{else}false{/if}
+            ,'account_type' : "{$_W['account']['type']}"
+            ,'module_title': "{$_W['current_module']['title']}"
+            ,'version': "{VERSION}"
+            ,'release': "{RELEASE}"
+            ,'family': "{FAMILY}"
+            ,'sys_isrewrite' : "{if !empty($_B['core_settings']['isrewrite'])}1{else}0{/if}"
+            ,'__ispcsite': '{$_GPC['__ispcsite']}'
+            ,'apptheme': "{$_B['setting']['global']['mobilethemes']}"
+            ,'webtheme': "{$_B['core_settings']['webtheme']}"
+            ,'m_static': "{M_STATIC}"
+    	};
+        layui.config({
+            base: 'https://res.we7pc.cn/static/{MODULE_NAME}/v2-0.0.1/'
+            //base: 'http://127.0.0.1/static/{MODULE_NAME}/v2-0.0.1/'
+            ,version: global.release
+            //,version: new Date().getTime()
+        }).use('index');
+		</script>
+	</body >
+</html>
+<!-- phpDesigner :: Timestamp [2018/9/6 14:47:49] -->

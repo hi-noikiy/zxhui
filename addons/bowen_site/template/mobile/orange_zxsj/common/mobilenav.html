@@ -1,0 +1,45 @@
+
+        <nav id="mobileNav" style="display:none;">
+        	<ul>
+                {php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+                {loop $topnavs $tn}
+                    {if $tn['status'] == '1'}
+                        <li class="{if $tn['sign'] && $tn['sign'] == $sign}active{/if}">
+                            {if count($children[$tn['id']]) <= 0}
+                                <a href="{$tn['url']}" title="{$tn['title']}">{$tn['title']}</a>
+                            {else}
+                                <span>{$tn['title']}</span>
+                                <ul>
+                                    <li class="">
+                    					<a href="{$tn['url']}" title="{$tn['title']}">{$tn['title']}</a>
+                    				</li>
+                                    {loop $children[$tn['id']] $tn_s}
+                                        {if $tn_s['status'] == '1'}
+                                        <li class="">
+                                            {if count($children[$tn_s['id']]) <= 0}
+                        					<a href="{$tn_s['url']}" title="{$tn_s['title']}">{$tn_s['title']}</a>
+                                            {else}
+                                            <span>{$tn_s['title']}</span>
+                                            <ul>
+                                                <li class="">
+                                					<a href="{$tn_s['url']}" title="{$tn_s['title']}">{$tn_s['title']}</a>
+                                				</li>
+                                                {loop $children[$tn_s['id']] $tn_t}
+                                                    {if $tn_t['status'] == '1'}
+                                                    <li class="">
+                                    					<a href="{$tn_t['url']}" title="{$tn_t['title']}">{$tn_t['title']}</a>
+                                    				</li>
+                                                    {/if}
+                                                {/loop}
+                                            </ul>
+                                            {/if}
+                        				</li>
+                                        {/if}
+                                    {/loop}
+                                </ul>
+                            {/if}
+                        </li>
+                    {/if}
+                {/loop}
+        	</ul>
+        </nav>

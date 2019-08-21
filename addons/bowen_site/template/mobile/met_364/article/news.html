@@ -1,0 +1,52 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+    <section class="met-shownews animsition">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 met-shownews-body">
+                    <div class="row">
+                        <div class="met-shownews-header">
+                            <h1>{$article['title']}</h1>
+                            <div class="info">
+                                <span>{php echo date('Y-m-d H:i:s', $article['createtime'])}</span>
+                                {if $article['author']}
+                                <span>{$article['author']}</span>
+                                {/if}
+                                <span>
+                                    <i class="icon wb-eye margin-right-5" aria-hidden="true"></i>{php echo intval($article['reading'])}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="met-editor lazyload clearfix">
+                            <div>
+                                {php echo m('ui')->html_lazy($article['content'])}
+                                <div id="metinfo_additional"></div>
+                            </div>
+                            <div class="center-block met_tools_code"></div>
+                        </div>
+                        <div class="met-shownews-footer">
+                            <ul class="pager pager-round">
+                                <li class="previous {if empty($last_article['id'])}disabled{/if}">
+                                    <a href="{if !empty($last_article['id'])}{php echo foregUrl('article',array('id'=>$last_article['id']),true)}{else}JavaScript:;{/if}"
+                                       title="{$last_article['title']}">
+                                        上一篇
+                                        <span aria-hidden="true" class="hidden-xs hidden-sm">：{if $last_article['title']}{$last_article['title']}{else}没有了{/if}</span>
+                                    </a>
+                                </li>
+                                <li class="next {if empty($next_article['id'])}disabled{/if}">
+                                    <a href="{if !empty($next_article['id'])}{php echo foregUrl('article',array('id'=>$next_article['id']),true)}{else}JavaScript:;{/if}" title="{$next_article['title']}">
+                                        下一篇
+                                        <span aria-hidden="true" class="hidden-xs hidden-sm">：{if $next_article['title']}{$next_article['title']}{else}没有了{/if}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {mytemplate 'common/rightpull'}
+
+            </div>
+        </div>
+    </section>
+{mytemplate 'common/footer'}

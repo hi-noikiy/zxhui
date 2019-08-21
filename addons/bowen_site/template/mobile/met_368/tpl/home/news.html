@@ -1,0 +1,39 @@
+        <section class="news_list_met_11_4 text-xs-center" m-id="6">
+			<div class="container">
+				<div class="head">
+					<h2 class="m-t-0 title">
+						{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}教育前沿资讯{/if}
+					</h2>
+					<p class="desc">
+						{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}关注教育新闻，助力学生成长{/if}
+					</p>
+				</div>
+				<ul class="list m-0 clearfix  ulstyle">
+                    {php $new_a[$mid] = $this->getClasseArticles($settings['home']['met_368'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,18));}
+					{loop $new_a[$mid] $item}
+					<li class="item">
+						<div class="card clearfix m-b-0">
+							<div class="pull-xs-left left">
+								<a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" title="{$item['title']}">
+                                    <strong>{php echo date('d', $item['createtime'])}</strong>
+    								<em>{php echo date('Y-m', $item['createtime'])}</em>
+								</a>
+							</div>
+							<div class="pull-xs-left right">
+								<h4>
+									<a href="{if !empty($item['tourl'])}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']), true)}{/if}" title="{$item['title']}">{$item['title']}</a>
+								</h4>
+								<p class="desc">
+									{if $item['description']}
+                                        {php $item['description'] = deleteRN($item['description'])}
+                                    {else}
+                                        {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                    {/if}
+                                    {php echo m('common')->msubstr($item['description'], 0, 183)}
+								</p>
+							</div>
+                        </div>
+					</li>
+					{/loop}
+				</ul>
+		  </section>

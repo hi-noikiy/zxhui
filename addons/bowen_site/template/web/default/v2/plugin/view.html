@@ -1,0 +1,21 @@
+<title>应用</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+		<a><cite>应用</cite></a>
+	</div>
+</div>
+<div id="BOWEN_app-plugin-view"></div>
+<script type="text/javascript">
+layui.use(['jquery', 'myutil', 'global'], function(){
+    var $ = layui.jquery
+    	,myutil = layui.myutil
+    	,router = layui.router()
+		,common = layui.global;
+
+    var iframe = '<iframe src="'+myutil.webUrl(router.search.r, {'s':'iframe', 'op':router.search.op, 'id':router.search.id})+'" frameborder="0" class="layadmin-iframe"></iframe>';
+    $('#BOWEN_app-plugin-view').html(iframe);
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/08 23:48:29] -->

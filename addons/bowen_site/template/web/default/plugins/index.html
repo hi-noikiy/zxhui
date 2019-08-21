@@ -1,0 +1,47 @@
+{php include $this->mytemplate('common/header')}
+<style type='text/css'>
+.feed-activity-list{width:100%;overflow:hidden}
+.feed-element{float:left;width:320px;height:100px;margin-left:15px;margin-bottom:20px;border:1px solid #efefef;padding:20px}
+.feed-element::after{display:none}
+.feed-element .title{font-size:14px;height:24px;line-height:24px;vertical-align:bottom;color:#333;font-weight:700;margin-left:10px}
+.dropdown-messages-box img.img-circle,.feed-element img.img-circle{float:left;width:60px;height:60px;border-radius:4px}
+.media-body{margin-top:3px}
+.text-muted{margin-left:10px;width:200px;display:block;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.noinstall{ filter: grayscale(100%); -webkit-filter: grayscale(100%); -moz-filter: grayscale(100%); -ms-filter: grayscale(100%); -o-filter: grayscale(100%); filter: url("data:image/svg+xml;utf8,#grayscale"); filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1); -webkit-filter: grayscale(1);}
+</style>
+<div class="page-content">
+	<div class='panel panel-default' style='border:none;'>
+        
+        {php $list = m('plugin')->getList();}
+        <div class="hidden">{php print_r($list)}</div>
+        {loop $list $li}
+        {if empty($li['plugins'])}{php continue;}{/if}
+        <div class="panel-heading" style='background:none;border:none;'>
+			{$li['title']}
+		</div>
+		<div class="feed-activity-list">
+            {loop $li['plugins'] $item}
+            {if $item['rolelevel'] == 1 && $_W['role'] != ACCOUNT_MANAGE_NAME_FOUNDER}{php continue;}{/if}
+            {if $item['rolelevel'] == 2 && !$_W['isfounder']}{php continue;}{/if}
+            <a class="feed-element {if empty($item['status'])}noinstall" onclick="layer.msg('当前应用正在维护，请稍后再试...', {icon:7});"{else}" href="{php echo webUrl($item['name'])}"{/if} >
+                <span class="pull-left">
+                    <img lay-src="{$item['thumb']}" class="img-circle" alt="{$item['name']}" onerror="this.src='../addons/bowen_site/static/images/plugins.png'" />
+    			</span>
+    			<div class="media-body ">
+        			<span class="title">
+                        {$item['title']}
+                    </span>
+        			<br />
+        			<small class="text-muted">
+                        {$item['desc']}
+                    </small>
+    			</div>
+			</a>
+            {/loop}
+		</div>
+        {/loop}
+        
+	</div>
+</div>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/19 10:32:02] -->

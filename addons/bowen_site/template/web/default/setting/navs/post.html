@@ -1,0 +1,117 @@
+{php include $this->mytemplate('common/header')}
+<ol class="breadcrumb we7-breadcrumb">
+	<a href="{php echo webUrl('setting/navs')}"><i class="wi wi-back-circle"></i> </a>
+	<li><a href="{php echo webUrl('setting/navs')}">导航管理</a></li>
+	<li><a href="#">导航编辑</a></li>
+</ol>
+<!--<div class="alert we7-page-alert">
+    <p><i class="wi wi-info-sign"></i> 专题页面：指的是不需要导航可单独作为一个页面文章页。如：联系我们</p>
+    <p><i class="wi wi-info-sign"></i> 封面图：主要用作导航页面下，文章列表中的文章封面。专题页面及不展示在导航列表中的文章可以不设置。</p> 
+</div>-->
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data" id="form">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			编辑导航
+		</div>
+		<div class="panel-body">
+			<input type="hidden" name="id" value="{$id}" />
+            {if $lastnav}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+                    上级导航
+                </label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" readonly="" value="{if $topnav}{$topnav['title']} - {/if}{$lastnav['title']}"/>
+				</div>
+			</div>
+            {/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					导航排序
+				</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="number" name="displayorder" class="form-control" value="{if $nav['displayorder']}{$nav['displayorder']}{else}0{/if}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					导航名称
+				</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" name="title" class="form-control" value="{$nav['title']}" />
+				</div>
+			</div>
+			<div class="form-group" id="sign_group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					导航标识
+				</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" name="sign" class="form-control" value="{$nav['sign']}" id="sign" />
+					<span class="help-block">
+						注：用于导航的选中状态；当分类标识与导航标识一致时，则为选中状态；<br />
+                        <code>一般情况下，只需设置一级分类的标识</code><br />
+                        首页请写 <code onclick="$('#sign').val('home');">home</code>
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					导航链接
+				</label>
+				<div class="col-sm-8 col-xs-12">
+                    {php echo mytpl_form_field_link('url', $nav['url'])}
+					<span class="help-block">
+						注：支持相对链接。非相对链接请填写以http或https开头的完整链接
+						<br />
+						<code>不需要跳转请留空</code> 填写后，访问导航链接将会跳转到该自定义链接
+					</span>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					打开方式
+				</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="form-control" style="border: 0px; box-shadow: 0px 0px 0px #fff;">
+						<label class="radio-inline">
+							<input type="radio" name="target" value="" {if empty($nav['target'])}checked="checked"{/if} /> 默认打开方式
+						</label>
+                        <label class="radio-inline">
+							<input type="radio" name="target" value="_self" {if $nav['target'] == '_self'}checked="checked"{/if} /> 当前窗口打开
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="target" value="_blank" {if $nav['target'] == '_blank'}checked="checked"{/if} /> 新窗口打开
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">
+					是否隐藏
+				</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="form-control" style="border: 0px; box-shadow: 0px 0px 0px #fff;">
+						<label class="radio-inline">
+							<input type="radio" name="status" value="1" {if $nav['status'] == '1'}checked="checked"{/if} /> 显示
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="0" {if empty($nav['status'])}checked="checked"{/if} /> 隐藏
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}"/>
+				<input type="submit" name="submit" value="提  交" class="layui-btn col-lg-2" />
+                <a class="layui-btn layui-btn-primary" style="margin-left: 10px;" href="{php echo webUrl('setting/navs')}">返回列表</a>
+			</div>
+		</div>
+	</div>
+</form>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/26 10:27:40] -->

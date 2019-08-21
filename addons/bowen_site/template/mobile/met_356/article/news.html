@@ -1,0 +1,176 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+<div class="subcolumn_nav_met_11_4" m-id='10' m-type='nocontent'>
+    <div class="container">
+        <div class="row">
+            <div class="clearfix">
+                <div class="subcolumn-nav">
+                    <ul class="subcolumn_nav_met_11_4-ul m-b-0 ulstyle">
+
+                        <li>
+                            <a href="{php echo foregUrl('class',array('id'=>$all['id']), true)}"  title="全部" class="link">
+                                全部
+                            </a>
+                        </li>
+
+                        {loop $navs $n}
+                        {if $n['status'] == '1'}
+                            <li {if $n['t']}class="dropdown"{/if}>
+                                <a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}"
+                                   class="link{if $article['secondclass'] == $n['id'] || $article['thirdclass'] == $n['id']} active{/if}">
+                                    {$n['title']}
+                                </a>
+                            </li>
+                        {/if}
+                        {/loop}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<main class="news_list_detail_met_16_1 met-shownews animsition">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 met-shownews-body" m-id='19'>
+                <div class="row">
+                    <section class="details-title border-bottom1">
+                        <h1 class='m-t-10 m-b-5'>{$article['title']}</h1>
+                        <div class="info font-weight-300">
+                            <span>{php echo date('Y-m-d H:i:s', $article['createtime'])}</span>
+                            <span>{if $article['author']}{$article['author']}{/if}</span>
+                            <span>
+								<i class="icon wb-eye m-r-5" aria-hidden="true"></i>{php echo intval($article['reading'])}
+                            </span>
+                        </div>
+                    </section>
+                    <section class="met-editor clearfix">{php echo m('ui')->html_lazy($article['content'])}</section>
+                    <div class="tag">
+                        <span></span>
+                        <a href="" title=""></a>
+                    </div>
+                    <div class='met-page p-y-30 border-top1'>
+                        <div class="container p-t-30 ">
+                            <ul class="pagination block blocks-2"'>
+                            <li class="page-item m-b-0 {if empty($last_article['id'])}disable{/if}">
+                                <a href="{if !empty($last_article['id'])}{php echo foregUrl('article',array('id'=>$last_article['id']),true)}{else}JavaScript:;{/if}"
+                                   title="{$last_article['title']}"
+                                   class='page-link text-truncate'>
+                                    上一篇
+                                    <span aria-hidden="true" class='hidden-xs-down'>: {if $last_article['title']}{$last_article['title']}{else}没有了{/if}</span>
+                                </a>
+                            </li>
+                            <li class="page-item m-b-0 {if empty($next_article['id'])}disable{/if}">
+                                <a href="{if !empty($next_article['id'])}{php echo foregUrl('article',array('id'=>$next_article['id']),true)}{else}JavaScript:;{/if}"
+                                   title="{$next_article['title']}"
+                                   class='page-link pull-xs-right text-truncate'>
+                                    下一篇<span aria-hidden="true" class='hidden-xs-down'>: {if $next_article['title']}{$next_article['title']}{else}没有了{/if}</span>
+                                </a>
+                            </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="row">
+                    <aside class="sidebar_met_16_1 met-sidebar panel panel-body m-b-0" boxmh-h m-id='20' m-type='nocontent'>
+                        <form class='sidebar-search' method='get' action="{$_W['siteroot']}app/index.php">
+                            <input type="hidden" name="i" value="{$_W['uniacid']}" />
+                            <input type="hidden" name="c" value="entry" />
+                            <input type="hidden" name="m" value="bowen_site" />
+                            <input type="hidden" name="do" value="foreg" />
+                            <input type="hidden" name="r" value="search" />
+                            <div class="form-group">
+                                <div class="input-search">
+                                    <button type="submit" class="input-search-btn">
+                                        <i class="icon wb-search" aria-hidden="true"></i>
+                                    </button>
+                                    <input type="text" class="form-control" name="kw" placeholder="search">
+                                </div>
+                            </div>
+                        </form>
+                        <ul class="sidebar-column list-icons">
+
+                            {if $class_info['level'] == '3'}
+                            <li>
+                                <a href="{php echo foregUrl('class', array('id' => $topclass['id']), true)}" title="{$topclass['title']}">
+                                    {$topclass['title']}
+                                </a>
+                            </li>
+                            {/if}
+                            {if $class_info['level'] == '2'}
+                            <li>
+                                <a href="{php echo foregUrl('class', array('id' => $lastclass['id']), true)}" title="{$lastclass['title']}">
+                                    {$lastclass['title']}
+                                </a>
+                            </li>
+                            {/if}
+
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+                                <li>
+                                    <a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" class="{if $class_info['id'] == $n['id'] || $lastclass['id'] == $n['id']}active{/if}" title="{$n['title']}" target='_self'><i class="fa fa-angle-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;{$n['title']}</a>
+                                </li>
+                                {if !empty($n['t'])}
+                                    {loop $n['t'] $n_t}
+                                    {if $n_t['status'] == '1'}
+                                        <li style="margin-left: 10px;">
+                                            <a href="{php echo foregUrl('class',array('id'=>$n_t['id']), true)}" title="{$n_t['title']}" class="{if $class_info['id'] == $n_t['id']}active{/if}" target='_self'>-&nbsp;&nbsp;&nbsp;&nbsp;{$n_t['title']}</a>
+                                        </li>
+                                    {/if}
+                                    {/loop}
+                                {/if}
+                            {/if}
+                            {/loop}
+
+                        </ul>
+                        <div class="sidebar-news-list recommend">
+                            <h3 class='font-size-16 m-0'>为你推荐</h3>
+                            <ul class="list-group list-group-bordered m-t-10 m-b-0">
+
+                                {if isset($article)}
+                                    {php $where = array('istranslate' => 1, 'status' => 1, 'firstclass' => $article['firstclass'], 'secondclass' => $article['secondclass'])}
+                                {else}
+                                    {if $class_info['level'] == '3'}
+                                        {php $class_level = 'thirdclass'}
+                                    {elseif $class['level'] == '2'}
+                                        {php $class_level = 'secondclass'}
+                                    {else}
+                                        {php $class_level = 'firstclass'}
+                                    {/if}
+                                    {php $where = ' AND istranslate = 1 AND status = 1 AND ' . $class_level . ' = ' . $class_info['id']}
+                                {/if}
+                                {php $str_articles = $this->getArticles($where, array('displayorder DESC', 'createtime DESC'), array(0,6));}
+                                {php unset($where, $class_level)}
+                                {if !empty($str_articles)}
+                                    {loop $str_articles $item}
+                                    <li class="list-group-item">
+                                        <a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target="_self">
+                                            {$item['title']}
+                                        </a>
+                                    </li>
+                                    {/loop}
+                                {else}
+                                    <div class="list-group-item">
+                                        -- 暂无推荐 --
+                                    </div>
+                                {/if}
+
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{mytemplate 'common/footer'}
+<!-- phpDesigner :: Timestamp [2018/9/22 10:08:15] -->

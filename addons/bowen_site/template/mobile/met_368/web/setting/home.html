@@ -1,0 +1,126 @@
+<form action="" method="post" class="form-horizontal form">
+    
+    <div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('info');">
+				<h5 class="panel-title">
+					<div>
+						主题参数
+                        <span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="info" style="display: none;">
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >导航栏产品</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('the_product_class_ngi', $settings['home']['met_368']['the_product_class'])}
+                        <div class="help-block">
+                            注：导航栏产品分类的数据来源。此处填写一级分类ID，或者该分类的链接。
+                        </div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <ol class="contents">
+        <?php
+        unset($_B['setting']['home']['met_368']['the_product_class']);
+        $mid = 0;
+        $_B['setting']['home']['met_368'] = !empty($_B['setting']['home']['met_368'])?$_B['setting']['home']['met_368']:array(
+            array('mtype' => 'banner'),array('mtype' => 'product'),array('mtype' => 'team'),array('mtype' => 'service'),array('mtype' => 'news'),array('mtype' => 'show')
+        );
+        foreach($_B['setting']['home']['met_368'] as $k1 => $v1){
+            $mtype = $v1['mtype'];
+            include $this->mytemplate("web/tpl/".$mtype, 'mobile');
+            $mid++;
+        }
+        ?>
+    </ol>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+				<input id="submit" type="submit" name="submit" value="提  交" class="layui-btn col-lg-2" />
+                <a class="layui-btn layui-btn-primary" onclick="module_selector();">唤出板块选择器</a>
+			</div>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+function addBanner() {
+	$(".btn-add-banner").button("loading");
+	$.ajax({
+		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+		,cache: false
+        ,type :'post'
+        ,data :{fname:'banner-s'}
+	}).done(function(html) {
+		$(".btn-add-banner").button("reset");
+		$(".banner").append(html);
+	});
+}
+
+function delete_item(obj) {
+	$(obj).closest('.item').remove();
+}
+
+function delete_module(obj) {
+	$(obj).closest('.panel-group').remove();
+}
+
+function module_selector(){
+    layui.use('layer', function(){
+      var layer = layui.layer;
+      
+      layer.open({
+          title: '板块选择器'
+          ,offset: 'r'
+          ,area: '300px'
+          ,shade: 0
+          ,content: '<div class="panel-body tm">'+
+                        '<a href="JavaScript:;" data="banner" class="btn btn-default btn-sm">轮播图</a>'+
+                        '<a href="JavaScript:;" data="product" class="btn btn-default btn-sm">产品</a>'+
+                        '<a href="JavaScript:;" data="team" class="btn btn-default btn-sm">团队</a>'+
+                        '<a href="JavaScript:;" data="service" class="btn btn-default btn-sm">服务</a>'+
+                        '<a href="JavaScript:;" data="news" class="btn btn-default btn-sm">资讯</a>'+
+                        '<a href="JavaScript:;" data="show" class="btn btn-default btn-sm">用户展示</a>'+
+                    '</div>'+
+                    '<!--div class="panel-body">'+
+                        ''+
+                        '<div class="text text-danger"></div>'+
+                    '</div-->'
+          ,btn: '关闭'
+        });
+    });
+    
+    $(function () {
+        require(['jquery.caret'],function(){
+            $("a[href='JavaScript:;']").click(function () {
+                var fthemes = this.getAttribute("data"); 
+                addModules(fthemes);
+            })
+        })
+    })
+    var mid = "{$mid}";
+    function addModules(fname){
+        $(".tm .btn").button("loading");
+    	$.ajax({
+    		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+    		,cache: false
+            ,type :'post'
+            ,data :{fname:fname, mid:mid}
+    	}).done(function(html) {
+    		$(".tm .btn").button("reset");
+    		$(".contents").append(html);
+    	});
+        mid++;
+    }
+}
+
+</script>

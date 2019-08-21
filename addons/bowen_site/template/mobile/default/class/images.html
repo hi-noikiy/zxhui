@@ -1,0 +1,100 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+	{php include $this->mytemplate('common/top-nav')}
+	{php include $this->mytemplate('common/banner2')}
+	<!--====================S main====================-->
+	<section class="main">
+		<section class="full-page-title-wrap clearfix" skinobjectzone="menu_2532">
+			<h2>{$lastclass['title']}</h2>
+			<em class="full-page-title-line"></em>
+		</section>
+        
+        <!-- S page-menu -->
+		<section class="full-page-menu" skinobjectzone="menu_2617">
+            <div class="full-page-menu-content">
+                <div class="page-width">
+                    <ul class="clearfix">
+                        {loop $navs $n}
+                        {if $n['status'] == '1'}
+                        <li class="{if $id == $n['id']}current{/if}">
+                            <a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+                        </li>
+                        {/if}
+                        {/loop}
+                    </ul>
+                    <!-- 没有子菜单时输出 -->
+                </div>
+            </div>
+		</section>
+        <!-- S page-menu -->
+        
+		<div class="page-width clearfix">
+			<!-- S full-page-content -->
+			<div class="full-page-content">
+				<div id="a1portalSkin_mainArea" class="full-page-content-wrapper">
+					<!-- Start_Module_225325 -->
+					<a name="34188" id="34188"></a>
+					<div class="module-default">
+						<div class="module-inner">
+							<div id="a1portalSkin_ctr225325225325_mainArea" class="module-content">
+								<!-- Start_Module_225325 -->
+								<!-- S portfolio-list -->
+								<div class="portfolio-list">
+									<ul class="column marg-per2 clearfix">
+                                        {php $ca = 0;}
+                                        {loop $articles $ai}
+                                        {php $ca++;}
+                                        {if $ai['status'] == '1'}
+										<li class='col-4-1 {if $ca%4 == 0}last{/if} not-animated' data-animate='fadeInUp' >
+											<div class="portfolio-img">
+												<a href="{php echo tomedia($ai['thumb'])}" rel="imgZoom-group-225325" title="{$ai['title']}">
+                                                    {if $ai['thumb']}
+                                                        {php $ai['thumb'] = tomedia($ai['thumb'])}
+                                                    {else}
+                                                        {php $ai['images'] = iunserializer($ai['images']);}
+                                                        {php $ai['thumb'] = tomedia($ai['images'][0])}
+                                                    {/if}
+                                                    <img lay-src="{php echo m('image')->image_crop($ai['thumb'], 750, 500)}" alt="{$ai['title']}" />
+                                                    <span class="opacity-overlay"><i class="icon-zoom"></i></span>
+                                                </a>
+											</div>
+											<div class="portfolio-title">
+												<h2>
+													<a href="{php echo tomedia($ai['thumb'])}" rel="imgZoom-group-title-225325" title="{$ai['title']}">{$ai['title']}</a>
+												</h2>
+											</div>
+										</li>
+                                        {/if}
+                                        {/loop}
+									</ul>
+									<script type="text/javascript">
+                                    $(document).ready(function() {
+                                        //弹窗
+                                        $('a[rel=imgZoom-group-225325],a[rel=imgZoom-group-title-225325]').fancybox({
+                                            'transitionIn': 'elastic',
+                                      		'transitionOut': 'elastic',
+                                      		'hideOnOverlayClick': false,
+                                      		'centerOnScroll': true,
+                                      		'overlayColor': '#000',
+                                      		'padding': '0'
+                                      	});
+                                    });
+									</script>
+								</div>
+								<!-- E portfolio-list -->
+								<!-- S pagination -->
+                                {php echo pagination_foreg($count, $pindex, $psize);}
+                    
+								<!-- E pagination -->
+								<!-- End_Module_225325 -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- E full-page-content -->
+		</div>
+	</section>
+	<!--====================E main====================-->
+
+{php include $this->mytemplate('common/footer')}

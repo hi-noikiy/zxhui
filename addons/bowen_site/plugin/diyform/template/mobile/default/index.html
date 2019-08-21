@@ -1,0 +1,177 @@
+{mytemplate 'common/header'}
+<style>body{background-color: #F2F2F2;}</style>
+
+<div style="padding: 5px;max-width: 850px; margin:0 auto;">
+	<div class="layui-row layui-col-space15">
+    
+		<div class="layui-col-md12">
+			<div class="layui-card">
+            
+				<div class="layui-card-header" style="margin-bottom: 10px; height: 50px; line-height: 50px; font-size: 16px;">
+                    {$item['title']}
+				</div>
+				<div class="layui-card-body">
+                    {php echo m('ui')->html_lazy($item['description'])}
+                    <form class="layui-form" action="">
+    					{php $kw=0;}
+                        {if !empty($dfields)}
+                        {loop $dfields $k1 $v1}
+                        {php $data_type = $v1['data_type'];}
+            
+                        {mytemplate 'tpl/'.$data_type}
+            
+                        {php $kw++;}
+                        {/loop}
+                        {/if}
+                        <div class="layui-form-item">
+                        	<div class="layui-input-block">
+                                <button class="layui-btn form-submit" lay-submit lay-filter="form-submit">
+                        			立即提交
+                        		</button>
+                        		<button class="layui-btn real-submit hidden" lay-submit lay-filter="real-submit">
+                        			提交
+                        		</button>
+                        		<button type="reset" class="layui-btn layui-btn-primary">
+                        			重置
+                        		</button>
+                        	</div>
+                        </div>
+                        <div style="display: none;">
+                            <div id="num_checkbox">0</div>
+                            <div id="num_checkbox_checked">0</div>
+                            <div id="num_radio">0</div>
+                            <div id="num_radio_checked">0</div>
+                            <div id="num_img">0</div>
+                        </div>
+                    </form><br />    
+				</div>
+                
+			</div>
+		</div>
+        
+	</div>
+</div>
+
+{mytemplate 'common/footer'}
+
+<script type="text/javascript">
+layui.use(['flow', 'laydate', 'form', 'jquery'], function(){
+    var $ = layui.jquery
+    ,laydate = layui.laydate
+    ,form = layui.form
+    ,flow = layui.flow;
+    
+    flow.lazyimg();
+    
+    var num_checkbox = 0, num_radio = 0;
+    
+    $(function(){
+        $(".datepicker").each(function(){
+            laydate.render({elem: this});
+        });
+        $(".daterangepicker").each(function(){
+            laydate.render({elem: this, range: true});
+        });
+        $(".timepicker").each(function(){
+            laydate.render({elem: this, type: 'time'});
+        });
+        $(".timerangepicker").each(function(){
+            laydate.render({elem: this, type: 'time', range: true});
+        });
+        
+        //初始化CheckBox选中数据
+        num_checkbox = $(".checkbox").length;
+        $("#num_checkbox").html(num_checkbox);
+        console.log("num_checkbox:"+num_checkbox)
+        
+        //初始化checkbox选中数据
+        num_radio = $(".radio").length;
+        $("#num_radio").html(num_radio);
+        console.log("num_radio:"+num_radio);
+    });
+    
+    form.verify({
+        reconfirm: function(value, item){
+            if($(item).prev('input').val() != value){
+                var placeholder = $(item).attr('placeholder')
+                return "内容不符! " + placeholder;
+            }
+        }
+        ,myidentity: function(value, item){
+            if(value != '' && false == /(^\d{15}$)|(^\d{17}(x|X|\d)$)/.test(value)){
+                return '请输入正确的身份证号';
+            }
+        }
+    });
+
+    //监控回车
+    /**
+    $(document).keypress(function(e){ 
+        if(e.which == 13) {
+            $(".form-submit").click();  
+        }
+    });*/
+
+    //处理图片的上传
+    form.on('submit(form-submit)', function(data){
+        //如果有待上传的图片，就先上传图片
+        if($('.layui-upload-img').length>0 && $('#num_img').html()>0){
+            $(".go_upload_image").each(function(){
+                $(this).click();
+            });
+        }else{
+            $(".real-submit").click();
+        }
+        
+        return false;
+    });
+
+    form.on('submit(real-submit)', function(data){
+        //监听CheckBox的必选
+        var num_checkbox_checked = $("#num_checkbox_checked").html()
+        ,num_checkbox = $("#num_checkbox").html();
+        
+        if(num_checkbox_checked != num_checkbox){
+            layer.msg('请完善表单中必选的多选项！', {icon:2});
+            return false;
+        }
+        
+        //监听radio的必选
+        var num_radio_checked = $("#num_radio_checked").html()
+        ,num_radio = $("#num_radio").html();
+        
+        if(num_radio_checked != num_radio){
+            layer.msg('请完善表单中必选的单选项！', {icon:2});
+            return false;
+        }
+        
+        layer.load(1);
+        $.post("{php echo foregUrl('diyform/post', array('dfid' => $id), true)}"
+            ,data.field
+            ,function(d){
+                layer.closeAll('loading');
+                if(d.errno == '0'){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1500
+                    }, function(){
+                        if(d.data.re_url){
+                            //window.location.href=d.data.re_url;
+                            window.parent.location.href = d.data.re_url;
+                        }else{
+                            //window.location.reload();
+                            parent.location.reload();
+                        }
+                    });
+                }else{
+                    layer.msg(d.message, {icon: 2});
+                    return false;
+                }
+            }
+            ,'json'
+        );
+        
+        return false;
+    });
+});
+</script>

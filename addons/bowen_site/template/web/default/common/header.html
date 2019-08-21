@@ -1,0 +1,22 @@
+{php include $this->mytemplate('common/header-base')}
+
+    </head>
+    <body class="layui-layout-body">
+        <div class="loader" style="display:none">
+    		<div class="la-ball-clip-rotate">
+    			<div></div>
+    		</div>
+    	</div>
+        <div class="layui-layout layui-layout-admin">
+            {if $_GET['s'] != 'iframe'}
+            {php $menus = m('system')->getMenu()}
+        	{php include $this->mytemplate('common/nav-top')}
+        	{php include $this->mytemplate('common/nav-left')}
+            {else}
+            <style>
+            .layui-layout-admin .layui-body { top: 0 !important;}
+            .layui-body { left: 0;}
+            </style>
+            {/if}
+        	<div class="layui-body right-content">
+<!-- phpDesigner :: Timestamp [2018/8/18 17:39:56] -->

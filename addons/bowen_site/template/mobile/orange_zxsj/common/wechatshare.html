@@ -1,0 +1,23 @@
+    {if $_W['type_is_'] != 'webapp'}
+    {php echo(register_jssdk())}
+    <script type="text/javascript">
+    sharedata = {
+        'title' : "{$_W['page']['title']}",
+        'desc' : "{$settings['global']['description']}",
+        'link' : '',
+        'imgUrl' : "{if $article['thumb']}{php echo tomedia($article['thumb'])}{else}{if $settings['global']['ico']}{php echo tomedia($settings['global']['ico'])}{/if}{/if}"
+    }
+    sharedata.success = function(){
+        
+    }
+	$(function(){
+		wx.config(jssdkconfig);		
+		wx.ready(function () {
+			wx.onMenuShareAppMessage(sharedata);
+			wx.onMenuShareTimeline(sharedata);
+			wx.onMenuShareQQ(sharedata);
+			wx.onMenuShareWeibo(sharedata);
+		});
+	});
+	</script>
+    {/if}

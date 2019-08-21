@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Bowen" />
+        <meta name="release" content="{RELEASE}" />
+    	<title>{$_W['page']['title']}</title>
+        <meta name="keywords" content="{$settings['global']['keyword']}" />
+    	<meta name="description" content="{$settings['global']['description']}" />
+    	<link rel="shortcut icon" href="{if $settings['global']['ico']}{php echo tomedia($settings['global']['ico'])}{/if}" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="format-detection" content="telephone=no" />
+        <link rel="stylesheet" href="{M_URL}static/layui/css/layui.css?v=20180525" />
+		<link rel="stylesheet" href="{M_URL}template/mobile/bowen_help/static/css/global.css?v={RELEASE}" media="all"/>
+		<!--[if lt IE 9]>
+			<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+			<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+        <style>.layui-fixbar { z-index: 999;}</style>
+    </head>
+	<body>

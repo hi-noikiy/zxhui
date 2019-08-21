@@ -1,0 +1,11 @@
+{php $r = str_replace('//', '/', trim($_GPC['r'], '/')); $routes = explode('.', $r);}
+
+<ul class="we7-page-tab">
+    <li class="{if $routes['1'] == 'articles'}active{/if}">
+        <a href="{php echo webUrl('content/articles')}">文章管理</a>
+	</li>
+    <li class="{if $routes['1'] == 'classes'}active{/if}">
+        <a href="{php echo webUrl('content/classes')}">分类管理</a>
+	</li>
+</ul>
+<!-- phpDesigner :: Timestamp [2018/8/18 17:41:00] -->

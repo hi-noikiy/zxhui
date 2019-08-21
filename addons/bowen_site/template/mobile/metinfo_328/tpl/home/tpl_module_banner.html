@@ -1,0 +1,53 @@
+
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module001 S -->
+						<div class="window-bin swiper-slide-active" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back banner" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}">
+								<div class="banner-box banner-box_{$mid}">
+									<div class="banner-cut banner-cut_{$mid}">
+                                        {loop $settings['home']['banner'] $item}
+                                        {php include $this->mytemplate('tpl/home/tpl_banner_'.$item['bannerstyle'])}
+                                        {/loop}
+									</div>
+                                    
+									<div class="banner-ctrl banner-ctrl_{$mid}">
+										<div class="ctrl-box ctrl-left">
+											<i class="fa fa-angle-left"></i>
+										</div>
+										<div class="ctrl-box ctrl-right">
+											<i class="fa fa-angle-right"></i>
+										</div>
+									</div>
+                                    
+                                    <!-- 滚动新闻 S -->
+                                    {php $news_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,8));}
+									<div class="banner-news {if empty($news_articles[$mid])}hidden{/if}">
+										<b>NEWS：</b>
+										<span class="banner-span banner-span_{$mid}">
+											<ol class="banner-ol banner-ol_{$mid}">
+                                                <?php
+                                                for($i=0; $i<count($news_articles[$mid]); $i++){
+                                                ?>
+												<li class="banner-li banner-li_{$mid}">
+													<a href="{php echo foregUrl('article',array('id'=>$news_articles[$mid][$i]['id']), true)}" title="{$news_articles[$mid][$i]['title']}">{$news_articles[$mid][$i]['title']}</a>
+												</li>
+                                                <?php
+                                                }
+                                                ?>
+											</ol>
+										</span>
+										<p>
+											<a href="{php echo foregUrl('class',array('id'=>$settings['home']['metinfo_328']['class'][$mid]), true)}" title="">more</a>
+										</p>
+									</div>
+                                    
+                                    <!-- 滚动新闻 E -->
+									<div class="banner-pager"></div>
+									<div class="banner-down">
+										<i class="fa fa-angle-down"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module001 E -->
+                        {/if}

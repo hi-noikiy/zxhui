@@ -1,0 +1,149 @@
+
+            {if stripos($settings['global']['login']['link'], './') !== false}
+            {php $settings['global']['login']['link'] = $_W['siteroot'] . 'web/' . $settings['global']['login']['link']}
+            {/if}
+            {if stripos($settings['global']['register']['link'], './') !== false}
+            {php $settings['global']['register']['link'] = $_W['siteroot'] . 'web/' . $settings['global']['register']['link']}
+            {/if}
+            <!--====================S top====================-->
+            <header class="top header-v1 desktops-section default-top">
+            	<!-- S top-main -->
+            	<div class="top-main">
+            		<div class="page-width clearfix">
+            			<div class="logo float-left" skinobjectzone="HtmlLogo_395">
+            				<a href="{php echo foregUrl()}" style="{if $settings['global']['style']['logo']['margin_top']}margin-top: {$settings['global']['style']['logo']['margin_top']}px;{/if}{if $settings['global']['style']['logo']['margin_left']} margin-left: {$settings['global']['style']['logo']['margin_left']}px;{/if}"><img src="{if $settings['global']['tn_logo']}{media $settings['global']['tn_logo']}{/if}" width="300px" height="60px" alt="{$_W['page']['title']}" /></a>
+            			</div>
+            			<!-- end of logo -->
+            			<div class="top-main-content">
+            				<!-- S nav -->
+            				<nav class="nav" style="{if !empty($settings['home']['default']['info']['nav_left'])}margin-left: {$settings['home']['default']['info']['nav_left']}px;{/if}">
+            					<div class="main-nav clearfix" skinobjectzone="menu_464">
+            						<ul class="sf-menu">
+                                        {php $topnavs = $this->getForegTopNav();}
+                                        {loop $topnavs $tn}
+                                        {if $tn['status'] == '1'}
+                                        <li class="{if $sign == $tn['sign']}current{/if}">
+            								<a class="first-level" href="{$tn['url']}" target="{$tn['target']}"><strong>{$tn['title']}</strong></a>
+            								<i></i>
+            								<ul class="">
+                                                {loop $tn['s'] $tn_s}
+                                                {if $tn_s['status'] == '1'}
+            									<li class="">
+            										<a class="" href="{$tn_s['url']}" target="{$tn_s['target']}"><strong>{$tn_s['title']}</strong></a>
+            									</li>
+                                                {/if}
+                                                {/loop}
+            								</ul>
+            							</li>
+                                        {/if}
+                                        {/loop}
+            						</ul>
+            					</div>
+            				</nav>
+            				<!-- E nav-->
+            			</div>
+                        {if $settings['global']['login']['link']}
+                        <!-- S login -->
+            			<div class="language" skinobjectzone="HtmlLanguage_1275">
+            				<a href="{$settings['global']['login']['link']}">{if $settings['global']['login']['text']}{$settings['global']['login']['text']}{else}登录{/if}</a>
+                            {if $settings['global']['register']['link']}
+            				<em>/</em>
+            				<a href="{$settings['global']['register']['link']}">{if $settings['global']['register']['text']}{$settings['global']['register']['text']}{else}注册{/if}</a>
+                            {/if}
+            			</div>
+            			<!-- E login -->
+                        {/if}
+            		</div>
+            	</div>
+            	<!-- E top-main -->
+            	<div class="clear">
+            	</div>
+            </header>
+            <!-- S touch-top-wrapper -->
+            <div class="touch-top mobile-section clearfix">
+            	<div class="touch-top-wrapper clearfix">
+            		<div class="touch-logo" skinobjectzone="HtmlLogo_1407">
+            			<a class="" href="/"><img src="{if $settings['global']['tn_logo']}{php echo tomedia($settings['global']['tn_logo'])}{else}{DF_RES}img/a754cfe5-2848-40e0-8ef0-64a5e8ed2f8a_0_60.png{/if}" alt="{$_W['pagetitle']}" /></a>
+            		</div>
+            		<!-- S touch-navigation -->
+            		<div class="touch-navigation">
+            			<div class="touch-toggle">
+            				<ul>
+                                {if $settings['global']['login']['link']}
+                                <li class="touch-toggle-item-first">
+            						<a href="javascript:;" class="drawer-language" data-drawer="drawer-section-language"><i class="touch-icon-language" style="font-size: 20px;"></i><span>登录</span></a>
+            					</li>
+                                {/if}
+            					<li class="touch-toggle-item-last">
+            						<a href="javascript:;" class="drawer-menu" data-drawer="drawer-section-menu"><i class="icon icon-menu mnav" style="font-size: 26px;margin-top: 12px;"></i><span>导航</span></a>
+            					</li>
+            				</ul>
+            			</div>
+            		</div>
+            		<!-- E touch-navigation -->
+            	</div>
+            	<!-- S touch-top -->
+            	<div class="touch-toggle-content touch-top-home">
+            		<div class="drawer-section drawer-section-language">
+            			<ul class="touch-language clearfix" skinobjectzone="HtmlLanguage_1680">
+            				{if $settings['global']['login']['link']}
+                            <li>	
+            				    <a href="{$settings['global']['login']['link']}">登录</a>
+            				</li>
+                            {/if}
+                            {if $settings['global']['register']['link']}
+            				<li>
+            					<a href="{$settings['global']['register']['link']}">注册</a>
+            				</li>
+                            {/if}
+            			</ul>
+            		</div>
+            		<div class="drawer-section drawer-section-menu">
+            			<div class="touch-menu" skinobjectzone="menu_1898">
+            				<ul>
+                                {loop $topnavs $tn}
+                                <li>
+            						<a href="{if count($tn['s']) > 0}javascript:;{else}{$tn['url']}{/if}"><span>{$tn['title']}</span>{if count($tn['s']) > 0}<i class="touch-arrow-down"></i>{/if}</a>
+            						<ul>
+                                        {loop $tn['s'] $tn_s}
+            							<li>
+            								<a href="{$tn_s['url']}"><span>{$tn_s['title']}</span></a>
+            							</li>
+                                        {/loop}
+            						</ul>
+            					</li>
+                                {/loop}
+            				</ul>
+            			</div>
+            		</div>
+            		<script type="text/javascript">
+           			$(document).ready(function() {
+                    	$(".touch-toggle a").click(function(event) {
+                    		var className = $(this).attr("data-drawer");
+                    
+                    		if ($("." + className).css('display') == 'none') {
+                    			$("." + className).slideDown().siblings(".drawer-section").slideUp();
+                    		} else {
+                    			$(".drawer-section").slideUp();
+                    		}
+                    		event.stopPropagation();
+                    	});
+                    	$('.touch-menu a').click(function() {
+                    		if ($(this).next().is('ul')) {
+                    			if ($(this).next('ul').css('display') == 'none') {
+                    				$(this).next('ul').slideDown();
+                    				$(this).find('i').attr("class", "touch-arrow-up");
+                    			} else {
+                    				$(this).next('ul').slideUp();
+                    				$(this).next('ul').find('ul').slideUp();
+                    				$(this).find('i').attr("class", "touch-arrow-down");
+                    			}
+                    		}
+                    	});
+                    });
+            		</script>
+            	</div>
+            	<!-- E touch-top -->
+            </div>
+            <!-- E touch-top-wrapper -->
+            <!--====================E top====================-->

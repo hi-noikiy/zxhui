@@ -1,0 +1,93 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('setting/tab')}
+
+<div class="alert we7-page-alert">
+	<p><i class="wi wi-info-sign"></i> 功能描述：这里是对站点展示主题的切换</p>
+    <p><strong class="text-danger"><i class="wi wi-info-sign"></i> 功能说明：点击下方模板，即可切换至选中的模板；不同主题的分类模板和内容模板都是不同的，切换后，记得切换内容模板及分类模板哟</strong></p>
+</div>
+
+<style type="text/css">
+.caption h3{color: #009688;}
+.current{
+    /**
+    border-style: solid;
+    border-width: 5px;
+    border-color: #5FB878;
+    width:-moz-calc(100% - 5px);
+    width:-webkit-calc(100% - 5px);
+    width: calc(100% - 5px);
+    */
+    background-color: #009688;
+}
+.current h3{color: white;}
+.current p{color: #eeeeee;}
+.thumbnail img{width: 100%;}
+</style>
+<div class="row" id="items"></div>
+<script type="text/javascript">
+layui.use(['layer', 'flow'], function(){
+    var layer = layui.layer, flow = layui.flow;
+    flow.load({
+		elem: '#items'
+        ,isLazyimg: true
+		,done: function(page, next) {
+			var lis = [];
+            $.get("{php echo webUrl('setting/themes/getThemes')}&page=" + page, function(res) {
+                var res = $.parseJSON(res);
+				layui.each(res.data, function(index, item) {
+				    var current_class = '';
+				    if(res.current == item.name){
+				        current_class = 'current';
+				    }
+                    var item_data = ''+
+                        '<div class="col-sm-6 col-md-4 col-lg-3 ">'+
+                    		'<div class="thumbnail ' + current_class + '" onclick="changeTheme(\'' + item.name + '\')">'+
+                    			'<img class="no-lightGallery" src="' + item.preview + '">'+
+                    			'<div class="caption">'+
+                    				'<h3>' + item.name + '</h3>'+
+                    				'<p>' + item.title + '</p>'+
+                    				'<p>'+
+                                        '<span class="layui-badge layui-bg-blue">'+item.tag[0]+'</span> '+
+                    					'<span class="layui-badge layui-bg-blue">'+item.tag[1]+'</span> '+
+                    					'<span class="layui-badge layui-bg-blue">'+item.tag[2]+'</span> '+
+                    				'</p>'+
+                    			'</div>'+
+                    		'</div>'+
+                    	'</div>';
+					lis.push(item_data);
+				});
+                
+				next(lis.join(''), page < res.pages);
+			});
+            
+		}
+        ,end: '&nbsp;'
+	});
+});
+
+var changeTheme = function(obj){
+    $('.loader').show();
+    $.post(
+        "{php echo webUrl('setting/themes/changeMobileTheme')}"
+        ,{mobilethemes:obj}
+        ,function(d){
+            console.log(d);
+            $('.loader').hide();
+            if(d.errno == 0){
+                layer.msg(d.message, {
+                    icon: 1
+                    ,time: 1000
+                }, function(){
+                    $('.loader').show();
+                    location.reload();
+                });
+            }else{
+                layer.msg(d.message, {icon: 2})
+            }
+        }
+        ,'json'
+    );
+}
+</script>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/7/12 23:33:24] -->

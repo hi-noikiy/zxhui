@@ -1,0 +1,58 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/mobilenav')}
+			{php include $this->mytemplate('common/topnav')}
+			{php include $this->mytemplate('common/banner2')}
+            {php include $this->mytemplate('common/mobilesearch')}
+			<div class="eco-leftnav">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-9 col-xs-12 pull-right">
+							<div class="section-title-style">
+								<h2>
+									{$article['title']}
+								</h2>
+							</div>
+							<section class="met-show animsition">
+								<div class="container">
+									<div class="row">
+										<div class="met-editor lazyload clearfix">
+											<div class="editorlightgallery">
+												<div>
+                                                    {if !empty($article['thumb']) || ($article['images'] != "N;" && !empty($article['images']))}
+                                                    <p><img data-original="{if !empty($article['thumb'])}{media $article['thumb']}{else}{php $article['images'] = iunserializer($article['images']);}{media $article['images'][0]}{/if}" style="width: 300px;  float: right; padding: 0px 10px; " alt="{$article['title']}" /></p>
+													{/if}
+                                                    {php echo m('ui')->html_lazy($article['content'])}
+                                                    
+                                                    <!-- Map -->
+                                                    <div id="mapContent" style="width:100%;height:420px;">
+                                    					&nbsp;
+                                    				</div>
+                                    				<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=qen1OGw9ddzoDQrTX35gote2"></script>
+                                    				<script type="text/javascript">	
+                                                    // 百度地图API功能
+                                                    var map = new BMap.Map("mapContent");
+                                                	var point = new BMap.Point({$article['value']['baidumap']['lng']},{$article['value']['baidumap']['lat']});
+                                                	map.centerAndZoom(point, 20);
+                                                	var marker = new BMap.Marker(point);  // 创建标注
+                                                	map.addOverlay(marker);               // 将标注添加到地图中
+                                                	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                                    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                                                    
+                                                    map.addControl(top_left_control);        
+                                            		map.addControl(top_left_navigation);     
+                                            		map.addControl(top_right_navigation);
+                                    				</script>
+                                                    <!-- Map -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</section>
+						</div>
+						{php include $this->mytemplate('common/leftpull')}
+					</div>
+				</div>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}

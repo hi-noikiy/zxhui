@@ -1,0 +1,19 @@
+{php $bowen_themes = file_get_contents(M_ROOT.'/bowen_themes.txt')}
+{php $bowen_themes = explode("\r\n",$bowen_themes)}
+{if in_array($settings['global']['mobilethemes'], $bowen_themes)}
+    {php include $this->mytemplate('common/header')}
+    {php include $this->mytemplate('setting/tab')}
+
+    <div class="alert we7-page-alert">
+        <p><strong class="text-danger"><i class="wi wi-info-sign"></i> 注意：请在操作首页设置前，请确保已经设置好了导航、设置好了文章分类，并且已经做好了单独的专题页面。</strong></p>
+        <p><i class="wi wi-info-sign"></i> 功能描述：这里主要是对企业官网的首页数据来源和该主题独有设置进行设置，这一步一般放在最后进行。</p>
+        <p><i class="wi wi-info-sign"></i> 当前模板：<strong class="color-green">{$template_title}</strong></p>
+        <p><i class="wi wi-info-sign"></i> 温馨提示：凡是涉及到填写id的，可以直接填写该分类、文章或留言的链接即可</p>
+    </div>
+
+    {php include $this->mytemplate('setting/home', 'mobile')}
+    {php include $this->mytemplate('common/footer')}
+{else}
+    {php include $this->mytemplate('setting/home', 'mobile')}
+{/if}
+<!-- phpDesigner :: Timestamp [2018/9/28 10:57:19] -->

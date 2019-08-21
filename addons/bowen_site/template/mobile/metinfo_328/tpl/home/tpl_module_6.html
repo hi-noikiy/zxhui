@@ -1,0 +1,44 @@
+                        {php $mid = 5;}
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module006 S -->
+                        <!-- 该模块，最少要六个内容才会显示 -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" style="background-image: url('{M_URL}template/mobile/metinfo_328/static/images/1481180268.jpg');">
+								<div class="mark-ctrl">
+									<div class="ctrl-box ctrl-left">
+										<i class="fa fa-angle-left"></i>
+									</div>
+									<div class="ctrl-box ctrl-right">
+										<i class="fa fa-angle-right"></i>
+									</div>
+								</div>
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												{$settings['home']['metinfo_328']['title'][$mid]}
+											</h2>
+										</div>
+										<div class="mark-box mark-type-0 swiper-container-horizontal" style="cursor: -webkit-grab;">
+											<div class="mark-cut" style="transform: translate3d(-1200px, 0px, 0px); transition-duration: 0ms;">
+                                                {php $mark_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+                                                {loop $mark_articles[$mid] $item}
+												<div class="mark-bin">
+													<a title="{$item['title']}">
+    													<i class="fa fa-{$item['thumb']}"></i>
+    													<h3>{$item['title']}</h3>
+    													{php echo html_entity_decode($item['content'])}
+													</a>
+												</div>
+                                                {/loop}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module006 E -->
+                        {/if}

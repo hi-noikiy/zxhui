@@ -1,0 +1,16 @@
+<title>预览</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>预览</cite></a>
+	</div>
+</div>
+<div id="BOWEN_app-preview-index"></div>
+<script type="text/javascript">
+ layui.use(['jquery'], function(){
+    var $ = layui.jquery;
+    var iframe = '<iframe src="'+global.foregUrl+'" frameborder="0" class="layadmin-iframe"></iframe>';
+    $('#BOWEN_app-preview-index').html(iframe);
+ });
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/18 18:11:56] -->

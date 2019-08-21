@@ -1,0 +1,29 @@
+                <li class="item">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">banner图</label>
+                        <div class="col-sm-3">
+                            {php echo tpl_form_field_image('bannerimg[]', $item['bannerimg']);}
+                            <div class="help-block">推荐尺寸:2000*1333</div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">风格</span>
+                                <select name="bannerstyle[]" class="form-control">
+                                    <option value="1" {if $item['bannerstyle'] == 1}selected="true"{/if}>风格1</option>
+                                    <option value="2" {if $item['bannerstyle'] == 2}selected="true"{/if}>风格2</option>
+                                    <option value="3" {if $item['bannerstyle'] == 3}selected="true"{/if}>风格3</option>
+                                    <option value="4" {if $item['bannerstyle'] == 4}selected="true"{/if}>风格4</option>
+                                </select>
+                            </div>
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">内容</span>
+                                <textarea class="form-control bannercontent" rows="3" name="bannercontent[]" >{$item['bannercontent']}</textarea>
+                                <div class="help-block"> &nbsp;&nbsp;点击填充示例：<kbd class="hands" onclick="add_demo_content(this, 1);">demo1</kbd> <kbd class="hands" onclick="add_demo_content(this, 2);">demo2</kbd> <kbd class="hands" onclick="add_demo_content(this, 3);">demo3</kbd> <kbd class="hands" onclick="add_demo_content(this, 4);">demo4</kbd></div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="bannertitle[]" value="{$item['bannertitle']}" />
+                        <input type="hidden" name="bannerurl[]" value="{$item['bannerurl']}" />
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_item(this)"><i class='fa fa-remove'></i> 删除</a>
+                    </div>
+                    <hr/>
+                </li>

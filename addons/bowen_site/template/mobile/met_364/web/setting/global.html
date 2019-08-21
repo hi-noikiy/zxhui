@@ -1,0 +1,466 @@
+<form action="" method="post" class="form-horizontal form">
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>请选择模板</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >请选择站点模板</label>
+            <div class="col-sm-8 col-xs-12">
+                <select class="form-control" name="mobilethemes">
+                    {loop $mobilethemes $t}
+                    <option value="{$t}" {if $settings['global']['mobilethemes'] == $t}selected="true"{/if}>{$t}</option>
+                    {/loop}
+                </select>
+                <span class="help-block">
+                    <code>注：站点模板切换后，分类页和文章页的模板需要重新设置</code><br />
+                    站长权限，普通用户不可见
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div class="page-heading">
+            <h4>登录注册按钮</h4>
+        </div>
+        <hr />
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >登录按钮</label>
+            <div class="col-sm-2 col-xs-12">
+                <input type="text" name="login[text]" class="form-control" value="{if $settings['global']['login']['text']}{$settings['global']['login']['text']}{else}登录{/if}" placeholder="按钮文字内容" />
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                {php echo mytpl_form_field_link('login[link]', $settings['global']['login']['link'])}
+                <span class='help-block'>
+                    注：请输入登录链接，不输入则不显示登录按钮；请以 <code>http://</code> 或 <code>https://</code> 开头<br />
+                    {if $_W['isfounder']}如果是系统登录页面，可点击 <kbd onclick="$('input[name=\'login[link]\']').val('../web/index.php?c=user&a=login&');">../web/index.php?c=user&a=login&</kbd> 快速添加{/if}
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >注册按钮</label>
+            <div class="col-sm-2 col-xs-12">
+                <input type="text" name="register[text]" class="form-control" value="{if $settings['global']['register']['text']}{$settings['global']['register']['text']}{else}注册{/if}" placeholder="按钮文字内容" />
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                {php echo mytpl_form_field_link('register[link]', $settings['global']['login']['link'])}
+                <span class='help-block'>
+                    注：请输入注册链接，不输入则不显示注册按钮；请以 <code>http://</code> 或 <code>https://</code> 开头<br />
+                    {if $_W['isfounder']}如果是系统注册页面，可点击 <kbd onclick="$('input[name=\'register[link]\']').val('../web/index.php?c=user&a=register&');">../web/index.php?c=user&a=register&</kbd> 快速添加{/if}
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-heading">
+        <h4>SEO设置</h4>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >title</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="text" name="title" class="form-control" value="{$settings['global']['title']}" placeholder="请输入官网名称" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >keyword</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="text" name="keyword" class="form-control" value="{$settings['global']['keyword']}" placeholder="请输入权重关键词" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >description</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="text" name="description" class="form-control" value="{$settings['global']['description']}" placeholder="请输入站点描述" />
+        </div>
+    </div>
+    <div class="form-group {if $_W['core_settings']['is_rewrite'] != 1}hidden{/if}">
+        <label class="col-sm-2 control-label" >是否开启伪静态</label>
+        <div class="col-sm-8 col-xs-12">
+            <label class="radio-inline"><input type="radio" name="isrewrite" value="1" lay-ignore {if !empty($settings['global']['isrewrite'])}checked="checked"{/if}/> 启用</label>
+            <label class="radio-inline"><input type="radio" name="isrewrite" value="0" lay-ignore {if empty($settings['global']['isrewrite'])}checked="checked"{/if}/> 关闭</label>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>客服设置</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >PC端客服</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="kf[pc][]" class="form-control" value="{$settings['global']['kf']['pc'][0]}" placeholder="请输入PC端客服链接" />
+                <span class='help-block'>
+                    注：不填写则不显示客服按钮；
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >手机端客服</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="kf[mobile][]" class="form-control" value="{$settings['global']['kf']['mobile'][0]}" placeholder="请输入手机端客服链接" />
+                <span class='help-block'>
+                    注：不填写则不显示客服按钮；
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>自定义配色</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >
+                1号颜色
+                <span class='help-block'>
+                    <kbd style="cursor: pointer;" onclick="$('input[name=\'color1\']').val('#21bbc7');">重置</kbd>
+                </span>
+            </label>
+            <div class="col-sm-3 col-xs-12">
+                <input type="color" name="color1" class="form-control" value="{if $settings['global']['color']['1']}{$settings['global']['color']['1']}{else}#21bbc7{/if}" />
+                <span class='help-block'>
+                    注：顶部一级导航文字选中、顶部二级导航背景、首页我们的优势标题
+                </span>
+            </div>
+
+            <label class="col-sm-2 control-label" >
+                2号颜色
+                <span class='help-block'>
+                    <kbd style="cursor: pointer;" onclick="$('input[name=\'color2\']').val('#1da4ae');">重置</kbd>
+                </span>
+            </label>
+            <div class="col-sm-3 col-xs-12">
+                <input type="color" name="color2" class="form-control" value="{if $settings['global']['color']['1']}{$settings['global']['color']['2']}{else}#1da4ae{/if}"  />
+                <span class='help-block'>
+                    注：顶部二级导航选中、分类导航选中及背景
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>首页全屏加载设置</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >全屏背景图1</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('loading_bg1', $settings['global']['loading']['bg1'], '../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome.jpg');}
+                <span class='help-block'>尺寸：1920*1200（大屏幕访问时）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >全屏背景图2</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('loading_bg2', $settings['global']['loading']['bg2'], '../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome_h800.jpg');}
+                <span class='help-block'>尺寸：1280*800（中屏幕访问时）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >全屏背景图3</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('loading_bg3', $settings['global']['loading']['bg3'], '../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome_h600.jpg');}
+                <span class='help-block'>尺寸：960*600（小屏幕访问时）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >加载时显示的图片</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('loading_logo', $settings['global']['loading']['logo'], '../addons/bowen_site/template/mobile/metinfo_328/static/images/welcome_words.png');}
+                <span class='help-block'>尺寸：370*206（不填则不显示）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >加载时文字</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="loading_text" class="form-control" value="{if !empty($settings['global']['loading']['text'])}{$settings['global']['loading']['text']}{else}Loading . . .{/if}" placeholder="loading..." />
+                <span class='help-block'></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-heading">
+        <h4>版权设置</h4>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >logo1</label>
+        <div class="col-sm-8 col-xs-12">
+            {php echo tpl_form_field_image('tn_logo', $settings['global']['tn_logo'], '../addons/bowen_site/template/mobile/met_364/static/images/1491791225.jpg');}
+            <span class='help-block'><code>顶部导航logo</code>，尺寸:144*40</span>
+        </div>
+    </div>
+
+    <div class="form-group hidden">
+        <label class="col-sm-2 control-label" >logo1上下偏移</label>
+        <div class="col-sm-8 col-xs-12">
+            <div class="input-group">
+                <input type="number" name="logo_margin_top" class="form-control" value="{if $settings['global']['style']['logo']['margin_top']}{$settings['global']['style']['logo']['margin_top']}{else}0{/if}" placeholder="" />
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="help-block">注：格式为数字；负数向上偏移，正数向下偏移。</div>
+        </div>
+    </div>
+
+    <div class="form-group hidden">
+        <label class="col-sm-2 control-label" >logo1左右偏移</label>
+        <div class="col-sm-8 col-xs-12">
+            <div class="input-group">
+                <input type="number" name="logo_margin_left" class="form-control" value="{if $settings['global']['style']['logo']['margin_left']}{$settings['global']['style']['logo']['margin_left']}{else}0{/if}" placeholder="" />
+                <span class="input-group-addon">px</span>
+            </div>
+            <div class="help-block">注：格式为数字；负数向左偏移，正数向右偏移。</div>
+        </div>
+    </div>
+
+    <div class="form-group hidden">
+        <label class="col-sm-2 control-label" >logo旁文字</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="text" name="subtitle" class="form-control" value="{if $settings['global']['subtitle']}{$settings['global']['subtitle']}{else}助力企业在移动互联网时代全面转型|专注于微信策划+建设+运营{/if}"  />
+            <span class='help-block'>以 <code>|</code> 进行分行，最多两行；第一行为蓝色大字体，第二行浅灰色字体</span>
+        </div>
+    </div>
+
+    <div class="hidden hidden">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >logo2</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('logo2', $settings['global']['logo2']);}
+                <span class='help-block'><code>左侧导航logo</code>，尺寸:162*59</span>
+            </div>
+        </div>
+
+        <div class="form-group hidden">
+            <label class="col-sm-2 control-label" >logo2上下偏移</label>
+            <div class="col-sm-8 col-xs-12">
+                <div class="input-group">
+                    <input type="number" name="logo2_margin_top" class="form-control" value="{if $settings['global']['style']['logo2']['margin_top']}{$settings['global']['style']['logo2']['margin_top']}{else}0{/if}" placeholder="" />
+                    <span class="input-group-addon">px</span>
+                </div>
+                <div class="help-block">注：格式为数字；负数向上偏移，正数向下偏移。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group hidden">
+        <label class="col-sm-2 control-label" >微信二维码</label>
+        <div class="col-sm-8 col-xs-12">
+            {php echo tpl_form_field_image('qr', $settings['global']['qr']);}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >ico图标</label>
+        <div class="col-sm-8 col-xs-12">
+            {php echo tpl_form_field_image('ico', $settings['global']['ico']);}
+            <span class='help-block'>
+                建议尺寸:32*32(像素)的<code>.ico</code>文件。<a href="https://www.baidu.com/s?wd=ico%E5%9B%BE%E6%A0%87%E5%88%B6%E4%BD%9C" target="_blank">点击制作ICO</a>
+                <br />
+                如果无法正常显示新上传图标，清空浏览器缓存后访问。
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >底部版权(左)</label>
+        <div class="col-sm-8 col-xs-12">
+            {php echo tpl_ueditor('copyright', $settings['global']['copyright']);}
+            <span class='help-block'>
+                注：版权中的变量 <code>#年#</code> 将会被替换成今年的年。如：今年是2018年，则会被自动替换为2018
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >底部版权(右)</label>
+        <div class="col-sm-8 col-xs-12">
+            {php echo tpl_ueditor('copyright2', $settings['global']['copyright2']);}
+            <span class='help-block'>
+                    注：支持html代码<br />
+                    版权中的变量 <code>#年#</code> 将会被替换成今年的年。如：今年是2018年，则会被自动替换为2018
+            </span>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>友链设置</h4>
+        </div>
+        <hr />
+        {php $cf = '0'}
+        {loop $settings['global']['flink'] $fl}
+        {php $cf++}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >友情链接_{$cf}</label>
+            <div class="col-sm-2 col-xs-12">
+                <input type="text" name="flink[{$cf}][title]" class="form-control" value="{$fl['title']}" placeholder="请输入标题" />
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <input type="text" name="flink[{$cf}][url]" class="form-control" value="{$fl['url']}" placeholder="请输入链接" />
+            </div>
+            <a class="layui-btn layui-btn-primary" href="javascript:;" onclick="del(this)"><i class="fa fa-remove"></i> 删除</a>
+        </div>
+        {/loop}
+        <div id="parama"></div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-7">
+                <a class="layui-btn layui-btn-primary btn-add-dtw" href="javascript:addparama();"><i class="fa fa-plus" title=""></i> 增加友链</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>联系我们(底部)</h4>
+        </div>
+        <hr />
+        {php $cc = '0'}
+        {loop $settings['global']['bt_contact'] $bc}
+        {php $cc++}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >联系我们_{$cc}</label>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" name="bt_contact[{$cc}][title]" class="form-control" value="{$bc['title']}" placeholder="请输入标题" />
+                <span class='help-block'><code>联系方式一般情况下只需要标题，特殊情况才需要添加链接</code></span>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <input type="text" name="bt_contact[{$cc}][url]" class="form-control" value="{$bc['url']}" placeholder="请输入链接" />
+            </div>
+            <a class="layui-btn layui-btn-primary" href="javascript:;" onclick="del(this)"><i class="fa fa-remove"></i> 删除</a>
+        </div>
+        {/loop}
+        <div id="parama2"></div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-7">
+                <a class="layui-btn layui-btn-primary btn-add-dtw" href="javascript:addcontact();"><i class="fa fa-plus" title=""></i> 增加联系方式</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>左侧导航</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >QQ</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="qq" class="form-control" value="{$settings['global']['contact']['qq']}" placeholder="不填则不显示该图标" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >微博</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="weibo" class="form-control" value="{$settings['global']['contact']['weibo']}" placeholder="不填则不显示该图标" />
+                <span class='help-block'>新浪微博主页链接</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >微信</label>
+            <div class="col-sm-8 col-xs-12">
+                {php echo tpl_form_field_image('wechat', $settings['global']['contact']['wechat']);}
+                <span class='help-block'>微信二维码图片，不填则不显示该图标</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >邮箱</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="email" class="form-control" value="{$settings['global']['contact']['email']}" placeholder="不填则不显示该图标" />
+                <span class='help-block'>邮箱链接</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <div class="page-heading">
+            <h4>联系我们</h4>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >联系电话</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="phone" class="form-control" value="{$settings['global']['contact']['phone']}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >详细地址</label>
+            <div class="col-sm-8 col-xs-12">
+                <input type="text" name="address" class="form-control" value="{$settings['global']['contact']['address']}" />
+                <span class='help-block'>联系地址</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-heading">
+        <h4>全局代码</h4>
+    </div>
+    <hr />
+    <div class="form-group">
+        <label class="col-sm-2 control-label" >全局统计代码</label>
+        <div class="col-sm-8 col-xs-12">
+            <textarea class="form-control" name="diycode" style="height: 150px;">{$settings['global']['diycode']}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 control-label" ></label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="help-block">
+                <input type="hidden" name="token" value="{$_W['token']}" />
+                <input type="submit" name="submit"  value="提交" class="layui-btn"  />
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var i='{$cf}';
+    function addparama(){
+        i++;
+        var temp='<div class="form-group">'+
+            '<label class="col-sm-2 control-label"></label>'+
+            '<div class="col-sm-2">'+
+            '<input type="text" name="flink['+i+'][title]" class="form-control" value="" placeholder="请输入标题" />'+
+            '</div>'+
+            '<div class="col-sm-6">'+
+            '<input type="text" name="flink['+i+'][url]" class="form-control" value="" placeholder="请输入链接" />'+
+            '</div>'+
+            '<a class="layui-btn layui-btn-primary" href="javascript:;" onclick="del(this)"><i class="fa fa-remove"></i> 删除</a>'+
+            '</div>';
+        $("#parama").append(temp);
+    }
+
+    var c='{$cc}';
+    function addcontact(){
+        c++;
+        var temp='<div class="form-group">'+
+            '<label class="col-sm-2 control-label"></label>'+
+            '<div class="col-sm-4">'+
+            '<input type="text" name="bt_contact['+c+'][title]" class="form-control" value="" placeholder="请输入标题" />'+
+            '<span class="help-block"><code>联系方式一般情况下只需要标题，特殊情况才需要添加链接</code></span>'+
+            '</div>'+
+            '<div class="col-sm-4">'+
+            '<input type="text" name="bt_contact['+c+'][url]" class="form-control" value="" placeholder="请输入链接" />'+
+            '</div>'+
+            '<a class="layui-btn layui-btn-primary" href="javascript:;" onclick="del(this)"><i class="fa fa-remove"></i> 删除</a>'+
+            '</div>';
+        $("#parama2").append(temp);
+    }
+
+    function del(obj){
+        $(obj).closest('.form-group').remove();
+    }
+</script>

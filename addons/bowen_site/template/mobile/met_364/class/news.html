@@ -1,0 +1,67 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+<section class="met-news animsition">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 met-news-body">
+                    <div class="row">
+                        <div class="met-news-list">
+
+                            <ul class="met-page-ajax">
+                                {loop $articles $item}
+                                {if $item['status'] == '1'}
+                                <li>
+                                    <h4>
+                                        <a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target="_self">
+                                            {$item['title']}
+                                        </a>
+                                    </h4>
+                                    <p class="des">
+                                        {if $item['description']}
+                                        {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                        {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        {php echo m('common')->msubstr($item['description'], 0, 65)}
+                                    </p>
+                                    <p class="info">
+                                        <span>{php echo date('Y-m-d', $item['createtime'])}</span>
+                                        {if $item['author']}<span class="margin-left-10">{$item['author']}</span>{/if}
+                                        <span class="margin-left-10">
+                                            <i class="icon wb-eye margin-right-5" aria-hidden="true"></i> {php echo intval($item['reading'])}
+                                        </span>
+                                    </p>
+                                </li>
+                                {/if}
+                                {/loop}
+                            </ul>
+
+                            <?php
+                                $param = array(
+                                    'html' => array(
+                                        's' => '<div class="hidden-xs"><div class="met_pager">',
+                                        'e' => '</div></div>',
+                                        'ac' => 'Ahover',
+                                        'fpnl' => array(
+                                            'f' => 'class="PreSpan first_last"',
+                                            'p' => 'class="PreSpan"',
+                                            'n' => 'class="NextA"',
+                                            'l' => 'class="PreSpan first_last"',
+                                        )
+                                    ),
+                                    'li' => 'null',
+                                    'always_show' => 1
+                                );
+                                echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                            ?>
+
+                        </div>
+                    </div>
+                </div>
+
+                {mytemplate 'common/rightpull'}
+
+            </div>
+        </div>
+    </section>
+{mytemplate 'common/footer'}

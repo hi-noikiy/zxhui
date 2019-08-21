@@ -1,0 +1,158 @@
+<title>系统设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+        <a><cite>版权设置</cite></a>
+        <a><cite>后台版权</cite></a>
+    </div>
+</div>
+
+<form class="layui-fluid layui-form" lay-filter="BOWEN_app-sys-copyright-manage-form">
+
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                <p>下拉框中的域名来源于域名管理中状态为生效的域名</p>
+            </blockquote>
+        </div>
+        <div class="layui-card-body">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">域名</label>
+                <div class="layui-input-block">
+                    <select name="domain" id="BOWEN_app-sys-copyright-manage-form-account" lay-filter="BOWEN_app-sys-copyright-manage-form-account"></select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">页面标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">网站关键词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="keywords" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">站点简介</label>
+                <div class="layui-input-block">
+                    <input type="text" name="description" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">底部版权</label>
+                <div class="layui-input-block">
+                    <textarea id="copyright" name="copyright"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="BOWEN_app-sys-copyright-manage-form-submit">立即提交</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<script type="text/html" id="BOWEN_app_sys_copyright_manage_form_accountTpl">
+    <option value="0">全部</option>
+    {{#  layui.each(d.data.domains, function(index, item){ }}
+    <option value="{{ item.id }}">{{ item.domain }}</option>
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl', 'myedit'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,form = layui.form
+            ,laytpl = layui.laytpl
+            ,myedit = layui.myedit;
+
+        //此处解决局部刷新时未渲染问题
+        form.render();
+
+        var copyright_content = myedit.build('copyright')
+            ,new_copyright = function (id) {
+            admin.req({
+                url: myutil.webUrl('sys/copyright/manage')
+                ,type: 'post'
+                ,data: {id:id}
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        if(id == false){
+                            var getTpl = BOWEN_app_sys_copyright_manage_form_accountTpl.innerHTML
+                                ,view = document.getElementById('BOWEN_app-sys-copyright-manage-form-account');
+                            laytpl(getTpl).render(d, function(html){
+                                view.innerHTML = html;
+                                form.val("BOWEN_app-sys-copyright-manage-form", d.data);//初始赋值
+                            });
+                        }
+                        if(d.data.copyright.param){
+                            form.val("BOWEN_app-sys-copyright-manage-form", {
+                                title:d.data.copyright.param.title||''
+                                ,keywords:d.data.copyright.param.keywords||''
+                                ,description:d.data.copyright.param.description||''
+                            });
+                        }
+                        myedit.setContent(copyright_content, d.data.copyright.content);
+                    }
+                }
+            });
+        };
+
+        new_copyright(false);
+
+        form.on('select(BOWEN_app-sys-copyright-manage-form-account)', function(data){
+            new_copyright(data.value);
+        });
+
+        form.on('submit(BOWEN_app-sys-copyright-manage-form-submit)', function(data){
+            data.field.copyright = myedit.getContent(copyright_content);
+            admin.req({
+                url: myutil.webUrl('sys/copyright/manage/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }else{
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/10/17 15:25:22] -->

@@ -1,0 +1,237 @@
+{mytemplate 'common/header-base'}
+        <header class="head_nav_met_11_4-header" m-id='1' m-type="head_nav">
+
+			<div class="top-box ulstyle">
+				<div class="container">
+					<div class="row">
+                        {if $_B['setting']['global']['subtitle']}
+						<div class="pull-md-left">
+							<i class="welcome-img"></i> <span>{$_B['setting']['global']['subtitle']}</span>
+						</div>
+                        {/if}
+						<div class="pull-md-right top-social">
+                            {if $_B['setting']['global']['qr']}
+							<li>
+								<span 
+                                data-plugin="webuiPopover" 
+                                data-trigger="hover" 
+                                data-animation="fade" 
+                                data-placement='bottom' 
+                                data-width='150' 
+                                data-padding='0'
+                                data-content="<img src='{media $_B['setting']['global']['qr']}'  style='width: 146px;display:block;'>">
+									<i class="fa fa-weixin m-r-10"></i> <a>我们的微信</a> <i class="icon pe-angle-down"></i>
+								</span>
+							</li>
+                            {/if}
+                            {if $_B['setting']['global']['bt_contact']}
+							<li>
+								<span 
+                                data-plugin="webuiPopover" 
+                                data-trigger="hover" data-animation="fade" data-placement='bottom' data-width='136' data-padding='0'
+                                data-content="
+                                <div style='width: 130px;display:block;padding:15px 15px 5px 15px;'>
+                                    {loop $_B['setting']['global']['bt_contact'] $bc}
+                                    <p class='m-b-5 contact-p'>{$bc['title']}<p class='contact-num'><b>{php echo html_entity_decode($bc['url'], ENT_QUOTES)}</b></p></p>
+                                    {/loop}
+                                </div>">
+									<i class="fa fa-phone"></i> <a>联系我们</a> <i class="icon pe-angle-down"></i>
+								</span>
+							</li>
+                            {/if}
+                            {if !empty($_B['setting']['global']['contact']['qq'])}
+							<li>
+								<span>
+									<i class="fa fa-qq"></i>
+									<a href="http://wpa.qq.com/msgrd?v=3&uin={$_B['setting']['global']['contact']['qq']}&site=qq&menu=yes" rel="nofollow" target="_blank"> 客服QQ</a>
+								</span>
+							</li>
+                            {/if}
+						</div>
+					</div>
+				</div>
+			</div>
+            
+			<nav class="navbar navbar-default box-shadow-none head_nav_met_11_4">
+				<div class="container">
+					<div class="row">
+                    
+						<div class="logo-box clearfix">
+							<h1 hidden>
+								{$_B['setting']['global']['title']}
+							</h1>
+							<div class="navbar-header pull-xs-left">
+								<a href="{foregUrl ''}" class="met-logo vertical-align block pull-xs-left p-y-5" title="{$_B['setting']['global']['title']}">
+    								<div class="vertical-align-middle" style="{if $_B['setting']['global']['style']['logo']['margin_top']}margin-top: {$_B['setting']['global']['style']['logo']['margin_top']}px;{/if}{if $_B['setting']['global']['style']['logo']['margin_left']} margin-left: {$_B['setting']['global']['style']['logo']['margin_left']}px;{/if}">
+    								    <img src="{if $_B['setting']['global']['tn_logo']}{media $_B['setting']['global']['tn_logo']}{else}{M_URL}template/mobile/met_368/static/images/1517885836.png{/if}" alt="{$_B['setting']['global']['title']}" />
+                                    </div>
+								</a>
+							</div>
+							
+							<div class="pull-md-right">
+                                {if $_B['setting']['global']['login']['link']}
+                                    {if stripos($_B['setting']['global']['login']['link'], './') !== false}
+                                    {php $_B['setting']['global']['login']['link'] = $_W['siteroot'] . 'web/' . $_B['setting']['global']['login']['link']}
+                                    {/if}
+                                    {if stripos($_B['setting']['global']['register']['link'], './') !== false}
+                                    {php $_B['setting']['global']['register']['link'] = $_W['siteroot'] . 'web/' . $_B['setting']['global']['register']['link']}
+                                    {/if}
+                                    <p>
+    									<b>
+        									<a href="{$_B['setting']['global']['login']['link']}"> {if $_B['setting']['global']['login']['text']}{$_B['setting']['global']['login']['text']}{else}登录{/if}</a>
+        								</b>
+                                        {if $_B['setting']['global']['register']['link']}
+                                        <b>
+        									<a href="{$_B['setting']['global']['register']['link']}"> {if $_B['setting']['global']['register']['text']}{$_B['setting']['global']['register']['text']}{else}注册{/if}</a>
+        								</b>
+                                        {/if}
+    								</p>
+                                {/if}
+                                <p>
+									<b>
+										{$_B['setting']['global']['contact']['phone']}&nbsp;&nbsp;
+									</b>
+								</p>
+							</div>
+						</div>
+                        
+						<button type="button" class="navbar-toggler hamburger hamburger-close collapsed  met-nav-toggler" data-target="#met-nav-collapse" data-toggle="collapse">
+							<span class="sr-only"></span>
+							<span class="hamburger-bar"></span>
+						</button>
+                        
+						<div class="nav-box clearfix">
+                        
+							<!-- 侧边栏导航 -->
+							<div class="sidebar-nav">
+                                {php $top_product = $this->getClassInfo($settings['home']['met_368']['the_product_class']);}
+								<span class="sn-title">
+									{$top_product['title']}
+									<i class="fa fa-caret-down"></i>
+								</span>
+								<div class="sn-box">
+									<ul class="sn-list ulstyle {if empty($_B['routes_array'][0])}sn-open{/if}" data-hex="|0.5">
+                                        {php $top_product_2 = $this->getClasses('lower', array('cid' => $top_product['id']));}
+                                        {loop $top_product_2 $tp2}
+                                        {if $tp2['status'] == 1}
+										<li class="sn-li">
+											<div class="nav-left">
+												<span class="column-1">
+													<i class="icon fa-pencil-square-o  namemark"></i>
+													<a href="{php echo foregUrl('class', array('id' => $tp2['id']), true)}" title="{$tp2['title']}" target='_self'>{$tp2['title']}</a>
+													<i class="fa fa-angle-right"></i>
+												</span>
+												<span class="column-2">
+                                                    {loop $top_product_2[$tp2['id']]['t'] $tp3}
+                                                    {if $tp3['status'] == 1}
+
+													<h3>
+														<a href="{php echo foregUrl('class', array('id' => $tp3['id']), true)}" title="{$tp3['title']}" target='_self'>{$tp3['title']}</a>
+													</h3>
+
+                                                    {/if}
+                                                    {/loop}
+												</span>
+											</div>
+											<div class="nav-right">
+												<div class="main">
+													{php $tp2_bg = M_URL.'template/mobile/met_368/static/images/1517886750.jpg'}
+													{php $tp2_img = iunserializer($tp2['images'])}
+													{php $tp2_bg = !empty($tp2_img[0])?tomedia($tp2_img[0]):$tp2_bg}
+													<div class="left" style="background-image:url({$tp2_bg});">
+                                                        {loop $top_product_2[$tp2['id']]['t'] $tp3_2}
+                                                        {if $tp3_2['status'] == 1}
+
+														<div class="column-2-list">
+															<span class="column-2-title">
+																<a href="{php echo foregUrl('class', array('id' => $tp3_2['id']), true)}" title="{$tp3_2['title']}" target='_self'>
+																    <i class="fa fa-angle-right"></i> {$tp3_2['title']}
+                                                                </a>
+															</span>
+															<div class="column-2-content">
+																<ul class="clearfix ulstyle">
+
+                                                                    {php $top_product_articles = $this->getClasseArticles($tp3_2['id'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,4))}
+																	{loop $top_product_articles $tpa}
+                                                                    <li>
+																		<a href="{php echo foregUrl('article',array('id'=>$tpa['id']), true)}" title="{$tpa['title']}" target="_self">
+                                                                            {$tpa['title']}
+                                                                        </a>
+																	</li>
+                                                                    {/loop}
+																</ul>
+															</div>
+														</div>
+
+                                                        {/if}
+														{/loop}
+                                                        
+													</div>
+                                                    {php $tra_articles = $this->getArticles(array('istranslate' => 1, 'status' => 1, 'secondclass' => $tp2['id']), array('displayorder DESC', 'createtime DESC'), array(0,2));}
+													{if !empty($tra_articles)}
+                                                    <div class="right pull-md-right">
+                                                        {loop $tra_articles $item}
+														<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="column-2-img">
+                                                            {if $item['thumb']}
+                                                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                                            {else}
+                                                                {php $item['images'] = iunserializer($item['images']);}
+                                                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                                            {/if}
+                                                            <img src="{$item['thumb']}" alt="{$item['title']}" />
+														</a>
+														{/loop}
+													</div>
+                                                    {/if}
+												</div>
+											</div>
+										</li>
+                                        {/if}
+										{/loop}
+									</ul>
+								</div>
+							</div>
+							<!-- 侧边栏导航 -->
+                            <!-- 此处客户需求，已单独为客户更新
+                            <div class="layui-hide-sm">
+                                <span style="height: 48px; line-height: 48px; font-size: 16px; color: #ff5722; float: right;">导航</span>
+                            </div>
+                            -->
+							<div class="collapse navbar-collapse navbar-collapse-toolbar  p-0" id="met-nav-collapse">
+								<ul class="nav navbar-nav navlist">
+                                    
+                                    {php $tnavs = $this->getForegTopNav(false); $topnavs = $tnavs['top']; $children = $tnavs['children']; unset($tnavs);}
+                                    {loop $topnavs $tn}
+                                    {if $tn['status'] == '1'}
+                                        <!-- 1 -->
+                                        <li class="nav-item{if count($children[$tn['id']]) > 0} dropdown m-l-0{/if}">
+    										<a href="{$tn['url']}" title="{$tn['title']}" class="nav-link{if $tn['sign'] && $tn['sign'] == $sign} active{/if}{if count($children[$tn['id']]) > 0} dropdown-toggle" data-toggle="dropdown" data-hover="dropdown{/if}" data-dropname="{$tn['title']}" target="{$tn['target']}">
+                                                {$tn['title']}
+                                            </a>
+                                            {if count($children[$tn['id']]) > 0}
+    										<div class="dropdown-menu dropdown-menu-right dropdown-menu-bullet secondmenu">
+    											<a href="{$tn['url']}" title="全部" class="dropdown-item nav-parent hidden-lg-up {if $tn['sign'] && $tn['sign'] == $sign} active{/if}" target="{$tn['target']}">全部</a>
+    											{loop $children[$tn['id']] $tn_s}
+                                                {if $tn_s['status'] == '1'}
+                                                <!-- 2 -->
+                                                <a href="{$tn_s['url']}" title="{$tn_s['title']}" class="dropdown-item  navlist-2 {if $tn_s['sign'] && $tn_s['sign'] == $sign} active{/if}" target="{$tn_s['target']}">{$tn_s['title']}</a>
+                                                <!-- 2 -->
+                                                {/if}
+                        						{/loop}
+                                            </div>
+                                            {/if}
+    									</li>
+                                        <!-- 1 -->
+                                    {/if}
+                                    {/loop}
+                                                                      
+								</ul>
+							</div>
+                            
+						</div>
+                        
+					</div>
+				</div>
+			</nav>
+		</header>
+        <!-- phpDesigner :: Timestamp [2018/11/3 21:23:14] -->

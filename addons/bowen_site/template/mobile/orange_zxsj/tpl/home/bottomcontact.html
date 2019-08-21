@@ -1,0 +1,77 @@
+
+            <div class="met-index-bottomcontact met-index-body">
+				<div class="container">
+					<div class="row">
+						<div class="partner col-lg-6 col-md-6">
+							<h3 class="invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">
+								<a href="{php echo foregUrl('class',array('id'=>$settings['home']['orange_zxsj']['class'][$mid]))}" title="{$settings['home']['orange_zxsj']['title'][$mid]}" target="_self">{$settings['home']['orange_zxsj']['title'][$mid]}</a>
+							</h3>
+							<p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+								{$settings['home']['orange_zxsj']['title_en'][$mid]}
+							</p>
+							<div class="row">
+								<ul>
+                                    {php $joint_articles[$mid] = $this->getClasseArticles($settings['home']['orange_zxsj']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,12));}
+                                    {loop $joint_articles[$mid] $item}
+                                    <li class="col-lg-3 col-md-3  col-sm-3 col-xs-6">
+										<a href="{if $item['tourl']}{$item['tourl']}{else}{php echo foregUrl('article',array('id'=>$item['id']),true)}{/if}" title="{$item['title']}" target="_blank">
+                                            <img class="cover-image" src="{php echo tomedia($item['thumb'])}" title="{$item['title']}" alt="{$item['title']}" />
+                                        </a>
+									</li>
+									{/loop}
+								</ul>
+							</div>
+						</div>
+						<div class="get_touch col-lg-6 col-md-5 col-sm-12 col-xs-12">
+							<h3 class="invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">
+								<a href="#" title="{$settings['home']['orange_zxsj']['title2'][$mid]}" target="_self">{$settings['home']['orange_zxsj']['title2'][$mid]}</a>
+							</h3>
+							<p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+								{$settings['home']['orange_zxsj']['title_en2'][$mid]}
+							</p>
+							<form class="get-in-touch-form met-form met-form-validation fv-form fv-form-bootstrap onclick" data-type="show_diyform" data-dfid="{$settings['home']['orange_zxsj']['diyform'][$mid]}" novalidate="novalidate">
+								<button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;">
+								</button>
+								<input type="hidden" name="lang" value="cn">
+								<div class="form-group">
+									<div>
+										<input readonly="" name="para30" class="form-control" type="text" placeholder="姓名 " autocomplete="off" data-fv-notempty="true" data-fv-message="不能为空" data-fv-field="para30">
+									</div>
+									<small class="help-block" data-fv-validator="notEmpty" data-fv-for="para30" data-fv-result="NOT_VALIDATED" style="display: none;">
+										不能为空
+									</small>
+								</div>
+								<div class="form-group">
+									<div>
+										<input readonly="true" name="para31" class="form-control" type="text" placeholder="电话 " autocomplete="off">
+									</div>
+								</div>
+								<div class="form-group">
+									<div>
+										<input readonly="true" name="para32" class="form-control" type="text" placeholder="Email " autocomplete="off">
+									</div>
+								</div>
+								<div class="form-group">
+									<div>
+										<input readonly="true" name="para33" class="form-control" type="text" placeholder="其他联系方式 " autocomplete="off">
+									</div>
+								</div>
+								<div class="form-group">
+									<div>
+										<textarea readonly="true" name="para34" class="form-control" data-fv-notempty="true" data-fv-message="不能为空" placeholder="留言内容 " rows="5" data-fv-field="para34"></textarea>
+									</div>
+									<small class="help-block" data-fv-validator="notEmpty" data-fv-for="para34" data-fv-result="NOT_VALIDATED" style="display: none;">
+										不能为空
+									</small>
+								</div>
+								<div class="clear">
+								</div>
+								<button type="submit" class="submit btn-squared" onclick="return false;">
+									提交留言
+									<i class="fa fa-arrow-circle-right"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>

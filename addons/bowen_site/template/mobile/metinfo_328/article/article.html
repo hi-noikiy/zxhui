@@ -1,0 +1,95 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/header')}
+		<section role="main" class="subpage active">
+			<div class="main-box">
+				<div class="sidebar-header active">
+					<div class="sidebar-icon active">
+						<i class="fa fa-arrow-left"></i>
+						<i class="fa fa-th-list"></i>
+					</div>
+					<div class="sidebar-nav">
+						<ul>
+							<li class="">
+								<a href="{php echo foregUrl('class',array('id'=>$article['firstclass']))}" title="{$lastclass['title']}" class="">全部</a>
+							</li>
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+        					<li class="{if $article['secondclass'] == $n['id']}active{/if}">
+        						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}" class="{if $article['secondclass'] == $n['id']}active{/if}">{$n['title']}</a>
+                                <!--ul>
+                                    <li><a href="" title="">响应式建站</a></li>
+                                </ul-->
+        					</li>
+                            {/if}
+        					{/loop}
+						</ul>
+					</div>
+                    
+					{php include $this->mytemplate('common/search')}
+				</div>
+				<div class="information-table">
+					<div class="information-row">
+						<div class="information-descript info1">
+							<div class="information-title">
+								<h1>{$article['title']}</h1>
+								<em>
+									<u>阅读</u> <i class="fa fa-eye"></i> {if $article['reading']}{$article['reading']}{else}0{/if} &nbsp;·&nbsp; <u>发布日期</u> <i class="fa fa-clock-o"></i> {php echo date('Y-m-d H:i:s', $article['createtime'])} &nbsp;·&nbsp; {if $article['author']}<i class="fa fa-smile-o"></i> {$article['author']}{/if}
+								</em>
+							</div>
+							<div class="information-content site-content">
+								<div>
+                                    {php echo m('ui')->html_lazy($article['content'])}
+								</div>
+							</div>
+						</div>
+                        
+                        <!-- S,右侧推荐列表 -->
+						<div class="information-hots">
+							<div>
+								<h3>为您推荐</h3>
+								<ul>
+                                    {php $str_articles = $this->getArticles(array('istranslate' => 1, 'status' => 1), array('displayorder DESC', 'createtime DESC'), array(0,6));}
+                                    {if !empty($str_articles)}
+                                    {loop $str_articles $item}
+									<li>
+										<a href="{php echo foregUrl('article',array('id'=>$item['id']))}" title="{$item['title']}" target="_self">
+										<img data-original="{if $item['thumb']}{php echo tomedia($item['thumb'])}{else}{M_URL}template/mobile/metinfo_328/static/images/1481262873.jpg{/if}" title="{$item['title']}" />
+										<span>{$item['title']}</span>
+										<font><i class="fa fa-clock-o"></i> {php echo date('Y-m-d H:i:s', $item['createtime'])}</font>
+										</a>
+									</li>
+                                    {/loop}
+                                    {else}
+                                    暂无推荐
+                                    {/if}
+								</ul>
+							</div>
+						</div>
+                        <!-- E,右侧推荐列表 -->
+                        
+					</div>
+				</div>
+                
+				<div class="page-main">
+					<ul class="pager pager-round">
+						<li class="previous {if empty($last_article['id'])}disabled{/if}">
+							<a href="{if !empty($last_article['id'])}{php echo foregUrl('article',array('id'=>$last_article['id']))}{else}#{/if}" title="{$last_article['title']}">
+							上一篇
+							<span aria-hidden="true" class="hidden-xs">：{if $last_article['title']}{$last_article['title']}{else}没有更多了{/if}</span> 
+							</a>
+						</li>
+						<li class="next {if empty($next_article['id'])}disabled{/if}">
+							<a href="{if !empty($next_article['id'])}{php echo foregUrl('article',array('id'=>$next_article['id']))}{else}#{/if}" title="{$next_article['title']}">
+							下一篇
+							<span aria-hidden="true" class="hidden-xs">：{if $next_article['title']}{$next_article['title']}{else}没有更多了{/if}</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<button type="button" class="btn btn-icon btn-primary btn-squared met-scroll-top hide">
+					<i class="fa fa-chevron-up" aria-hidden="true"></i>
+				</button>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+		</section>
+{php include $this->mytemplate('common/footer-base')}

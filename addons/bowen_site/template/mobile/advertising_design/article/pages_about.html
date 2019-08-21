@@ -1,0 +1,34 @@
+{php include $this->mytemplate('common/header-base')}
+	<body class="inner-box-body">
+		<!-- 顶部导航 begin-->
+		{php include $this->mytemplate('common/top-nav')}
+		<!-- 顶部导航 end-->
+		<!-- 轮播图片 begin-->
+		{php include $this->mytemplate('common/banner2')}
+		<!-- 轮播图片 end-->
+		<!-- 内容展示 begin-->
+		<div class="layout  padding-large-top" id="fh5co-content_show">
+			<div class="content-boxs channel-box">
+				<div class="detail">
+					<div class="about-boxs">
+						<!-- 我们的服务 begin-->
+						{php include $this->mytemplate('common/ourservices')}
+						<!-- 我们的服务 end-->
+						<!-- 关于我们 begin-->
+                        {php include $this->mytemplate('common/about')}
+						<!-- 关于我们 end-->
+						<!-- 服务团队 begin-->
+						<div id="fh5co-our-team" class="layout">
+							<div class="bg-team">
+								<div class="container qhd-content">
+                                    {php echo m('ui')->html_lazy($article['content'])}
+								</div>
+							</div>
+						</div>
+						<!-- 服务团队 end-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 内容展示 end-->
+		{php include $this->mytemplate('common/footer')}

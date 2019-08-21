@@ -1,0 +1,95 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+<div class="subcolumn_nav_met_11_4" m-id='10' m-type='nocontent'>
+    <div class="container">
+        <div class="row">
+            <div class="clearfix">
+                <div class="subcolumn-nav">
+                    <ul class="subcolumn_nav_met_11_4-ul m-b-0 ulstyle">
+
+                        <li>
+                            <a href="{php echo foregUrl('class',array('id'=>$all['id']), true)}"  title="全部"
+                               class="link{if $class_info['id'] == $all['id']} active{/if}">
+                                全部
+                            </a>
+                        </li>
+
+                        {loop $navs $n}
+                        {if $n['status'] == '1'}
+                        <li {if $n['t']}class="dropdown"{/if}>
+                        <a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}"
+                           class="link{if $class_info['id'] == $n['id']} active{/if}">
+                            {$n['title']}
+                        </a>
+                        </li>
+                        {/if}
+                        {/loop}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="news_list_page_met_16_4 animsition" m-id='11'>
+    <div class="container">
+        <div class="met-news-body">
+            <div class="met-news-list">
+                <ul class="met-pager-ajax met-grid clearfix" id="met-grid">
+
+                    {loop $articles $item}
+                    {if $item['status'] == '1'}
+                    <li class="col-lg-6 col-xs-12">
+                        <div class="news-card">
+                            <div class="news-item">
+                                <a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target=_self>
+                                    <h4>{$item['title']}</h4>
+                                    <p class="des">
+                                        {if $item['description']}
+                                            {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        {php echo m('common')->msubstr($item['description'], 0, 173)}
+                                    </p>
+                                    <p class="info">
+                                        <span>{php echo date('Y-m-d', $item['createtime'])}</span>
+                                        <span></span>
+                                        <span><i class="fa fa-eye m-r-5"></i>{php echo intval($item['reading'])}</span>
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {/if}
+                    {/loop}
+
+                </ul>
+
+                <?php
+                    $param = array(
+                        'html' => array(
+                            's' => '<div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">',
+                            'e' => '</div></div>',
+                            'ac' => 'Ahover',
+                            'fpnl' => array(
+                                'fl' => 'class="null"',
+                                'p' => 'class="PreSpan"',
+                                'n' => 'class="NextA"',
+                            )
+                        ),
+                        'li' => 'null',
+                        'always_show' => 1
+                    );
+                    echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                ?>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{mytemplate 'common/footer'}
+<!-- phpDesigner :: Timestamp [2018/10/06 10:31:15] -->

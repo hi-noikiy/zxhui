@@ -1,0 +1,76 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/mobilenav')}
+			{php include $this->mytemplate('common/topnav')}
+			{php include $this->mytemplate('common/banner2')}
+            {php $needsearch = true;}
+            {php include $this->mytemplate('common/mobilesearch')}
+			
+			<div class="eco-leftnav">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-9 col-xs-12 pull-right">
+							<div class="section-title-style">
+								<h2>{$class_info['title']}</h2>
+							</div>
+							<div class="met-product animsition type-1">
+								<div class="container">
+									<div class="row">
+										<div class="less-page-content">
+											<ul class="blocks blocks-100 blocks-xlg-4 blocks-md-3 blocks-sm-2 met-page-ajax met-grid" id="met-grid">
+                                            	{loop $articles $ai}
+												<li class="masonry-item">
+                                					<div class="widget widget-shadow">
+                                						<figure class="widget-header cover">
+                                							<a href="{php echo foregUrl('article',array('id'=>$ai['id']), true)}" title="{$ai['title']}" target='_self'>
+                                                                {if $ai['thumb']}
+                                                                    {php $ai['thumb'] = tomedia($ai['thumb'])}
+                                                                {else}
+                                                                    {php $ai['images'] = iunserializer($ai['images']);}
+                                                                    {php $ai['thumb'] = tomedia($ai['images'][0])}
+                                                                {/if}
+                                								<img class="cover-image" data-original="{php echo m('image')->image_crop($ai['thumb'], 376, 299)}" height='299' alt="{$ai['title']}" />
+                                							</a>
+                                						</figure>
+                                						<h4 class="widget-title">
+                                							<a href="{php echo foregUrl('article',array('id'=>$ai['id']), true)}" title="{$ai['title']}" target='_self'>
+                                                                {$ai['title']}
+                                                            </a>
+                                						</h4>
+                                					</div>
+                                				</li>
+                        				        {/loop}
+											</ul>
+                                            
+                                            <?php
+                                            $param = array(
+                                                'html' => array(
+                                                    's' => '<div class="hidden-xs"><div class="met_pager">', 
+                                                    'e' => '</div></div>', 
+                                                    'ac' => 'Ahover', 
+                                                    'fpnl' => array(
+                                                        'f' => 'class="PreSpan first_last"', 
+                                                        'p' => 'class="PreSpan"', 
+                                                        'n' => 'class="NextA"',
+                                                        'l' => 'class="PreSpan first_last"',
+                                                    )
+                                                ),
+                                                'li' => 'null',
+                                                'always_show' => 1
+                                            );
+                                            echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                                            ?>
+                                
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        
+                        
+						{php include $this->mytemplate('common/leftpull')}
+                        
+					</div>
+				</div>
+			</div>
+            {php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}

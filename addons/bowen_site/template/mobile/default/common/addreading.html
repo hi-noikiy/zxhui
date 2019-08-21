@@ -1,0 +1,11 @@
+        <script type="text/javascript">
+        setTimeout('addReading();',3000);
+        function addReading(){
+            $.post('{php echo foregUrl("article/addReading", "", true)}',
+                {id:'{$id}'},
+                function(d){
+                    console.log(d.message);
+                }
+            ,'json');
+        }
+        </script>

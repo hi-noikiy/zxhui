@@ -1,0 +1,403 @@
+<title>文章列表</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>内容</cite></a>
+		<a><cite>文章列表</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+    <div class="layui-card">
+		<div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                <p>功能描述：文章其实就是网站中的内容展示页（比如点击新闻列表中的具体的某一个新闻的时候，进入的那个新闻内容页面，就是我们的文章页，点击案例，展示案例详情的页面也是文章）；至于所说的专题页，其实就是没有进行分类的文章，这类文章是可以单独设置标识的，如果是带地图的，也会在文章编辑页面中显示出选择坐标的输入框。</p>
+                <p>补充说明：当前页面的文章状态，可直接点击切换</p>
+            </blockquote>
+        </div>
+    </div>
+
+	<div class="layui-card">
+    
+		<form class="layui-form layui-card-header layuiadmin-card-header-auto" id="BOWEN_app-content-article-search" lay-filter="BOWEN_app-content-article-search">
+			<div class="layui-form-item">
+				
+				<div class="layui-inline">
+					<label class="layui-form-label">
+						文章ID
+					</label>
+					<div class="layui-input-block">
+						<input type="text" name="id" placeholder="文章ID" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+                
+                <div class="layui-inline">
+					<label class="layui-form-label">
+						标题
+					</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" placeholder="支持模糊搜索" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label">分类</label>
+                    <div class="layui-input-block">
+                        <select name="class" id="BOWEN_app-content-article-searchClass" lay-search></select>
+                    </div>
+                </div>
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select name="status">
+                            <option value="">不限制</option>
+                            <option value="1">显示</option>
+                            <option value="0">隐藏</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label">推荐</label>
+                    <div class="layui-input-block">
+                        <select name="istranslate">
+                            <option value="">不限制</option>
+                            <option value="1">开启</option>
+                            <option value="0">关闭</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="layui-inline">
+					<label class="layui-form-label">
+						发布时间
+					</label>
+					<div class="layui-input-block">
+						<input type="text" name="createtime" placeholder="" autocomplete="off" class="layui-input laydate">
+					</div>
+				</div>
+                
+                <div class="layui-inline">
+					<label class="layui-form-label">
+						修改时间
+					</label>
+					<div class="layui-input-block">
+						<input type="text" name="updatetime" placeholder="" autocomplete="off" class="layui-input laydate">
+					</div>
+				</div>
+                
+				<div class="layui-inline">
+					<a class="layui-btn" lay-submit lay-filter="BOWEN_app-content-article-search-submit">
+						<i class="layui-icon layui-icon-search layuiadmin-button-btn search-btn"></i>
+					</a>
+                    <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				</div>
+                
+			</div>
+		</form>
+        
+		<div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn onclick" data-type="batchdel">删除</button>
+                <button class="layui-btn" lay-href="/content/article/post/op=post">添加文章</button>
+            </div>
+			<table id="BOWEN_app-content-article-table" lay-filter="BOWEN_app-content-article-table"></table>
+		</div>
+
+        <script type="text/html" id="otherTpl">
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" data-type="clip_article" lay-tips="复制文章" data-id="{{ d.id }}"><i class="fa fa-copy"></i></a>
+        </script>
+        <script type="text/html" id="categorylTpl">
+            {{#  if(d.category){ }}
+            {{ d.category }}
+            {{#  } else { }}
+            <span class="layui-badge layui-bg-orange">专题页面</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="statusTpl">
+            {{#  if(d.status == '1'){ }}
+            <span style="color: #5FB878;">显示</span>
+            {{#  } else { }}
+            <span style="color: #FFB800;">隐藏</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="translateTpl">
+            {{#  if(d.istranslate == '1'){ }}
+            <span style="color: #5FB878;">推荐</span>
+            {{#  } else { }}
+            <span style="color: #c2c2c2;">关闭</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="toolbar">
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" data-type="preview" data-id="{{ d.id }}" lay-tips="预览"><i class="layui-icon layui-icon-search"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary onclick" lay-event="clip" lay-tips="复制链接" data-id="{{ d.id }}" data-clip=""><i class="layui-icon layui-icon-link"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-primary" lay-href="/content/article/post/op=post/id={{ d.id }}" lay-tips="编辑"><i class="layui-icon layui-icon-edit"></i></a>
+        </script>
+        <script type="text/html" id="BOWEN_app_content_article_searchClassTpl">
+            <option value="">不限制分类</option>
+            {{#  layui.each(d.data.category, function(index, item){ }}
+            <option value="{{ item.id }}|0|0">{{ item.title }}</option>
+                {{#  if(d.data.children[item.id]){ }}
+                    {{#  layui.each(d.data.children[item.id], function(index2, item2){ }}
+                    <option value="{{ item.id }}|{{ item2.id }}|0">{{ item.title }}-{{ item2.title }}</option>
+                        {{#  if(d.data.children[item2.id]){ }}
+                            {{#  layui.each(d.data.children[item2.id], function(index3, item3){ }}
+                            <option value="{{ item.id }}|{{ item2.id }}|{{ item3.id }}">{{ item.title }}-{{ item2.title }}-{{ item3.title }}</option>
+                            {{#  }); }}
+                        {{#  } }}
+                    {{#  }); }}
+                {{#  } }}
+            {{#  }); }}
+            {{#  if(d.data.length === 0){ }}
+              无数据
+            {{#  } }} 
+        </script>
+	</div>
+</div>
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'form', 'table', 'myutil', 'laydate', 'clip'], function(){
+        var $ = layui.$
+        ,admin = layui.admin
+        ,form = layui.form
+        ,table = layui.table
+        ,layer = layui.layer
+        ,myutil = layui.myutil
+        ,laydate = layui.laydate
+        ,laytpl = layui.laytpl
+        ,clip = layui.clip;
+        
+        //渲染搜索中的模块选择
+        $.ajax({
+            url: myutil.webUrl('getCategory')
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno == 0){
+                    laytpl(BOWEN_app_content_article_searchClassTpl.innerHTML).render(d, function(html){
+                        document.getElementById('BOWEN_app-content-article-searchClass').innerHTML = html;
+                    });
+
+                    //监听路径，并执行搜索
+                    var router = layui.router();
+                    if(router.search.class != ''){
+                        form.val("BOWEN_app-content-article-search", {
+                            "class": router.search.class
+                        })
+                        $('.layuiadmin-button-btn').click();
+                    }else{
+                        //渲染搜索表单，解决重载当前页面时渲染失效问题
+                        form.render(null, "BOWEN_app-content-article-search");
+                    }
+                }else{
+                    layer.msg(d.message,{'icon':2,time: 500},function(){
+                        if(d.data.re_url){
+                            location.hash = d.data.re_url;
+                        }
+                    })
+                }
+            }
+        });
+        
+        //渲染时间选择器
+        $("#BOWEN_app-content-article-search .laydate").each(function() {
+            laydate.render({
+                elem: this
+                ,type: 'datetime'
+                ,range: true
+            });
+        })
+        
+        var The_width = $('.layui-form-item').width();
+        if(admin.screen() > 1)The_width = The_width-17;
+        //渲染表格
+        table.render({
+            elem: '#BOWEN_app-content-article-table'
+            ,cellMinWidth: 120
+            ,url: myutil.webUrl('content/article/getList')
+            ,method: 'post'
+            ,page: true
+            ,request: {
+                limitName: 'psize'
+            }
+            ,width: The_width
+            ,cols: [[
+                {type:'checkbox', fixed: 'left'}
+                ,{title: '', width:60, align:'center', templet: '#otherTpl'}
+                ,{type:'numbers', title: '序号', align: 'center'}
+                ,{field: 'id', width:60, title: 'ID', align: 'center'}
+                ,{field: 'displayorder', width:60,title: '排序', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'title', title: '标题', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'thirdclass', title: '分类', align: 'center', templet: '#categorylTpl'}
+                ,{field: 'themes_title', title: '模板', align: 'center'}
+                ,{field: 'tourl', title: '直接链接', align: 'center', edit: 'text', style:'cursor: pointer;'}
+                ,{field: 'status', width:100, title: '状态', align: 'center', sort: true, templet: '#statusTpl', event: 'changeStatus', style:'cursor: pointer;'}
+                ,{field: 'istranslate', width:100, title: '推荐', align: 'center', sort: true, templet: '#translateTpl', event: 'changeTranslate', style:'cursor: pointer;'}
+                ,{field: 'createtime', title: '创建时间', align: 'center', sort: true}
+                ,{fixed: 'right', title: '操作', align:'center', toolbar: '#toolbar'}
+            ]]
+            ,done: function(){
+                $(".onclick").each(function() {
+                    if(($(this).attr('lay-event') == 'clip' || $(this).data('type') == 'clip')){
+                        if(!$(this).attr("data-clip") && $(this).data('id'))$(this).attr("data-clip", myutil.foregUrl('article', {'id': $(this).data('id')}, true))
+                        clip(this, $(this).attr("data-clip"))
+                    }
+            	});
+                $('.onclick').on('click', function() {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            }
+        });
+        
+        //监听单元格编辑
+        table.on('edit(BOWEN_app-content-article-table)', function(obj){
+            var value = obj.value
+            ,data = obj.data
+            ,field = obj.field;
+            if(value == '' && field != 'tourl'){
+                layer.msg("修改内容不能为空", {icon: 2});
+                return false;
+            }
+            admin.req({
+                url: myutil.webUrl('content/article/updateField')
+                ,type: 'post'
+                ,data: {id:data.id, field:field, value:value}
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno == 0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 500
+                        });
+                    }else{
+                        layer.msg(d.message, {icon: 2});
+                    }
+                }
+            });
+        });
+        
+        //监听工具条
+        table.on('tool(BOWEN_app-content-article-table)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'changeStatus') {
+                admin.req({
+                    url: myutil.webUrl('content/article/changeStatus')
+                    ,type: 'post'
+                    ,data: {id:data.id,status:data.status}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                status: d.data.status
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            } else if (obj.event === 'changeTranslate') {
+                admin.req({
+                    url: myutil.webUrl('content/article/changeTranslate')
+                    ,type: 'post'
+                    ,data: {id:data.id,translate:data.istranslate}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            obj.update({
+                                istranslate: d.data.istranslate
+                            });
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            });
+                        }else{
+                            layer.msg(d.message, {icon: 2});
+                        }
+                    }
+                });
+            }
+        });
+        
+        //监听表单搜索
+        form.on('submit(BOWEN_app-content-article-search-submit)', function(data){
+            var field = data.field;
+            table.reload('BOWEN_app-content-article-table', {
+                where: field
+            });
+        });
+        
+        var active = {
+            batchdel: function(){
+                var checkData = table.checkStatus('BOWEN_app-content-article-table').data;
+                
+                if(checkData.length === 0){
+                  return layer.msg('请选择数据');
+                }
+                
+                var domain_del_confirm = layer.confirm('确定删除勾选数据吗？删除后不可恢复', function(index) {
+                    admin.req({
+                        url: myutil.webUrl('content/article/delete')
+                        ,type: 'post'
+                        ,data: {checkData:checkData}
+                        ,cache: false
+                        ,dataType:"json"
+                        ,success: function(d){
+                            if(d.errno == 0){
+                                layer.close(domain_del_confirm);
+                                layer.msg(d.message, {
+                                    icon: 1
+                                    ,time: 1500
+                                }, function(){
+                                    table.reload('BOWEN_app-content-article-table');
+                                });
+                            }else{
+                                console.log(d);
+                                layer.msg(d.message, {icon: 2});
+                            }
+                        }
+                    });
+               	});
+            }
+            ,clip: function(){
+                if($(this).data('type') == 'clip'){
+                    clip(this, $(this).attr("data-clip"))
+                }
+            }
+            ,preview: function(){
+                if(!$(this).data('id'))return;
+                var url = myutil.foregUrl('article', {'id': $(this).data('id')}, true);
+                window.open(url);
+            }
+            ,clip_article: function () {
+                if(!$(this).data('id'))return;
+                admin.req({
+                    url: myutil.webUrl('content/article/copyArticle')
+                    ,type: 'post'
+                    ,data: {id:$(this).data('id')}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno == 0){
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            }, function(){
+                                table.reload('BOWEN_app-content-article-table');
+                            });
+                        }else{
+                            console.log(d);
+                        }
+                    }
+                });
+            }
+        };
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/10/05 11:08:47] -->

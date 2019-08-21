@@ -1,0 +1,44 @@
+
+                        {if $settings['home']['metinfo_328']['sign'][$mid] != 'hide'}
+                        <!-- module006 S -->
+                        <!-- 该模块，最少要六个内容才会显示 -->
+						<div class="window-bin" data-hash="{$settings['home']['metinfo_328']['sign'][$mid]}">
+							<div class="window-back swiper-lazy" data-title="{$settings['home']['metinfo_328']['anchor'][$mid]}" data-background="{if $settings['home']['metinfo_328']['background_color'][$mid]}{php echo tomedia($settings['home']['metinfo_328']['background_color'][$mid])}{else}{M_URL}template/mobile/metinfo_328/static/images/1481180268.jpg{/if}">
+								<div class="mark-ctrl mark-ctrl_{$mid}">
+									<div class="ctrl-box ctrl-left">
+										<i class="fa fa-angle-left"></i>
+									</div>
+									<div class="ctrl-box ctrl-right">
+										<i class="fa fa-angle-right"></i>
+									</div>
+								</div>
+								<div class="table-box">
+									<div class="table-cell">
+										<div class="title-box">
+											<h1>
+												{$settings['home']['metinfo_328']['title_en'][$mid]}
+											</h1>
+											<h2>
+												{$settings['home']['metinfo_328']['title'][$mid]}
+											</h2>
+										</div>
+										<div class="mark-box mark-box_{$mid} mark-type-0 ">
+											<div class="mark-cut mark-cut_{$mid}" >
+                                                {php $mark_articles[$mid] = $this->getClasseArticles($settings['home']['metinfo_328']['class'][$mid], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(1,7));}
+                                                {loop $mark_articles[$mid] $item}
+												<div class="mark-bin mark-bin_{$mid}" onclick="{if !empty($item['tourl'])}window.open('{$item['tourl']}');{/if}">
+													<a title="{$item['title']}">
+    													<i class="fa fa-{if $item['icon']}{$item['icon']}{else}{$item['thumb']}{/if}"></i>
+    													<h3>{$item['title']}</h3>
+    													{php echo html_entity_decode($item['content'])}
+													</a>
+												</div>
+                                                {/loop}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!-- module006 E -->
+                        {/if}

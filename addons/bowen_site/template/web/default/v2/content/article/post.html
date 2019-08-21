@@ -1,0 +1,19 @@
+<title>编辑文章</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>内容</cite></a>
+		<a><cite>编辑文章</cite></a>
+	</div>
+</div>
+<div id="BOWEN_app-content-article-post"></div>
+<script type="text/javascript">
+layui.use(['jquery', 'myutil'], function(){
+    var $ = layui.jquery
+    ,myutil = layui.myutil
+    ,router = layui.router();
+    var iframe = '<iframe src="'+myutil.webUrl('content/articles',{'s':'iframe', 'op':'post', 'id':router.search.id})+'" frameborder="0" class="layadmin-iframe"></iframe>';
+    $('#BOWEN_app-content-article-post').html(iframe);
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/18 18:05:23] -->

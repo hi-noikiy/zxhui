@@ -1,0 +1,351 @@
+{php $_W['need_we7res'] = false}
+{php include $this->mytemplate('common/header')}
+<link rel="stylesheet" href="{M_LOCAL}plugin/{$_W['plugin']}/static/css/login.css" media="all" />
+<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+	<div class="layadmin-user-login-main">
+		<div class="layadmin-user-login-box layadmin-user-login-header">
+			<h2>
+				{if $register_setting['title']}{$register_setting['title']}{else}用户注册{/if}
+			</h2>
+			<p>{$register_setting['title_vice']}</p>
+		</div>
+        <div id="status" style="display: none;" >0</div>
+		<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+            
+            {if $_GPC['register_type'] == 'system' || empty($_GPC['register_type'])}
+                <div class="layui-form-item">
+    				<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"><i class="icon icon-wode"></i></label>
+    				<input type="text" name="username" lay-verify="required" data-type="check_username" placeholder="用户名" class="layui-input onchange">
+    			</div>
+            {/if}
+            
+            {if $_GPC['register_type'] == 'mobile'}
+    			<div class="layui-form-item">
+    				<label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+    				<input type="text" name="mobile" lay-verify="required|phone" placeholder="手机" class="layui-input">
+    			</div>
+            {/if}
+            
+            {if !empty($_W['setting']['copyright']['verifycode'])}
+    			<div class="layui-form-item">
+    				<div class="layui-row">
+    					<div class="layui-col-xs7">
+    						<label class="layadmin-user-login-icon layui-icon layui-icon-vercode"><i class="icon icon-safe"></i></label>
+    						<input type="text" name="imagecode" lay-verify="required|number" autocomplete="off" placeholder="图形验证码" data-type="check_code" class="layui-input onchange">
+    					</div>
+    					<div class="layui-col-xs5">
+    						<div style="margin-left: 10px;" class="onclick" data-type="new_verify">
+    							<img src="{php echo url('utility/code')}" class="layadmin-user-login-codeimg" id="imgverify">
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+            {/if}
+            
+            {if $_GPC['register_type'] == 'mobile'}
+    			<div class="layui-form-item">
+    				<div class="layui-row">
+    					<div class="layui-col-xs7">
+    						<label class="layadmin-user-login-icon layui-icon layui-icon-vercode"></label>
+    						<input type="text" name="smscode" lay-verify="required" placeholder="短信验证码" class="layui-input">
+    					</div>
+    					<div class="layui-col-xs5">
+    						<div style="margin-left: 10px;">
+    							<button type="button" class="layui-btn layui-btn-primary layui-btn-fluid onclick" id="sendCode" data-type="sendMessage">
+    								获取验证码
+    							</button>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+            {/if}
+            
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
+   				<input type="password" name="password" lay-verify="required" placeholder="请输入不少于8位的密码" data-type="check_password" class="layui-input onchange">
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
+                <input type="password" name="repassword" lay-verify="required" placeholder="请确认密码" data-type="check_repass" class="layui-input onchange">
+            </div>
+            
+            {if $_GPC['register_type'] == 'system' || empty($_GPC['register_type'])}
+                <!--用户注册拓展字段 end -->
+                {if $extendfields}
+                    {loop $extendfields $item}
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-star"></label>
+                        {php echo $this->model->tpl_fans_form($item['field'], '',  array('title' => $item['title'], 'required' => $item['required']))}
+                    </div>
+                    {/loop}
+                {/if}
+            {/if}
+            
+            <!--
+			<div class="layui-form-item">
+				<input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+			</div>
+            -->
+            <input name="register_type" value="{$register_type}" type="hidden"/>
+            <input name="register_sign" value="{$register_sign}" type="hidden"/>
+            <input name="owner_uid" value="{php echo !empty($owner_uid) ? $owner_uid : 0}" type="hidden"/>
+            
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-fluid reg-submit" lay-submit lay-filter="reg-submit">
+					注 册
+				</button>
+			</div>
+			<div class="layui-trans layui-form-item layadmin-user-login-other">
+                {if !empty($login_setting['isthirdlogin']) && !empty($register_setting['isthirdlogin']) && $_W['siteroot'] == $login_setting['redirect_uri']}
+    				{if !empty($_W['setting']['thirdlogin']['qq']['authstate']) || !empty($_W['setting']['thirdlogin']['wechat']['authstate'])}
+                  	<label>第三方注册</label>
+                  	{/if}
+                    {if !empty($_W['setting']['thirdlogin']['qq']['authstate'])}<a href="{$login_urls['qq']}"><img src="./resource/images/qqlogin.png" width="28px"></a>{/if}
+                    {if !empty($_W['setting']['thirdlogin']['wechat']['authstate'])}<a href="{$login_urls['wechat']}"><img src="./resource/images/wxlogin.png" width="28px"></a>{/if}
+                {/if}
+
+				<a href="{php echo webUrl('pcsite/user/login', '', false)}" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+				<a href="{php echo webUrl('pcsite/user/login', '', false)}" class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+			</div>
+		</div>
+        
+	</div>
+
+	{if $copyright['content']}
+	<div class="layui-trans layadmin-user-login-footer" style="{if !file_exists(MODULE_ROOT . '/map.json')}{if $_GPC['i'] == '76'}display: none;{/if}{/if}">
+		{$copyright['content']}
+	</div>
+	{/if}
+</div>
+<script>
+layui.use(['form'], function(){
+    var $ = layui.$
+    ,form = layui.form;
+    
+    var isSend = 0;
+    var owner_uid = "{php echo !empty($owner_uid) ? $owner_uid : 0}";
+    var register_sign = "{php echo !empty($register_sign) ? $register_sign : 'null'}";
+    var register_type = "{php echo !empty($register_type) ? $register_type : 0}";
+    
+    form.on('submit(reg-submit)', function(obj){
+        var field = obj.field;
+        var isfalse = 0;
+        
+        var password = $.trim(field.password);
+        if (password.length < 8) {
+        	isfalse = 1;
+            layer.msg('密码不能少于8位', {
+        		icon: 2
+        	});
+        	return false;
+        }
+        var repass = $.trim(field.repassword);
+        if (password != repass) {
+        	isfalse = 1;
+            layer.msg('两次密码输入不一致', {
+        		icon: 2
+        	});
+        	return false;
+        }
+        
+        /** 用户名登录校验 **/
+        if(register_type != 'mobile'){
+            var username = $.trim(field.username);
+            if (username.length <= 2) {
+                isfalse = 1;
+            	layer.msg('用户名最少为3个字符', {
+            		icon: 2
+            	});
+            	return false;
+            }
+            $.post("{php echo webUrl('pcsite/user/register/check_username')}", {
+            	username: username,
+            	owner_uid: owner_uid,
+            	password: password
+            }, function(d) {
+            	if (d.errno != '0') {
+                    isfalse = 1;
+            		layer.msg(d.message, {
+            			icon: 2
+            		});
+            		return false;
+            	}
+            }, 'json');
+        }
+        
+        if(isfalse == 1){
+            return false;
+        }
+        
+        $.post(
+            "{php echo webUrl('pcsite/user/register/register')}"
+            ,field
+            ,function(d){
+                console.log(d);
+                if(d.errno == '0'){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1000
+                    }, function(){
+                        window.location.href = d.data.re_url;
+                    });
+                }else{
+                    click_active['new_verify'].call(this);
+                    layer.msg(d.message, {icon: 2});
+                    return false;
+                }
+            }
+            ,'json'
+        );
+        
+        return false;
+    });
+    
+    //监控回车
+    $(document).keypress(function(e){ 
+        if(e.which == 13) {
+            $(".reg-submit").click();  
+        }
+    });
+    
+    /** 
+    * 监控事件
+    * class="onclick" data-type="test1"
+    */
+    var click_active = {
+        new_verify: function(){
+            //$(':text[name="imagecode"]').val('');
+            $('#imgverify').prop('src', '{php echo url('utility/code')}r='+Math.round(new Date().getTime()));
+            return true;
+        }
+        ,sendMessage: function(field){
+            var code = field?$.trim(field.imagecode):$.trim($(':text[name="imagecode"]').val());
+            var mobile = field?$.trim(field.mobile):$.trim($(':text[name="mobile"]').val());
+            if ("" == mobile) return layer.msg("手机号不能为空", {icon: 2});
+            {if !empty($_W['setting']['copyright']['verifycode'])}
+            if ("" == code) return layer.msg("请先输入验证码", {icon: 2});
+            {/if}
+            if(2 == isSend) return layer.msg("正在发送中，请耐心等待...", {icon: 2});
+    		$.post("{php echo webUrl('pcsite/user/register/valid_mobile')}"
+                ,{mobile: mobile}
+                ,function(a){
+                    isSend = 2;
+                    if(0 != a.errno){
+                        layer.msg(a.message, {icon: 2})
+                        isSend = 0;
+                    }else{
+                        if(1 == isSend) return layer.msg("请倒计时结束后，再重新获取", {icon: 2});
+                        $.post("{php echo url('utility/verifycode')}", {
+            				receiver: mobile,
+            				custom_sign: register_sign
+            			}).success(function(t) {
+            				if ("success" == t) {
+            				    isSend = 1;
+            				    layer.msg("发送验证码成功", {icon: 1});
+            					$('#sendCode').addClass('layui-btn-disabled');
+                                djs();
+            				} else layer.msg(t, {icon: 2});
+            			})
+                    }
+        		}
+                , 'json'
+            );
+        }
+    };
+    var change_active = {
+        check_username: function(field){
+            var username = field?$.trim(field.username):$.trim($(':text[name="username"]').val());
+            var password = field?$.trim(field.password):$.trim($(':password[name="password"]').val());
+            if(username.length <= 2){
+                layer.msg('用户名最少为3个字符', {icon: 2});
+                return false;
+            }
+            $.post(
+                "{php echo webUrl('pcsite/user/register/check_username')}"
+                ,{username: username, owner_uid: owner_uid, password: password}
+                ,function(d){
+                    if(d.errno != '0'){
+                        layer.msg(d.message, {icon: 2});
+                        return false;
+                    }
+                }
+                ,'json'
+            );
+            return true;
+        }
+        ,check_password: function(field){
+            var password = field?$.trim(field.password):$.trim($(':password[name="password"]').val());
+            if(password.length < 8){
+                layer.msg('密码不能少于8位', {icon: 2});
+                return false;
+            }
+            return true;
+        }
+        ,check_repass: function(field){
+            var password = field?$.trim(field.password):$.trim($(':password[name="password"]').val());
+            var repass = field?$.trim(field.repassword):$.trim($(':password[name="repassword"]').val());
+            if(password != repass){
+                layer.msg('两次密码输入不一致', {icon: 2});
+                return false;
+            }
+            return true;
+        }
+        ,check_code: function(field){
+            var code = field?$.trim(field.imagecode):$.trim($(':text[name="imagecode"]').val());
+            $.post(
+                "{php echo webUrl('pcsite/user/register/check_code')}"
+                ,{code: code}
+                ,function(d){
+                    if(d.errno != '0'){
+                        $('#imgverify').prop('src', '{php echo url('utility/code')}r='+Math.round(new Date().getTime()));
+                        layer.msg(d.message, {icon: 2});
+                        return false;
+                    }
+                }
+                ,'json'
+            );
+            return true;
+        }
+    };
+    $('.onclick').on('click', function(){
+        var type = $(this).data('type');
+        click_active[type] && click_active[type].call(this);
+    });
+    $('.onchange').on('change', function(){
+        var type = $(this).data('type');
+        change_active[type] && change_active[type].call(this);
+    });
+    
+    /** 背景图 */
+    {php $backgroundImages = iunserializer($copyright_setting['backgroundImages'])}
+    var bg1 = "{media $backgroundImages[0]}",bg2 ="{media $backgroundImages[1]}";
+    if(bg1 != ''){
+        {if $copyright_setting['backgroundImages_showType'] == 3}
+        $('#LAY-user-login').css({'background-image':'url('+bg1+')', 'background-repeat': 'no-repeat', 'background-position': 'center'});
+        {elseif $copyright_setting['backgroundImages_showType'] == 2}
+        $('#LAY-user-login').css({'background-image':'url('+bg1+')', 'background-repeat': 'no-repeat', 'background-size': $(window).width()+'px auto'});
+        {else}
+        $('#LAY-user-login').css({'background-image':'url('+bg1+')', 'background-repeat': 'no-repeat', 'background-size': 'auto '+$(window).height()+'px'});
+        {/if}
+        //$('#LAY-user-login').css({'background-image':'url('+bg1+')', 'background-size': 'auto '+$(window).height()+'px'});
+    }
+    if(bg2 != ''){
+        $('.layadmin-user-login-main').css({'background-image':'url('+bg2+')', 'background-size': $('.layadmin-user-login-main').width()+'px '+$('.layadmin-user-login-main').height()+'px'});
+    }
+});
+
+var djs = function(t){
+    var s = t || 120;
+    $('#sendCode').html(s + '秒后重新获取');
+    s--;
+    if(s == 0){
+        setTimeout("$('#sendCode').html('重新获取');$('#sendCode').removeClass('layui-btn-disabled');isSend = '0';",1000);
+        return;
+    }
+    setTimeout('djs('+s+')',1000);
+}
+
+</script>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/23 21:21:32] -->

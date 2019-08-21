@@ -1,0 +1,31 @@
+
+<script type="text/javascript">
+document.write(''+
+'<div id="onlineservice" class="ks_ol_comm_div" style="width: auto; z-index: 2147483645; left: 20px; bottom: 0px; position: fixed !important; display: block; visibility: visible;display:none;">'+
+	'<div style="position:relative;padding:7px 13px;background: {if $settings['global']['color']['2']}{$settings['global']['color']['2']}{else}#0AB8A8{/if};display:inline-block;border-radius:3px;cursor:pointer;" addload="true">'+
+		'<img style="vertical-align:text-bottom;margin-right:8px;width:22px;height:22px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjRGRDY4QkVERDE4QjExRTY4QzBGQTEwNEQzMDJGNzFGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjRGRDY4QkVFRDE4QjExRTY4QzBGQTEwNEQzMDJGNzFGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NEZENjhCRUJEMThCMTFFNjhDMEZBMTA0RDMwMkY3MUYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NEZENjhCRUNEMThCMTFFNjhDMEZBMTA0RDMwMkY3MUYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7PdLeiAAABaElEQVR42rSUu0oDQRSGZ8OiYpEXcEFtJaX2QgQbIVhI7PIINtqKNhaW2ghWQtDeV0gaL51pg9iFoEIIKoma8dvlTBg2gyTZ3R++vZyd+ffsnJ2T01qrLMgpt2ahDJfQgC5oOTckXpZxI/I8T8Xf5MMBtPR4Csfty7yhTyQrsAQPejrdw6JtbJZiAWqwqqbTGtTFZ2jMgqgrCFQyBeLjGeMdKKp0VBS/yLii0lXFGBccD3vwY91/ww00rVgLqtCJzS1EBeTQj1W4CXlYhi+JnUnFV6xxJYntxeb3wrjPG9p2NdGvbIaBFduAddiyYrvwBqVYxm3zH1cd/2XHynZSVc2WvnCscR7mpihc+KXnpnh1KUIaCnvInb2l56Gmk+kWZuLd7RM2ZedMqj4cwrZcjzQhw+mYGT7DCQSufuw7MniX8yNcw4fcD2TTvMITvPz3GS7jcPIRHCepome6UdrKqYzkZ5XxnwADAEbIUDvF5430AAAAAElFTkSuQmCC" width="22" height="22" alt="">'+
+		'<span id="text" style="vertical-align:top;display:inline-block;color:#fff;font-size:16px;letter-spacing:3px;font-family:微软雅黑;line-height:20px;max-width:295px;white-space: nowrap;overflow: hidden;">'+
+			'欢迎咨询'+
+		'</span>'+
+		'<span style="display:none;font-family:微软雅黑;position:absolute;left:-7px;top:-7px;background:#fc4240;color:#fff;border-radius:50%;min-width:18px;min-height:18px;text-align:center;line-height:18px;font-size:14px;"></span>'+
+	'</div>'+
+'</div>');
+
+var onlineservice_url = onlineservice_mobile_url;
+if(onlineservice_status == 1 && (onlineservice_mobile_url || onlineservice_web_url)){
+    $('#onlineservice').show();
+}
+if(window.sysinfo.os == 'windows'){
+    onlineservice_url = onlineservice_web_url;
+}
+window.onresize=function(){
+    if( $(window).width() > 700 ) {
+        onlineservice_url = onlineservice_web_url;
+    }else{
+        onlineservice_url = onlineservice_mobile_url;
+    }
+}
+$('#onlineservice').click(function(event, wasTriggered) {
+    window.open(onlineservice_url);  
+});
+</script>

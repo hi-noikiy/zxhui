@@ -1,0 +1,83 @@
+    <li class="panel-group" >
+		<div class="panel panel-default">
+            <span class="mmove"><i class="fa fa-arrows"></i></span>
+            <input type="hidden" name="mtype[]" value="bottomcontact" />
+			<div class="panel-heading" {if !$is_ajax_tpl}onclick="display('bottomcontact{$mid}');"{/if}>
+				<h5 class="panel-title">
+					<div>
+						{if $settings['home']['orange_zxsj']['title'][$mid] || $settings['home']['orange_zxsj']['title2'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}+{$settings['home']['orange_zxsj']['title2'][$mid]}{else}合作伙伴+留言板{/if}
+                        {if !$is_ajax_tpl}<span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="bottomcontact{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >标题1</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title[]" class="form-control" value="{$settings['home']['orange_zxsj']['title'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >描述1</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en[]" class="form-control" value="{$settings['home']['orange_zxsj']['title_en'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >标题2</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title2[]" class="form-control" value="{$settings['home']['orange_zxsj']['title2'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >描述2</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en2[]" class="form-control" value="{$settings['home']['orange_zxsj']['title_en2'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label must" >板块背景图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('background_color[]', $settings['home']['orange_zxsj']['background_color'][$mid], '../addons/bowen_site/template/mobile/orange_zxsj/static/images/cases_bg.jpg');}
+                        <span class='help-block'>注：1572*922</span>
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >分类id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('class_ngi[]', $settings['home']['orange_zxsj']['class'][$mid])}
+                        <div class="help-block">注：合作伙伴的数据来源，logo为文章封面</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >留言id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('article_ngi[]', $settings['home']['orange_zxsj']['article'][$mid])}
+                    </div>
+                </div>
+                
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" >留言id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('diyform_ngi[]', $settings['home']['orange_zxsj']['diyform'][$mid])}
+                    </div>
+                </div>
+                
+                
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</li>

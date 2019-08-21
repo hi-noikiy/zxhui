@@ -1,0 +1,24 @@
+            <div class="met-banner-econy" style="background-color:;">
+				<img src="{if $banner}{php echo tomedia($banner)}{else}{M_URL}template/mobile/orange_zxsj/static/images/1474296568.jpg{/if}" />
+				<div class="econynr">
+					<div class="container">
+						<div class="row">
+							<div class="title">
+								<h1>
+									{$class_info['title']}
+								</h1>
+							</div>
+							<div class="breadcumb">
+								<i class="fa fa-home"></i>
+                                <a href="{php echo foregUrl()}" title="首页">首页</a> &gt;
+                				{if $class_info['level'] == '3'}
+                				<a href="{php echo foregUrl('class', array('id' => $topclass['id']))}" title="{$topclass['title']}">{$topclass['title']} </a> &gt;
+                				{/if} {if $class_info['level'] == '2'}
+               					<a href="{php echo foregUrl('class', array('id' => $lastclass['id']))}" title="{$lastclass['title']}">{$lastclass['title']} </a> &gt;
+                				{/if}
+               					<a href="{php echo foregUrl('class', array('id' => $class_info['id']))}" title="{$class_info['title']}">{$class_info['title']} </a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>

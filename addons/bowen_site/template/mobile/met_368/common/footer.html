@@ -1,0 +1,60 @@
+        <section class="foot_nav_met_11_4" m-id='8' m-type="foot_nav">
+			<div class="container">
+				<div class="title-box text-xs-center">
+					<div class="head">
+						<h2 class="title">
+							联系我们
+						</h2>
+						<p class="desc">
+							{$_B['setting']['global']['contact']['address']}
+						</p>
+					</div>
+				</div>
+				<div class="foot-box clearfix">
+					<div class="foot-input col-md-8 text-xs-left">
+						<div class="met-foot-feedback clearfix">
+							<form class="met-form met-form-validation onclick" data-type="show_diyform" data-dfid="{$_B['setting']['global']['contact']['wechat']}">
+								
+								<div class='form-group'>
+									<input name='para16' class='form-control' type='text' placeholder='姓名' readonly="true" />
+								</div>
+								<div class='form-group'>
+									<input name='para18' class='form-control' type='text' placeholder='电话' readonly="true" />
+								</div>
+                                <div class='form-group'>
+									<input name='para18' class='form-control' type='text' placeholder='QQ' readonly="true" />
+								</div>
+                                <div class='form-group'>
+									<input name='para18' class='form-control' type='text' placeholder='邮箱' readonly="true" />
+								</div>
+								<div class='form-group'>
+									<textarea name='para22' class='form-control' placeholder='留言内容 ' rows='5' readonly="true"></textarea>
+								</div>
+								<div class="form-group m-b-0">
+									<a class="btn btn-primary btn-lg btn-block btn-squared">
+										提交
+									</a>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="foot-info col-md-4">
+						<div class="foot-img">
+							<img data-original="{if $_B['setting']['global']['logo2']}{media $_B['setting']['global']['logo2']}{else}{M_URL}template/mobile/met_368/static/images/1517889570.png{/if}" alt="">
+						</div>
+						<div class="foot-tel">
+							{php $copyright2 = str_replace('#年#',date('Y'),$_B['setting']['global']['copyright2'])}
+                            {php echo html_entity_decode($copyright2, ENT_QUOTES)}
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer class='foot_info_met_16_1 met-foot p-y-20 border-top1' m-id='9' m-type='foot'>
+			<div class="container text-xs-center">
+				{php $copyright = str_replace('#年#',date('Y'),$_B['setting']['global']['copyright'])}
+                {php echo html_entity_decode($copyright, ENT_QUOTES)}
+				{mcommon 'copyright'}
+			</div>
+		</footer>
+{mytemplate 'common/footer-base'}

@@ -1,0 +1,119 @@
+
+<tr id="tp_item{php echo $kw}" class='tp_item'>
+    <td valign='top'>
+        <input type="text" value="{php echo $data_type_config[$data_type]}" class="layui-input" readonly="true" name="tp_type_title[{php echo $kw}]" />
+    </td>
+    <td valign='top' {if $data_type=="word_aux"}colspan="3"{/if}>
+
+        <input type="hidden" value="{php echo $data_type}" name="tp_type[{php echo $kw}]" />
+        <input type="text" value="{if $flag==1 && $data_type=='identity'}身份证{elseif $flag==1 && $data_type=='password'}密码{else}{php echo $v1['tp_name']}{/if}" class="layui-input tp_name" name="tp_name[{php echo $kw}]" maxlength="15" placeholder='字段名'  required  lay-verify="required" />
+        
+    </td>
+
+    {if $data_type!='word_aux'}
+        <td>
+            <input type="checkbox" name="tp_must[{php echo $kw}]" lay-skin="switch" value="1" {if $v1['tp_must']==1}checked{/if} >
+        </td>
+
+        <td>
+            {if $data_type=='text' ||  $data_type=='textarea'  ||  $data_type=='password'}
+            
+                {if $data_type=='text'}
+                设置默认值&nbsp;
+                <select id="tp_is_default{php echo $kw}" name="tp_is_default[{php echo $kw}]" onchange="tp_change_default('{php echo $kw}')" class="form-control" style='width:100px;display: inline-block; height: 27px!important;' lay-ignore>
+                    {loop $default_data_config $key $value}
+                    <option value="{$key}" {if $v1['tp_is_default']==$key}selected{/if}>{$value}</option>
+                    {/loop}
+                </select>
+                
+                <input type="text" id="tp_default{php echo $kw}" placeholder="请输入自定义默认值" value="{php echo $v1['tp_default']}"
+                       class="layui-input tp_default" name="tp_default[{php echo $kw}]"
+                       style="width:150px;display:{if $v1['tp_is_default']==1}inline{else}none{/if};">
+                
+                {/if}
+
+                提示语&nbsp;
+                <input type="text" id="placeholder{php echo $kw}" placeholder="请输入提示语" value="{php echo $v1['placeholder']}"
+                       class="layui-input" name="placeholder[{php echo $kw}]"
+                       style="width:150px;display:inline;">
+
+            {else if $data_type=='image'}
+
+                最大数量&nbsp;
+                <select name="tp_max[{php echo $kw}]" style='width:120px;display: inline-block' lay-ignore>
+                    <option value="1" {if $v1['tp_max']==1 || !$v1['tp_max']}selected{/if}>1</option>
+                    <option value="2" {if $v1['tp_max']==2}selected{/if}>2</option>
+                    <option value="3" {if $v1['tp_max']==3}selected{/if}>3</option>
+                    <option value="4" {if $v1['tp_max']==4}selected{/if}>4</option>
+                    <option value="5" {if $v1['tp_max']==5}selected{/if}>5</option>
+                </select>
+
+            {else if $data_type=='date'}
+
+                设置默认&nbsp;
+                <select id="default_time_type{php echo $kw}" name="default_time_type[{php echo $kw}]" onchange="tp_change_default_time(this,'default_time{php echo $kw}')" class="" style="width:167px;display:inline;" lay-ignore>
+                    {loop $default_date_config $key $value}
+                    <option value="{$key}" {if $v1['default_time_type']==$key}selected{/if}>{$value}</option>
+                    {/loop}
+                </select>
+                <input type="text" id="default_time{php echo $kw}" name="default_time[{php echo $kw}]" placeholder="" value="{if !empty($v1['default_time'])}{php echo $v1['default_time']}{/if}" class="layui-input datetimepicker" style="width:120px;display: {if $v1['default_time_type']==2}inline{else}none{/if};">
+
+            {else if ($data_type=='select' || $data_type=='checkbox')}
+
+                <textarea class="layui-input" name="tp_text[{php echo $kw}]" placeholder="一行一个选项" style="height: 120px;">{if !empty($v1['tp_text'])}{loop $v1['tp_text'] $k2 $v2}{php echo $v2."\n";}{/loop}{/if}</textarea>
+                
+            {else if ($data_type=='radio')}
+            
+                <textarea class="layui-input" name="tp_text[{php echo $kw}]" placeholder="一行一个选项" style="height: 120px;">{if !empty($v1['tp_text'])}{loop $v1['tp_text'] $k2 $v2}{php echo $v2."\n";}{/loop}{/if}</textarea>
+                
+            {else if $data_type=='date_range'}
+
+                设置默认起始日期&nbsp;
+                <select id="default_btime_type{php echo $kw}" name="default_btime_type[{php echo $kw}]" onchange="tp_change_default_time(this,'default_btime{php echo $kw}')" class=" input-sm" style="width:120px;display:inline;" lay-ignore>
+                    {loop $default_date_config $key $value}
+                    <option value="{$key}" {if $v1['default_btime_type']==$key}selected{/if}>{$value}</option>
+                    {/loop}
+                </select>
+                <input type="text" id="default_btime{php echo $kw}" name="default_btime[{php echo $kw}]" placeholder="" value="{if !empty($v1['default_btime'])}{php echo $v1['default_btime']}{/if}" class="datetimepicker layui-input input-sm" style="width:120px;display:{if $v1['default_btime_type']==2}inline{else}none{/if};margin-right: 25px;">
+                
+                <br/>
+
+                设置默认结束日期&nbsp;
+                <select id="default_etime_type{php echo $kw}" name="default_etime_type[{php echo $kw}]" onchange="tp_change_default_time(this,'default_etime{php echo $kw}')" class="form-control input-sm" style="width:120px;display:inline;" lay-ignore>
+                    {loop $default_date_config $key $value}
+                    <option value="{$key}" {if $v1['default_etime_type']==$key}selected{/if}>{$value}</option>
+                    {/loop}
+                </select>
+                <input type="text" id="default_etime{php echo $kw}" name="default_etime[{php echo $kw}]" placeholder="" value="{if !empty($v1['default_etime'])}{php echo $v1['default_etime']}{/if}" class="datetimepicker form-control  input-sm" style="width:120px;display:{if $v1['default_etime_type']==2}inline{else}none{/if};">
+                
+            {else if $data_type=='city'}
+
+            级别&nbsp;
+            <select name="tp_area[{php echo $kw}]" class="form-control" style='width:120px;display: inline-block' lay-ignore>
+                <option value="0" {if empty($v1['tp_area'])}selected{/if}>省市</option>
+                <option value="1" {if $v1['tp_area']==1}selected{/if}>省市区</option>
+            </select>
+
+            {else if $data_type=='confirm'}
+            
+                第二个输入框中的文字&nbsp;
+                <input type="text" id="tp_name2{php echo $kw}" placeholder="第二个输入框中文字" value="{php echo $v1['tp_name2']}"
+                       class="form-control" name="tp_name2[{php echo $kw}]"
+                       style="width:150px;display:inline;" lay-verify="required">
+                
+            {/if}
+        </td>
+
+    {/if}
+
+
+    <td>
+        
+        <button onclick="$(this).closest('.tp_item').remove()" class="layui-btn layui-btn-danger layui-btn-xs" style="padding: 10px;" ><i class="fa fa-remove"></i></button>
+        
+    </td>
+
+
+</tr>
+
+<!-- phpDesigner :: Timestamp [2018/8/28 9:50:28] -->

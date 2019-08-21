@@ -1,0 +1,31 @@
+{if !empty($banner)}
+<!-- 分类顶部图 BEGIN -->
+<div class="met-banner">
+    <div class="carousel slide" id="met-banner-slide" data-ride="carousel">
+
+        <div class="carousel-inner " role="listbox">
+
+            <div class="item active">
+
+                <picture>
+                    <source srcset="{media $banner}"
+                            media="(min-width: 768px)"/>
+                    <img
+                            class="cover-image overlay-scale"
+                            srcset="{media $banner}"
+                            alt=""
+                    />
+                </picture>
+                <div class="carousel-caption p-">
+                    <h3 class="animation-slide-top animation-delay-300" style="color: #dd0011;"></h3>
+                    <p class="animation-slide-bottom animation-delay-600" style="color: #dd0011;"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- 分类顶部图 END -->
+{/if}

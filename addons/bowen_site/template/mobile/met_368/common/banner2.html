@@ -1,0 +1,15 @@
+        {if $banner}
+        <section class="banner_met_11_4-warrper">
+			<div class="banner_met_11_4 page-bg" m-id='2' m-type="banner">
+				<div class="slick-slide">
+					<img class="cover-image" src="{php echo m('image')->image_crop($banner, 1920, 400)}"
+                    srcset="{php echo m('image')->image_crop($banner, 1920, 400)}"
+					sizes="(max-width: 767px) 767px"
+                    data-height='0|0|0'
+                    data-fade="true"
+                    data-autoplayspeed=4000
+                    data-speed="1000" alt="" />
+				</div>
+			</div>
+		</section>
+        {/if}

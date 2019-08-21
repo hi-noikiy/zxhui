@@ -1,0 +1,175 @@
+{mytemplate 'common/header'}
+<style>
+.layui-layout-admin .layui-body { top: 30px;}
+</style>
+
+    <div class="layui-tab layui-tab-brief" lay-filter="sys-set-tab">
+    	<ul class="layui-tab-title">
+            <li lay-id="function" class="layui-this">功能开关</li>
+    		<li lay-id="base">参数设置</li>
+    	</ul>
+    	<div class="layui-tab-content">
+            
+            <!-- 功能开关 Begin -->
+            <div class="layui-tab-item layui-show">
+                <div class="alert we7-page-alert" style="margin-top: 0px !important;">
+                    <p><strong class="text-danger"><i class="wi wi-info-sign"></i> 前两个开关都开启的情况下，域名管理功能才会生效。</strong></p>
+                </div>
+                <div class="panel panel-default" op="showhomepage">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-right">
+                            <input class="js-flag" type="checkbox" op="showhomepage" {if !empty($showhomepage)}checked="checked"{/if} />
+                        </div>
+                        是否开启系统首页功能
+                    </div>
+                    <div class="panel-body clearfix">
+                        {if IMS_FAMILY == 'v'}每次更新系统(不是更新本模块)后，需要在这里开启并关闭一次才能正常运行<br />{/if}
+                        <code>这里是系统全局设置，如果关闭，访问域名就会直接打开登录页。</code>
+                    </div>
+                </div>
+                
+                <div class="panel panel-default" op="site_welcome_module">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-right">
+                            <input class="js-flag" type="checkbox" op="site_welcome_module" {if $site_welcome_module == $modulename}checked="checked"{/if} />
+                        </div>
+                        是否用本模块接管系统首页功能
+                    </div>
+                    <div class="panel-body clearfix">
+                        关闭后，本模块的域名管理功能将会失效
+                    </div>
+                </div>
+                
+                <div class="panel panel-default" op="is_rewrite">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-right">
+                            <input class="js-flag" type="checkbox" op="is_rewrite" {if $_B['core_settings']['is_rewrite'] == 1}checked="checked"{/if} />
+                        </div>
+                        是否开启伪静态功能
+                    </div>
+                    <div class="panel-body clearfix">
+                        开启前请确定已经设置过伪静态规则！<a href="https://wiki.we7pc.com/71/class_42.html#article_78" target="_blank" style="color: #1E9FFF;">伪静态设置教程</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 功能开关 End -->
+            
+            <!-- 参数设置 Begin -->
+            <div class="layui-tab-item">
+                <div class="alert we7-page-alert" style="margin-top: 0px !important;">
+                	<p><i class="wi wi-info-sign"></i> 整站的设置</p>
+                </div>
+                
+                <form class="form-horizontal layui-form" >
+                    <div class="panel panel-default">
+                		<div class="panel-heading">
+                        参数设置
+                		</div>
+                		<div class="panel-body">
+                    		
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" >后台模板</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <select class="form-control" name="webtheme" lay-search>
+                                        {loop $webThemes $t}
+                                        <option value="{$t}" {if $_B['core_settings']['webtheme'] == $t}selected="true"{/if}>{$t}</option>
+                                        {/loop}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group hidden">
+                    			<label class="col-sm-2 control-label" >兼容其他首页</label>
+                    			<div class="col-sm-8 col-xs-12">
+                    				<input type="text" class="form-control" name="compatible_site_welcome_module" value="{$_B['core_settings']['compatible_site_welcome_module']}" placeholder="示例：bowen_site" />
+                    				<span class="help-block">此处填写模块标识；需要开启本模块接管系统首页才能生效 </span>
+                    			</div>
+                    		</div>
+                            
+                		</div>
+                		
+                	</div>
+                    <div class="form-group">
+                        <div class="col-sm-9 col-xs-12">
+                            <button class="layui-btn col-lg-2" lay-submit lay-filter="sys-set-base-submit" >提交</button>
+                		</div>
+                	</div>
+                
+                </form>
+            </div>
+            <!-- 参数设置 End -->
+            
+    	</div>
+    </div>
+	
+    <div class="form-group">
+		<div class="col-sm-8 col-xs-12">
+            快速操作：
+			<span class="layui-breadcrumb" lay-separator="|">
+                <a class="hands tabChange" data-go="function">功能开关</a>
+                <a class="hands tabChange" data-go="base">参数设置</a>
+            </span>
+		</div>
+	</div>
+    
+    
+
+<script>
+layui.use(['form', 'element'], function(){
+    var form = layui.form
+    ,element= layui.element;
+    
+    /** 按钮切换tab */
+    $(".tabChange").on('click', function() {
+        var goId = $(this).data("go");
+        if(goId){
+            element.tabChange('sys-set-tab', goId);
+            $('.right-content').animate({ scrollTop: 0 }, 500);
+        }
+	});
+    
+    //Hash地址的定位
+    var layid = location.hash.replace(/^#ss=/, '');
+    element.tabChange('sys-set-tab', layid);
+  
+    element.on('tab(sys-set-tab)', function(elem){
+        location.hash = 'ss='+ $(this).attr('lay-id');
+    });
+    
+    form.on('submit(sys-set-base-submit)', function(data){
+        $.post("{php echo webUrl('system/setting/sysSet')}"
+            ,data.field
+            ,function(d) {
+                if(d.errno == '0'){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1000
+                    }, function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(d.message, {icon: 2});
+                }
+		},'json');
+        return false;
+    });
+});
+
+require(['bootstrap.switch'],function($){
+	$('.js-flag:checkbox').bootstrapSwitch({onText: '启用', offText: '关闭', onColor:"success"});
+	$('.js-flag:checkbox').on('switchChange.bootstrapSwitch', function(event, status) {
+	   $('.loader').show();
+		var op = $(this).attr('op');
+		var status = status ? 1 : 0;
+		$.post("{php echo webUrl('system/setting')}", {op:op, status:status}, function(res) {
+            var type = 'error';
+            if(res.errno == '0'){
+                var type = 'success';
+            }
+            util.message(res.message, '{php echo webUrl('system/setting')}', type);
+		},'json');
+	});
+});
+</script>
+{mytemplate 'common/footer'}
+<!-- phpDesigner :: Timestamp [2018/8/19 23:59:30] -->

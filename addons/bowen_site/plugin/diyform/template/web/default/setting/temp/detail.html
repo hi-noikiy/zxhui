@@ -1,0 +1,42 @@
+{php include $this->mytemplate('common/header', 'web')}
+<link rel="stylesheet" href="{M_PLUGIN_URL}diyform/static/css/diyform.css?v=20180706" />
+<style>
+* {-webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box;}
+body{background-color: #f2f2f2;}
+.layui-header{display: none;}
+.layui-bg-black{display: none;}
+.layui-footer{display: none;}
+.layui-body {top: 0 !important; bottom: 0; left: 0;}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card" style="max-width: 850px; margin: 0 auto;">
+				<div class="layui-card-header">
+					表单记录 ID:{$id}
+				</div>
+				<div class="layui-card-body">
+                    
+                    <form class="layui-form" action="">
+    					{php $kw=0;}
+                        {if !empty($dfields)}
+                        {loop $dfields $k1 $v1}
+                        {php $data_type = $v1['data_type'];}
+            
+                        {mytemplate 'setting/temp/data/tpl/'.$data_type}
+            
+                        {php $kw++;}
+                        {/loop}
+                        {/if}
+                    </form><br />
+                    
+				</div>
+			</div>
+        </div>
+        
+    </div>
+</div>
+
+{php include $this->mytemplate('common/footer', 'web')}
+<!-- phpDesigner :: Timestamp [2018/7/8 23:09:35] -->

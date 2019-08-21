@@ -1,0 +1,81 @@
+        
+        <div id="a1portalSkin_headerAreaA" class="header">
+			<!-- Start_Module_225310 -->
+			<div class="module-default">
+				<div class="module-inner">
+					<div id="a1portalSkin_ctr225310225310_mainArea" class="module-content">
+						<!-- Start_Module_225310 -->
+						<!-- S slideshow -->
+                        {if $_W['os'] == 'mobile'}
+							<div class="layui-carousel home_banner">
+                                <div carousel-item>
+                                    {loop $settings['home']['banner'] $item}
+                                    {if $item['bannerstyle'] == '1' && $_W['os'] == 'windows'}
+                                    {php continue;}
+                                    {/if}
+                                    {if $item['bannerstyle'] == '2' && $_W['os'] == 'mobile'}
+                                    {php continue;}
+                                    {/if}
+                                    <div>
+                                        <a href="{$item['bannerurl']}" title="{$item['bannertitle']}" target="_blank">
+                                            <img src="{php echo tomedia($item['bannerimg'])}" alt="{$item['bannertitle']}" />
+                                        </a>
+                                    </div>
+                                    {/loop}
+                                </div>
+                            </div>
+                        {else}
+                        <div class="slideshow carousel clearfix" style="height: {if $settings['home']['default']['info']['banner_height']}{$settings['home']['default']['info']['banner_height']}{else}650{/if}px; overflow:hidden;">
+                            <div id="carousel-225310{$mid}">
+                                {php $cb = 0;}
+                                {loop $settings['home']['banner'] $item}
+                                {php $cb++;}
+                                {if $item['bannerstyle'] == '1' && $_W['os'] == 'windows'}
+                                {php continue;}
+                                {/if}
+                                {if $item['bannerstyle'] == '2' && $_W['os'] == 'mobile'}
+                                {php continue;}
+                                {/if}
+								<div class="carousel-item">
+									<div class="carousel-img">
+										<a href="{$item['bannerurl']}" title="{$item['bannertitle']}" target="_blank">
+                                            <img src="{if $cb == 1}{M_URL}/template/mobile/default/static/img/lazy-1680x650.jpg" class="lazyload" data-src="{/if}{php echo tomedia($item['bannerimg'])}" height="{if $settings['home']['default']['info']['banner_height']}{$settings['home']['default']['info']['banner_height']}{else}650{/if}px" alt="{$item['bannertitle']}" />
+                                        </a>
+									</div>
+								</div>
+                                {/loop}
+							</div>
+							<div class="carousel-btn carousel-btn-fixed" id="carousel-page-225310{$mid}"></div>
+                        </div>
+                        {/if}
+						
+						<script type="text/javascript">
+                        {if $_W['os'] == 'mobile'}
+						
+                        {else}
+                        $(window).bind("load resize", function() {
+                        	$("#carousel-225310{$mid}").carouFredSel({
+                        		width: '100%',
+                        		items: {
+                        			visible: 1
+                        		},
+                        		auto: {
+                        			pauseOnHover: true,
+                        			timeoutDuration: 5000
+                        		},
+                        		swipe: {
+                        			onTouch: true,
+                        			onMouse: true
+                        		},
+                        		pagination: "#carousel-page-225310{$mid}"
+                        	});
+                        });
+                        {/if}
+						</script>
+						<!-- E slideshow -->
+						<!-- End_Module_225310 -->
+					</div>
+				</div>
+			</div>
+		</div>
+                

@@ -1,0 +1,92 @@
+{mytemplate 'common/header', 'web'}
+<style>
+body{background-color: #f2f2f2;}
+.layui-form {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					版权设置
+				</div>
+				<div class="layui-card-body" >
+					
+                    <form class="layui-form" action="">
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		登录注册页背景图
+                        	</label>
+                        	<div class="layui-input-block">
+                                {php echo tpl_form_field_multi_image('backgroundImages', $copyright_setting['backgroundImages'])}
+                                <span class="layui-word-aux">第一张图为整体背景图，第二张图为输入框背景</span>
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<label class="layui-form-label">
+                        		整体背景图显示模式
+                        	</label>
+                        	<div class="layui-input-block">
+                        		<select name="backgroundImages_showType">
+                                  <option value="1"{if $copyright_setting['backgroundImages_showType'] == 1} selected="true"{/if}>高铺满，宽同比例缩放</option>
+                                  <option value="2"{if $copyright_setting['backgroundImages_showType'] == 2} selected="true"{/if}>宽铺满，高同比例缩放</option>
+                                  <option value="3"{if $copyright_setting['backgroundImages_showType'] == 3} selected="true"{/if}>素材原始尺寸居中显示</option>
+                                </select>
+                        	</div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                        	<div class="layui-input-block">
+                        		<button class="layui-btn" lay-submit lay-filter="formSubmit">
+                        			立即提交
+                        		</button>
+                        		<button type="reset" class="layui-btn layui-btn-primary">
+                        			重置
+                        		</button>
+                        	</div>
+                        </div>
+                        
+                    </form>
+                    <script>
+                    layui.use(['layer', 'form'], function(){
+                        var form = layui.form;
+                        layer = layui.layer;
+                      
+                        form.on('submit(formSubmit)', function(data){
+                            $.post(""
+                                ,data.field
+                                ,function(d){
+                                    if(d.errno == '0'){
+                                        layer.msg(d.message, {
+                                            icon: 1
+                                            ,time: 1500
+                                        }, function(){
+                                            window.location.reload();
+                                        });
+                                    }else{
+                                        layer.msg(d.message, {icon: 2});
+                                        return false;
+                                    }
+                                }
+                                ,'json'
+                            );
+                            return false;
+                        });
+                    });
+                    </script>
+				</div>
+			</div>
+		</div>
+        
+	</div>
+</div>
+
+{mytemplate 'common/footer', 'web'}
+<!-- phpDesigner :: Timestamp [2018/8/21 1:21:48] -->

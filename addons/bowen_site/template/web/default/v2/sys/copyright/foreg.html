@@ -1,0 +1,131 @@
+<title>系统设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+        <a><cite>版权设置</cite></a>
+        <a><cite>前端版权</cite></a>
+    </div>
+</div>
+
+<form class="layui-fluid layui-form" lay-filter="BOWEN_app-sys-copyright-foreg-form">
+
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                <p>如果在下拉框中，没有显示需要设置的平台应用，请先在该平台应用中提交保存全局设置或主题设置数据</p>
+                <p>此处的版权将会显示在前端站点的公共版权下方</p>
+            </blockquote>
+        </div>
+        <div class="layui-card-body">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">平台应用</label>
+                <div class="layui-input-block">
+                    <select name="uniacid" id="BOWEN_app-sys-copyright-foreg-form-account" lay-filter="BOWEN_app-sys-copyright-foreg-form-account"></select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">版权信息</label>
+                <div class="layui-input-block">
+                    <textarea id="copyright" name="copyright"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="BOWEN_app-sys-copyright-foreg-form-submit">立即提交</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<script type="text/html" id="BOWEN_app_sys_copyright_foreg_form_accountTpl">
+    <option value="0">全部</option>
+    {{#  layui.each(d.data.accounts, function(index, item){ }}
+    <option value="{{ item.uniacid }}">{{ item.name }}</option>
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl', 'myedit'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,form = layui.form
+            ,laytpl = layui.laytpl
+            ,myedit = layui.myedit;
+
+        //此处解决局部刷新时未渲染问题
+        form.render();
+
+        var copyright_content = myedit.build('copyright')
+            ,new_copyright = function (acid) {
+                admin.req({
+                    url: myutil.webUrl('sys/copyright/foreg')
+                    ,type: 'post'
+                    ,data: {uniacid:acid}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno==0){
+                            if(acid == false){
+                                var getTpl = BOWEN_app_sys_copyright_foreg_form_accountTpl.innerHTML
+                                    ,view = document.getElementById('BOWEN_app-sys-copyright-foreg-form-account');
+                                laytpl(getTpl).render(d, function(html){
+                                    view.innerHTML = html;
+                                    form.val("BOWEN_app-sys-copyright-foreg-form", d.data);//初始赋值
+                                });
+                            }
+                            myedit.setContent(copyright_content, d.data.copyright.content);
+                        }
+                    }
+                });
+            };
+
+        new_copyright(false);
+
+        form.on('select(BOWEN_app-sys-copyright-foreg-form-account)', function(data){
+            new_copyright(data.value);
+        });
+
+        form.on('submit(BOWEN_app-sys-copyright-foreg-form-submit)', function(data){
+            data.field.copyright = myedit.getContent(copyright_content);
+            admin.req({
+                url: myutil.webUrl('sys/copyright/foreg/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }else{
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/10/16 22:09:22] -->

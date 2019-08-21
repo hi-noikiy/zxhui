@@ -1,0 +1,25 @@
+
+{if $_W['nav_left']}
+    <div class="layui-side layui-bg-black">
+		<div class="layui-side-scroll" style="overflow-y :yes;">
+			<ul class="layui-nav layui-nav-tree" lay-filter="nav_left">
+                {php $leftmenus = $menus['left']}
+                {loop $leftmenus $me}
+				<li class="layui-nav-item {if !empty($me['default'])}layui-nav-itemed{/if}">
+                    {if $me['title']}
+					<a class="" href="javascript:;">{$me['title']}</a>
+                    {/if}
+					<dl class="layui-nav-child">
+                        {loop $me['content'] $ms}
+						<dd class="{if !empty($ms['active'])}layui-this{/if}">
+							<a href="{$ms['url']}" target="{$ms['target']}">{$ms['title']}</a>
+						</dd>
+                        {/loop}
+					</dl>
+				</li>
+                {/loop}
+			</ul>{if !empty($_B['config']['setting']['test_site'])}<div style="margin: 30px;">[演示站模式已开启]</div>{/if}
+		</div>
+	</div>
+{/if}
+<!-- phpDesigner :: Timestamp [2018/8/18 18:16:32] -->

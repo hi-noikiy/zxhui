@@ -1,0 +1,130 @@
+{php include $this->mytemplate('common/header-base')}
+        <script src="{M_URL}static/js/php.js"></script>
+		{php include $this->mytemplate('common/header')}
+		<section role="main" class="subpage active">
+			<div class="main-box">
+				<div class="sidebar-header active">
+					<div class="sidebar-icon active">
+						<i class="fa fa-arrow-left"></i>
+						<i class="fa fa-th-list"></i>
+					</div>
+					<div class="sidebar-nav">
+						<ul>
+							<li class="{if $id == $all['id']}active{/if}">
+								<a href="{php echo foregUrl('class',array('id'=>$all['id']))}" title="{$lastclass['title']}" class="{if $id == $all['id']}active{/if}">全部</a>
+							</li>
+                            {loop $navs $n}
+                            {if $n['status'] == '1'}
+        					<li class="{if $id == $n['id'] || $class_info['parid'] == $n['id']}active{/if}">
+        						<a href="{php echo foregUrl('class',array('id'=>$n['id']))}" title="{$n['title']}" class="{if $id == $n['id']}active{/if}">{$n['title']}{if $n['t']} <span class="caret"></span>{/if}</a>
+                                {if $n['t']}
+                                <ul>
+                                    {loop $n['t'] $n_t}
+                                    {if $n_t['status'] == '1'}
+                                    <li><a href="{php echo foregUrl('class',array('id'=>$n_t['id']))}" title="{$n_t['title']}">{$n_t['title']}</a></li>
+                                    {/if}
+                                    {/loop}
+                                </ul>
+                                {/if}
+        					</li>
+                            {/if}
+        					{/loop}
+						</ul>
+					</div>
+                    
+					{php include $this->mytemplate('common/search')}
+                    
+				</div>
+				<div class="information-box">
+					<ul class="met-page-ajax" id="items"></ul>
+				</div>
+                
+                <button type="button" class="btn btn-icon btn-primary btn-squared met-scroll-top hide">
+					<i class="fa fa-chevron-up" aria-hidden="true"></i>
+				</button>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+		</section>
+        <script type="text/javascript">
+        layui.use('flow', function() {
+        	var flow = layui.flow;
+        	flow.load({
+        		elem: '#items'
+                ,isLazyimg: true
+        		,done: function(page, next) {
+        			var lis = [];
+                    $.post("{php echo foregUrl('class/getArticles_list', array('id' => $id), true)}&page=" + page
+                        ,{psize:'{$psize}', thumb_crop:{width:'350',height:'250'}}
+                        ,function(res){
+                            //console.log(res);
+                            layui.each(res.data, function(index, item) {
+                                var thumb = '{M_URL}template/mobile/metinfo_328/static/images/1481262873.jpg';
+                                if(item.thumb){
+                                    thumb = item.thumb;
+                                }
+                                
+                                var reading = (item.reading != null)?item.reading:0;
+                                
+                                var author = '';
+                                if(item.author != ''){
+                                    var author = '<i class="fa fa-smile-o"></i> '+item.author;
+                                }
+                                
+                                var tag = '';
+                                if(item.tag.length > 0){
+                                    var itag = '';
+                                    for (var i=0;i<item.tag.length;i++){
+                                        itag = itag + '<a href="#" title="'+item.tag[i]+'">'+item.tag[i]+'</a>'
+                                    }
+                                    
+                                    tag = ''+
+                                    '<strong>'+
+    									'<i class="fa fa-tag"></i>'+
+    									itag+
+    								'</strong>'
+                                }
+                                
+                                var item_data = [];
+                                if(item.status == 1){
+                                    item_data = 
+                                    '<li class="news_img">'+
+            							'<font>'+
+            								'<b>'+item.d_createtime+'</b>'+
+            								'<u>'+item.m_createtime+'</u>'+
+            							'</font>'+
+                                        {if !empty($settings['global']['isrewrite'])}
+                                        '<a href="../{$_W["uniacid"]}/article_'+item.id+'.html" title="'+item.title+'" target="_self">'+
+                                        {else}
+            							'<a href="{php echo foregUrl("article")}&id='+item.id+'" title="'+item.title+'" target="_self">'+
+                                        {/if}
+                                            '<img lay-src="'+thumb+'" title="'+item.title+'" alt="'+item.title+'" style="display: block;">'+
+            							'</a>'+
+            							'<span>'+
+                                            {if !empty($settings['global']['isrewrite'])}
+                                            '<a href="../{$_W["uniacid"]}/article_'+item.id+'.html" title="'+item.title+'" target="_self"><h3>'+item.title+'</h3></a>'+
+                                            {else}
+            								'<a href="{php echo foregUrl("article")}&id='+item.id+'" title="'+item.title+'" target="_self"><h3>'+item.title+'</h3></a>'+
+                                            {/if}
+            								'<em>'+
+            									'<u>阅读</u> <i class="fa fa-eye"></i> '+reading+' &nbsp;·&nbsp;'+
+            									'<u>发布日期</u> <i class="fa fa-clock-o"></i> '+item.createtime+' &nbsp;·&nbsp;'+
+            									author+
+            								'</em>'+
+            								'<p>'+item.description+'</p>'+
+                                            tag+
+            							'</span>'+
+            						'</li>';
+                                }
+            					lis.push(item_data);
+            				});
+                            
+            				next(lis.join(''), page < res.pages);
+                        }
+                    ,"json");
+                    
+        		}
+                ,end: '&nbsp;'
+        	});
+        });
+        </script>
+{php include $this->mytemplate('common/footer-base')}

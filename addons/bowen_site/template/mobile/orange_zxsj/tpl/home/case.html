@@ -1,0 +1,68 @@
+
+            <div class="met-index-case met-index-body">
+            	<div class="container">
+            		<h3 class="invisible" data-plugin="appear" data-animate="slide-top" data-repeat="false">
+            			<a href="{php echo foregUrl('class',array('id'=>$settings['home']['orange_zxsj']['class'][$mid]))}" title="{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}客户案例{/if}" target='_self'>{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}客户案例{/if}</a>
+            		</h3>
+            		<p class="desc invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+            			{$settings['home']['orange_zxsj']['title_en'][$mid]}
+            		</p>
+            	</div>
+            	<ul class="nav nav-tabs invisible" data-plugin="appear" data-animate="fade" data-repeat="false">
+                    <li class="active">
+            			<a href="#caselist_{$mid}" title="综合" data-toggle="tab" data-num='10' data-filter="*">综合</a>
+            		</li>
+                    {php $navs[$mid] = $this->getClasses('lower', array('cid'=>$settings['home']['orange_zxsj']['class'][$mid]));}
+                    {php $cn[$mid] = 0;}
+                    {loop $navs[$mid] $n}
+                    {if $n['status'] == '1'}
+                        {php $cn[$mid]++}
+                		<li>
+                			<a href="#caselist_{$mid}" title="{$n['title']}" data-toggle="tab" data-filter="list_{$cn[$mid]}">{$n['title']}</a>
+                		</li>
+                    {/if}
+                    {/loop}
+            	</ul>
+				<ul class="blocks no-space blocks-xlg-5 blocks-md-5 blocks-sm-3 blocks-xs-2" id="caselist_{$mid}">
+                    {php $cn2[$mid] = 0;}
+                    {loop $navs[$mid] $n2}
+                    {if $n2['status'] == '1'}
+                        {php $cn2[$mid]++}
+                        {php $news_articles[$mid][$cn2[$mid]] = $this->getClasseArticles($n2['id'], array('status'=>1), array('displayorder DESC', 'createtime DESC'), array(0,10));}
+                        {loop $news_articles[$mid][$cn2[$mid]] $item}
+                        <li data-type="list_{$cn2[$mid]}" class="project-item">
+                        	<div class="widget widget-shadow">
+                        		<figure class="widget-header cover">
+                        			<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target='_self'>
+                            			<div class="project-img">
+                                            {if $item['thumb']}
+                                                {php $item['thumb'] = tomedia($item['thumb'])}
+                                            {else}
+                                                {php $item['images'] = iunserializer($item['images']);}
+                                                {php $item['thumb'] = tomedia($item['images'][0])}
+                                            {/if}
+                                            <img data-original="{php echo m('image')->image_crop($item['thumb'], 376, 376)}" alt="{$item['title']}" class="cover-image" />
+                            			</div>
+                            			<div class="project-intro">
+                                			<h4 class="project-title">
+                                                {$item['title']}
+                                            </h4>
+                                			<div class="project-descr">
+                                                {if $item['description']}
+                                                    {php $item['description'] = deleteRN($item['description'])}
+                                                {else}
+                                                    {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                                {/if}
+                                                {php echo m('common')->msubstr($item['description'], 0, 80)}
+                                            </div>
+                            			</div>
+                        			</a>
+                        		</figure>
+                        	</div>
+                        </li>
+                        {/loop}
+                    {/if}
+                    {/loop}
+                    
+				</ul>
+			</div>

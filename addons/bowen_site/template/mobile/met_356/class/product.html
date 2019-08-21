@@ -1,0 +1,119 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+
+<div class="subcolumn_nav_met_11_4" m-id='10' m-type='nocontent'>
+    <div class="container">
+        <div class="row">
+            <div class="clearfix">
+                <div class="subcolumn-nav">
+                    <ul class="subcolumn_nav_met_11_4-ul m-b-0 ulstyle">
+
+                        <li>
+                            <a href="{php echo foregUrl('class',array('id'=>$all['id']), true)}"  title="全部"
+                               class="link{if $class_info['id'] == $all['id']} active{/if}">
+                                全部
+                            </a>
+                        </li>
+
+                        {loop $navs $n}
+                        {if $n['status'] == '1'}
+                        <li {if $n['t']}class="dropdown"{/if}>
+                        <a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}"
+                           class="link{if $class_info['id'] == $n['id']} active{/if}">
+                            {$n['title']}
+                        </a>
+                        </li>
+                        {/if}
+                        {/loop}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="product_list_page_met_16_2 met-product animsition" m-id='7'></div>
+
+{mytemplate 'common/footer'}
+<script type="text/javascript">
+    layui.use(['flow','myutil'], function() {
+        var flow = layui.flow
+            ,myutil = layui.myutil;
+
+        flow.load({
+            elem: '.met-product'
+            ,isLazyimg: true
+            ,done: function(page, next) {
+                var lis = [];
+                $.post(myutil.foregUrl('class/getArticles_list', {'id':{$id}, page:page}, true)
+                    ,{psize:'{$psize}', thumb_crop:{width:'600',height:'400'}}
+                    ,function(res){
+                        var i = 0;
+                        layui.each(res.data, function(index, item) {
+                            var item_data = [];
+
+                            if(i%2 == 0)
+                            {
+                                item_data ='' +
+                                    '<section class="items animation-slide-bottom50 appear-no-repeat" data-plugin="appear" data-animate="slide-bottom50" data-repeat="false">' +
+                                        '<div class="container">' +
+                                            '<div class="row">' +
+                                                '<div class="col-md-4 desc animation-slide-left appear-no-repeat" data-plugin="appear" data-animate="slide-left" data-repeat="false">' +
+                                                    '<div>' +
+                                                        '<h4>'+item.title+'</h4>' +
+                                                        '<p>'+item.description+'</p>' +
+                                                        '<a href="'+myutil.foregUrl('article', {id:item.id}, true)+'" title="'+item.title+'" class="more" target=\'_self\'>' +
+                                                            '查看详情' +
+                                                        '</a>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-8 img text-xs-center vertical-align animation-slide-right appear-no-repeat" data-plugin="appear" data-animate="slide-right" data-repeat="false">' +
+                                                    '<div class="vertical-align-middle">' +
+                                                        '<img src="'+item.thumb+'" alt="'+item.title+'" />' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</section>';
+                            }else{
+                                item_data ='' +
+                                    '<section class="items animation-slide-bottom50 appear-no-repeat" data-plugin="appear" data-animate="slide-bottom50" data-repeat="false">' +
+                                        '<div class="container">' +
+                                            '<div class="row">' +
+                                                '<div class="col-md-8 text-xs-center img vertical-align animation-slide-left appear-no-repeat" data-plugin="appear" data-animate="slide-left" data-repeat="false">' +
+                                                    '<div class="vertical-align-middle">' +
+                                                        '<img src="'+item.thumb+'" alt="'+item.title+'" />' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-4 desc animation-slide-right appear-no-repeat" data-plugin="appear" data-animate="slide-right" data-repeat="false">' +
+                                                    '<div>' +
+                                                        '<h4>'+item.title+'</h4>' +
+                                                        '<p>'+item.description+'</p>' +
+                                                        '<a href="'+myutil.foregUrl('article', {id:item.id}, true)+'" title="'+item.title+'" class="more" target=\'_self\'>' +
+                                                            '查看详情' +
+                                                        '</a>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</section>';
+                            }
+
+                            lis.push(item_data);
+                            i++;
+                        });
+
+                        next(lis.join(''), page < res.pages);
+                    }
+
+                    ,"json");
+
+            }
+            ,end: '<style>.layui-flow-more {margin: 0;}</style>'
+        });
+
+
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/10/01 15:03:15] -->

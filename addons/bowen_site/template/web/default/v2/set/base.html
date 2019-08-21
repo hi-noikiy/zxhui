@@ -1,0 +1,190 @@
+<title>基础设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>设置</cite></a>
+        <a><cite>基础设置</cite></a>
+    </div>
+</div>
+
+<style>
+    .layui-form-switch{margin-top: 0;}
+</style>
+<div class="layui-fluid layui-form" lay-filter="BOWEN_app-set-base-form">
+
+
+    <div class="layui-tab" lay-filter="BOWEN_app-set-base-tab">
+
+        <div class="layui-card">
+            <div class="layui-card-header layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <!--<li lay-id="site" class=''>站点设置</li>-->
+                    <li lay-id="oauth" class="layui-this">借权设置</li>
+                </ul>
+            </div>
+            <div class="layui-card-body">
+
+            </div>
+        </div>
+
+        <div class="layui-tab-content">
+
+            <!-- 站点设置 Begin -->
+            <div class="layui-tab-item ">
+
+
+            </div>
+            <!-- 站点设置 End -->
+
+            <!-- 借权设置 Begin -->
+            <div class="layui-tab-item layui-show">
+
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                            <p>主要用于解决PC无服务号权限问题。如本身是认证公众号请勿使用！</p>
+                            <p>借权时不建议借用授权接入的服务号权限，详情咨询管理员</p>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        公众平台oAuth设置
+                    </div>
+                    <div class="layui-card-body">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择公众号</label>
+                            <div class="layui-input-block">
+                                <select name="oauthAccount" id="BOWEN_app-set-base-form-oauthAccount"></select>
+                                <div class="layui-form-mid layui-word-aux">在微信公众号请求用户网页授权之前，需要先到公众平台网站的【开发者中心】网页服务中配置授权回调域名.</div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">oAuth独立域名</label>
+                            <div class="layui-input-block">
+                                <input name="oauthHost" class="layui-input" autocomplete="off" />
+                                <div class="layui-form-mid layui-word-aux">适用于您的站点或是活动有多个域名的情况下，由此域名做统一的oauth授权用。例如：http://www.baidu.com 注意：结尾没有/</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        借用 JS 分享设置
+                    </div>
+                    <div class="layui-card-body">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择公众号</label>
+                            <div class="layui-input-block">
+                                <select name="jsOauthAccount" id="BOWEN_app-set-base-form-jsOauthAccount"></select>
+                                <div class="layui-form-mid layui-word-aux">在系统中使用微信分享接口前，需要先到公众平台网站的【公众号设置】 / 【功能设置】中配置 【JS 接口安全域名】。</div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="BOWEN_app-set-base-submit">立即提交</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- 借权设置 End -->
+
+        </div>
+    </div>
+</div>
+<script type="text/html" id="BOWEN_app_set_base_form_oauthAccountTpl">
+    <option value="">不借用任何权限</option>
+    {{#  layui.each(d.data.oauth_accounts, function(index, item){ }}
+    <option value="{{ item.uniacid }}">{{ item.title }}</option>
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/html" id="BOWEN_app_set_base_form_jsOauthAccountTpl">
+    <option value="">不借用任何权限</option>
+    {{#  layui.each(d.data.jsOauthAccounts, function(index, item){ }}
+    <option value="{{ item.uniacid }}">{{ item.title }}</option>
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,form = layui.form
+            ,laytpl = layui.laytpl;
+
+        //此处解决局部刷新时未渲染问题
+        form.render();
+
+        admin.req({
+            url: myutil.webUrl('set/base/get')
+            ,type: 'post'
+            //,data: {}
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno==0){
+                    var getTpl = BOWEN_app_set_base_form_oauthAccountTpl.innerHTML
+                        ,oauthAccount_view = document.getElementById('BOWEN_app-set-base-form-oauthAccount')
+                        ,jsOauthAccount_view = document.getElementById('BOWEN_app-set-base-form-jsOauthAccount');
+                    laytpl(getTpl).render(d, function(html){
+                        oauthAccount_view.innerHTML = html;
+                    });
+                    laytpl(getTpl).render(d, function(html){
+                        jsOauthAccount_view.innerHTML = html;
+                        form.val("BOWEN_app-set-base-form", d.data);
+                    });
+                }
+            }
+        });
+
+        form.on('submit(BOWEN_app-set-base-submit)', function(data){
+            admin.req({
+                url: myutil.webUrl('set/base/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }else{
+                        console.log(d);
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        }, function(){
+                            //admin.events.refresh();
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/23 10:40:22] -->

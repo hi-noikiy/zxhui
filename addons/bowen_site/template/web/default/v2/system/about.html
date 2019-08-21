@@ -1,0 +1,19 @@
+<div class="layui-card-header">版本信息</div>
+<div class="layui-card-body layui-text layadmin-about">
+    <script type="text/html" template>
+        <p>FAMILY：{{ global.family }}</p>
+        <p>VERSION：{{ global.version }}</p>
+        <p>RELEASE：{{ global.release }}</p>
+    </script>
+</div>
+
+<script type="text/html" template lay-url="../web/index.php?c=site&a=entry&m=bowen_site&do=web&r=getManageCopyright">
+    <div class="layui-card-header" style="margin-top: 30px"></div>
+    <div class="layui-card-body layui-text layadmin-about">
+        <!--blockquote-- class="layui-elem-quote" style="border: none;"></blockquote-->
+        {{# if(d.data.content){ }}
+            {{ d.data.content }}
+        {{# } }}
+    </div>
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/18 18:07:41] -->

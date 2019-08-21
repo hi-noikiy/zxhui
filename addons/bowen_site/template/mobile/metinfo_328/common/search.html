@@ -1,0 +1,13 @@
+                    <div class="sidebar-search">
+						<form method="get" action="{if $_B['core_settings']['is_rewrite'] == 1}../{$_W['uniacid']}/search.html">{else}../app/index.php">
+							<input type="hidden" name="i" value="{$_W['uniacid']}" />
+                            <input type="hidden" name="c" value="entry" />
+                            <input type="hidden" name="m" value="bowen_site" />
+                            <input type="hidden" name="do" value="foreg" />
+                            <input type="hidden" name="r" value="search" />
+                            {/if}
+							<input type="search" name="kw" class="searchword" value="{$keywords}" placeholder="search" />
+							<input type="submit" class="hidden" value=" " />
+							<i class="fa fa-search"></i>
+						</form>
+					</div>

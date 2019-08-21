@@ -1,0 +1,106 @@
+{php include $this->mytemplate('common/header-base')}
+		{php include $this->mytemplate('common/mobilenav')}
+			{php include $this->mytemplate('common/topnav')}
+			{php include $this->mytemplate('common/banner2')}
+			<div class="eco-leftnav">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-9 col-xs-12 pull-right">
+							<div class="section-title-style">
+								<h2>{$class_info['title']}</h2>
+							</div>
+							<section class="met-job animsition">
+								<div class="container">
+									<div class="row">
+										<div class="met-job-list met-page-ajax">
+                                            <style>.met-editor p {margin-bottom: 0;}</style>
+                                            {loop $articles $item}
+                                            {if $item['status'] == '1'}
+                                            <div class="widget widget-article widget-shadow">
+                                            	<div class="widget-body">
+                                            		<h3 class="widget-title">
+                                            			{$item['title']}
+                                            		</h3>
+                                            		<p class="widget-metas">
+                                            			{php echo date('Y-m-d', $item['createtime'])}
+                                            		</p>
+                                            		<hr>
+                                            		<div class="met-editor lazyload clearfix">
+                                                        {php echo html_entity_decode($item['content'], ENT_QUOTES)}
+                                                    </div>
+                                            		<hr>
+                                            		<div class="widget-body-footer margin-top-0">
+                                            			<a class="btn btn-outline btn-squared btn-primary met-job-cvbtn"
+														   data-type="show_form"
+														   bowen-form="{if $item['tourl']}{$item['tourl']}{/if}">
+															在线应聘
+														</a>
+                                            		</div>
+                                            	</div>
+                                            </div>
+                                            {/if}
+                                            {/loop}
+                                            
+										</div>
+                                        
+										  <?php
+                                            $param = array(
+                                                'html' => array(
+                                                    's' => '<div class="hidden-xs"><div class="met_pager">', 
+                                                    'e' => '</div></div>', 
+                                                    'ac' => 'Ahover', 
+                                                    'fpnl' => array(
+                                                        'f' => 'class="PreSpan first_last"', 
+                                                        'p' => 'class="PreSpan"', 
+                                                        'n' => 'class="NextA"',
+                                                        'l' => 'class="PreSpan first_last"',
+                                                    )
+                                                ),
+                                                'li' => 'null',
+                                                'always_show' => 1
+                                            );
+                                            echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                                            ?>
+                                            
+									</div>
+								</div>
+							</section>
+                            
+							
+						</div>
+                        {php include $this->mytemplate('common/leftpull')}
+					</div>
+				</div>
+			</div>
+			{php include $this->mytemplate('common/footer')}
+{php include $this->mytemplate('common/footer-base')}
+<script type="text/javascript">
+	layui.use(['layer'], function () {
+	    var $ = layui.$
+			,layer = layui.layer;
+
+        var active = {
+            show_form: function(){
+                var dfurl = this.getAttribute('bowen-form');
+                if(!dfurl || dfurl == ""){
+                    console.error('文章的直接链接为空。如需弹出表单，请在文章的直接链接中填写表单链接。');
+                    return layer.msg('当前职位暂不支持在线应聘，请直接联系我们', {'icon':2});
+                }
+
+                layer.open({
+                    type: 2
+                    ,title: '{$class_info["title"]}'
+                    ,content: [dfurl, 'no']
+                    ,area: ['90%', '95%']
+                    ,shadeClose: true
+                    ,moveOut: true
+                });
+            }
+        };
+
+        $('.btn').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

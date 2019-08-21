@@ -1,0 +1,237 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('content/tab')}
+
+<div class="alert we7-page-alert">
+	<p><i class="wi wi-info-sign"></i> 功能描述：站点中大部分内容都是由文章来进行内容填充的。</p>
+    <p><i class="wi wi-info-sign"></i> 补充说明：本处的显示状态，支持直接点击切换</p>
+</div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">筛选</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal layui-form" role="form">
+                <input type="hidden" name="c" value="site" />
+                <input type="hidden" name="a" value="entry" />
+                <input type="hidden" name="m" value="bowen_site" />
+                <input type="hidden" name="do" value="web" />
+                <input type="hidden" name="r" value="content.articles" />
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >ID</label>
+                    <div class="col-sm-2 col-lg-2">
+                        <input class="form-control" name="id" id="" type="text" value="{$_GPC['id']}">
+                    </div>
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >标题</label>
+                    <div class="col-sm-2 col-lg-2">
+                        <input class="form-control" name="title" id="" type="text" value="{$_GPC['title']}" placeholder="支持关键词搜索">
+                    </div>
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >分类</label>
+                    <div class="col-sm-12 col-lg-2 col-xs-12">
+                        <select name="class" class="form-control" lay-search>
+                            <option value="">不限制分类</option>
+                            
+                            {loop $category $c}
+                            <option value="{$c['id']}|0|0" {if $_GPC['class'] == $c['id'].'|0|0'}selected="true"{/if}>{$c['title']}</option>
+                            {if count($children[$c['id']]) > 0}
+                                {loop $children[$c['id']] $c_s}
+                                <option value="{$c['id']}|{$c_s['id']}|0" {if $_GPC['class'] == $c['id'].'|'.$c_s['id'].'|0'}selected="true"{/if}>{$c['title']} - {$c_s['title']}</option>
+                                {if count($children[$c_s['id']]) > 0}
+                                    {loop $children[$c_s['id']] $c_t}
+                                    <option value="{$c['id']}|{$c_s['id']}|{$c_t['id']}" {if $_GPC['class'] == $c['id'].'|'.$c_s['id'].'|'.$c_t['id']}selected="true"{/if}>{$c['title']} - {$c_s['title']} - {$c_t['title']}</option>
+                                    {/loop}
+                                {/if}
+                                {/loop}
+                            {/if}
+                            {/loop}
+                            
+                        </select>
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >状态</label>
+                    <div class="col-sm-2 col-lg-2 col-xs-12">
+                        <select name="status" class="form-control">
+                            <option value="">不限</option>
+                            <option value="0" {if $_GPC['status'] == '0'} selected="selected" {/if}>隐藏</option>
+                            <option value="1" {if $_GPC['status'] == '1'} selected="selected" {/if}>显示</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" >推荐</label>
+                    <div class="col-sm-2 col-lg-2 col-xs-12">
+                        <select name="istranslate" class="form-control">
+                            <option value="">不限</option>
+                            <option value="1" {if $_GPC['istranslate'] == '1'} selected="selected" {/if}>开启</option>
+                            <option value="0" {if $_GPC['istranslate'] == '0'} selected="selected" {/if}>关闭</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 col-sm-1 col-md-1 col-lg-1 control-label" >发布时间</label>
+                    <div class="col-sm-2 col-lg-2">
+                        <input class="form-control" name="createtime" id="createtime" type="text" value="{$_GPC['createtime']}" />
+                    </div>
+                    
+                    <div class="col-sm-5 col-lg-3" >
+                        <button class="layui-btn layui-btn-primary"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var isCheckAll = false;  
+        function swapCheck() {  
+            if (isCheckAll) {  
+                $("input[type='checkbox']").each(function() {  
+                    this.checked = false;  
+                });  
+                isCheckAll = false;  
+            } else {  
+                $("input[type='checkbox']").each(function() {  
+                    this.checked = true;  
+                });  
+                isCheckAll = true;  
+            }  
+        }
+    </script>
+
+    <div class="we7-padding-bottom clearfix">
+		<div class="pull-right">
+			<a class="layui-btn" href="{php echo webUrl('content/articles', array('op'=>'post'))}">+ 添加文章</a>
+		</div>
+	</div>
+
+{if !empty($count)}
+<div class="panel panel-success">
+	<div class="panel-heading">
+		当前信息总数：{$count}
+	</div>
+	<div class="panel-body table-responsive">
+		<form action="" method="post" class="form-horizontal form">
+			<table class="table table-hover">
+                <col width="5px"/>
+        		<col width="5px"/>
+                <col width="5px"/>
+        		<col width="5px"/>
+                <col width="150px"/>
+                <col width="150px"/>
+                <col width="150px"/>
+                <col width="50px"/>
+                <col width="50px"/>
+                <col width="150px"/>
+        		<col width="200"/>
+    			<thead>
+        			<tr>
+        				<th class="text-center" ><input type='checkbox' onclick="swapCheck()"/></th>
+        				<th class="text-center" >序号</th>
+                        <th class="text-center" >排序</th>
+                        <th class="text-center" >ID</th>
+        				<th class="text-center" >标题</th>
+                        <th class="text-center" >分类</th>
+                        <th class="text-center" >模板</th>
+                        <th class="text-center" >状态</th>
+                        <th class="text-center" >推荐</th>
+                        <th class="text-center" >发布时间</th>
+        				<th style="text-align:right;" >操作</th>
+        			</tr>
+    			</thead>
+    			<tbody>
+                    {php $ii = 1;}
+                    {loop $articles $al}
+                    <tr>
+                        <td class="text-center"><input type='checkbox' name="delete[{$al['id']}]" value="{$al['id']}"/></td>
+                    	<td class="text-center" scope="row">{$ii}</td>
+                        <td class="text-center" style="width: 10px;"><input type="text" class="form-control" name="displayorder[{$al['id']}]" value="{$al['displayorder']}"></td>
+                        <td class="text-center" scope="row">{$al['id']}</td>
+                    	<td class="text-center">{$al['title']}</td>
+                        <td class="text-center">{if $classes_info[$al['firstclass']]['title']}{$classes_info[$al['firstclass']]['title']}{if $classes_info[$al['secondclass']]['title']} - {$classes_info[$al['secondclass']]['title']}{/if}{if $classes_info[$al['thirdclass']]['title']} - {$classes_info[$al['thirdclass']]['title']}{/if}{else}<span class="label label-warning">专题页面</span>{/if}</td>
+                        <td class="text-center">{if $al['themes']}{$article_themes[$al['themes']]['title']}{else}无需模板{/if}</td>
+                        <td class="text-center">
+                            <label data="{$al['status']}" class="label label-default {if !empty($al['status'])}label-success{/if}" onclick="changeStatus(this,'{$al['id']}');">{if !empty($al['status'])}显示{else}隐藏{/if}</label>
+                        </td>
+                        <td class="text-center">
+                            <label data="{$al['istranslate']}" class="label label-default {if !empty($al['istranslate'])}label-success{/if}" onclick="changeTranslate(this,'{$al['id']}');">{if !empty($al['istranslate'])}开启{else}关闭{/if}</label>
+                        </td>
+                        <td class="text-center">{php echo date('Y-m-d H:i:s', $al['createtime'])}</td>
+                    	<td style="text-align:right;">
+                            <a class="btn btn-default btn-sm" href="{php echo foregUrl('article', array('id' => $al['id']), true)}" title="预览" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg" target="_blank"><i class="fa fa-search"></i></a>
+                    		<a class="btn btn-default btn-sm js-clip" href="JavaScript:;" data-url="{php echo foregUrl('article',array('id'=>$al['id']),true)}" title="复制链接"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-link"></i></a>
+                            <a class="btn btn-default btn-sm" href="{php echo webUrl('content/articles', array('op'=>'post', 'id'=>$al['id']), true)}" title="编辑"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                    		<a class="btn btn-default btn-sm" href="{php echo webUrl('content/articles', array('op'=>'delete', 'id'=>$al['id']), true)}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+                    	</td>
+                    </tr>
+                    {php $ii++;}
+                    {/loop}
+                </tbody>
+            </table>
+            <hr/>
+            <tfoot style="width: 100%;">
+                <div class="pull-right">
+                {$pager}
+                </div>
+                <tr>
+                    <td colspan="6">
+                        <input name="update_displayorder" type="submit" class="layui-btn" value="批量排序">
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                    </td>
+                </tr>
+            </tfoot>
+        </form>
+    </div>
+    
+</div>
+{else}
+    <div class="alert alert-warning alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Message：</strong> 当前数据为空
+    </div>
+{/if}
+{php include $this->mytemplate('common/footer')}
+<script type="text/javascript">
+    layui.use(['laydate', 'form'], function(){
+        var form = layui.form, laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#createtime'
+            ,type: 'datetime'
+            ,range: true
+        });
+    });
+    
+    function changeStatus(obj,id){
+        $(obj).html($(obj).html() + "...");
+        $.post('{php echo webUrl("content/articles/changeStatus")}',
+            {id:id, data:obj.getAttribute("data")},
+            function(d){
+                $(obj).html($(obj).html().replace("...",""));
+                $(obj).attr("data",d.data.status);
+                var status_name = '显示';
+                if(d.data.status==0){
+                    status_name = '隐藏';
+                }
+                if(d.errno==0){
+                    $(obj).toggleClass("label-success");
+                    $(obj).html(status_name);
+                }
+            },"json"
+        );
+    }
+    
+    function changeTranslate(obj,id){
+        $(obj).html($(obj).html() + "...");
+        $.post('{php echo webUrl("content/articles/changeTranslate")}',
+            {id:id, data:obj.getAttribute("data")},
+            function(d){
+                $(obj).html($(obj).html().replace("...",""));
+                $(obj).attr("data",d.data.translate);
+                var translate_name = '开启';
+                if(d.data.translate==0){
+                    translate_name = '关闭';
+                }
+                if(d.errno==0){
+                    $(obj).toggleClass("label-success");
+                    $(obj).html(translate_name);
+                }
+            },"json"
+        );
+    }
+</script>
+<!-- phpDesigner :: Timestamp [2018/8/18 17:40:30] -->

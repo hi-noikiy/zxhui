@@ -1,0 +1,30 @@
+
+            <div class="met-index-about met-index-body">
+				<div class="container-fluid">
+					<div class="left_side "   data-bg="{if $settings['home']['orange_zxsj']['background_color'][$mid]}{php echo tomedia($settings['home']['orange_zxsj']['background_color'][$mid])}{else}{M_URL}template/mobile/orange_zxsj/static/images/about_bg.jpg{/if}" bg-repeat="false">
+                        <div class="we_are_opacity">
+							<div class="we_are_border">
+								<h2>
+									{if $settings['home']['orange_zxsj']['title_en'][$mid]}{$settings['home']['orange_zxsj']['title_en'][$mid]}{else}We are E.s.t 2015{/if}
+								</h2>
+							</div>
+						</div>
+					</div>
+					<div class="right_side" data-plugin="appear" data-animate="fade" data-repeat="false">
+						<div class="we_are_deatails">
+							<h2>
+								<a href="{php echo foregUrl('article',array('id'=>$settings['home']['orange_zxsj']['article'][$mid]))}" title="{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}关于我们{/if}" target="_self">{if $settings['home']['orange_zxsj']['title'][$mid]}{$settings['home']['orange_zxsj']['title'][$mid]}{else}关于我们{/if}</a>
+							</h2>
+							<p></p>
+							{php $about_article[$mid] = $this->getArticleInfo($settings['home']['orange_zxsj']['article'][$mid]);}
+                            {if $about_article[$mid]['description']}
+                                {php $about_article[$mid]['description'] = replaceRN($about_article[$mid]['description'])}
+                            {else}
+                                {php $about_article[$mid]['description'] = html_entity_decode($about_article[$mid]['content'], ENT_QUOTES)}
+                            {/if}
+                            {php echo $about_article[$mid]['description']}
+							<p></p>
+						</div>
+					</div>
+				</div>
+			</div>

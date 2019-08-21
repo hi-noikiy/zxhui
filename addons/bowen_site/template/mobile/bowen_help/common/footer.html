@@ -1,0 +1,10 @@
+
+        <div class="layui-footer footer footer-doc">
+			<div class="layui-main">
+				{php $copyright = str_replace('#年#',date('Y'),$settings['global']['copyright'])}
+                {php echo html_entity_decode($copyright, ENT_QUOTES)}
+				{mcommon 'copyright'}
+			</div>
+		</div>
+
+{php include $this->mytemplate('common/footer-base')}

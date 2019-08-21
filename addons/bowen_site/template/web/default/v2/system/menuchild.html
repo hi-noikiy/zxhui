@@ -1,0 +1,50 @@
+<style type="text/css">
+.layadmin-menu-list .layui-card-header.layui-bg-green a{color: white;}
+</style>
+<div id="BOWEN_app_menuchild"></div>
+<script type="text/html" id="BOWEN_app_menuchildTpl">
+    <div class="layui-card-header">应用菜单<span style="color: #c2c2c2;"> - 如菜单不符，请刷新</span></div>
+    <div class="layadmin-menu-list">
+    {{# layui.each(d.data.menu_v2, function(index,item){ }}
+        <div class="layui-card-header">
+            <a lay-href="/plugin/view/r={{ item.jump }}/name={{ d.data.name }}">
+                <i class="{{# if(item.icon != ''){ }}{{ item.icon }}{{# }else{ }}layui-icon layui-icon-set{{# } }}" style="font-size: 20px;"></i> {{ item.title }}
+            </a>
+        </div>
+    {{# }); }}
+    </div>
+</script>
+<script type="text/javascript">
+    layui.use(['admin', 'myutil', 'laytpl'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,laytpl = layui.laytpl
+            ,myutil = layui.myutil;
+
+        var pluginMenu = function(){
+            var router = layui.router();
+            admin.req({
+                url: myutil.webUrl('plugin/getConfig_currentPlugin')
+                ,type: 'post'
+                ,data: {current_plugin:router.search.name}
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        var getTpl = BOWEN_app_menuchildTpl.innerHTML
+                            ,menuchild_view = document.getElementById('BOWEN_app_menuchild');
+                        laytpl(getTpl).render(d, function(html){
+                            menuchild_view.innerHTML = html;
+                        });
+                    }else{
+                        $('#BOWEN_app_menuchild').html('<div class="layui-card-header" style="color: #FF5722;">数据错误，请刷新重试</div>');
+                    }
+                }
+            });
+
+        }
+
+        pluginMenu();
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/08 23:48:29] -->

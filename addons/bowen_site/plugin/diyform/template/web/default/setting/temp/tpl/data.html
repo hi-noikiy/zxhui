@@ -1,0 +1,52 @@
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+	<legend>
+		字段设置
+	</legend>
+</fieldset>
+
+<div class="form-group">
+
+    <div class="col-sm-12">
+        <table class='table'>
+            <thead>
+            <th style='width:90px'>类型</th>
+            <th style='width:100px'>字段名称</th>
+            <th style='width:50px'>必填</th>
+            <th style='width:600px'>设置</th>
+            <th></th>
+            </thead>
+            <tbody id="type-items">
+            {php $kw=0;}
+            {if !empty($dfields)}
+                {loop $dfields $k1 $v1}
+                {php $data_type = $v1['data_type']}
+                {if $datacount>0}
+                    {php $flag = 2}
+                {/if}
+    
+                {mytemplate 'setting/temp/tpl'}
+    
+                {php $kw++;}
+                {/loop}
+            {/if}
+            </tbody>
+            
+            <tr>
+                <td colspan='5'>
+                    <div class='input-group'>
+                        <select id="data_type" name="data_type" style="width:200px;">
+                            {loop $data_type_config $key $value}
+                            <option value="{$key}">{$value}</option>
+                            {/loop}
+                        </select>   
+                        <div class='input-group-btn'>
+                            <button class="layui-btn layui-btn-normal btn-add-type onclick" data-type="addType"><i id="add_field" class="fa fa-plus" title=""></i> 增加一个字段</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+<!-- phpDesigner :: Timestamp [2018/7/6 16:30:34] -->

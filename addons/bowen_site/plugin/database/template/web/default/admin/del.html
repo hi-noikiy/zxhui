@@ -1,0 +1,95 @@
+{php include $this->mytemplate('common/header', 'web')}
+<style>
+body{background-color: #f2f2f2;}
+</style>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+        
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					主题演示数据导入 说明
+				</div>
+				<div class="layui-card-body">
+                    
+					<blockquote class="layui-elem-quote" style="font-size: 14px;">
+                        <span style="color: #FF5722;">
+						用于当前站点批量数据清理，一旦开始清理则不可撤回！<br />
+                        一旦清理，数据不可找回！
+                        </span>
+                        
+					</blockquote>
+                    <br />
+                    <a class="layui-btn layui-btn-danger" onclick="run('nav')">只删除导航</a>
+                    <a class="layui-btn layui-btn-danger" onclick="run('article')">只删除文章</a>
+                    <a class="layui-btn layui-btn-danger" onclick="run('category')">只删除分类和文章</a>
+                    <a class="layui-btn layui-btn-danger" onclick="run('setting')">只删除全局设置和主题设置</a>
+                    <a class="layui-btn layui-btn-danger" onclick="run('all')">全部删除</a>
+                    <p>&nbsp;</p>
+                    
+				</div>
+			</div>
+        </div>
+        
+    </div>
+</div>
+<script>
+function run(op){
+    var doTime = function(s, layero){
+        var wait = s;
+        var interval = setInterval(function(){
+            $('.layui-layer-btn0').html('请先考虑' + wait + '秒');
+            var time = --wait;
+            console.log(time)
+            if(time <= 0 || $('.confirm-del-all').length == 0) {
+                $('.layui-layer-btn0').html('确认删除');
+                $(layero).attr('data-allow', '1');
+                clearInterval(interval);
+            };
+        }, 1000);
+    }
+    
+    layer.open({
+        content: '确定删除当前站点 ['+op+'] 数据吗？删除后不可恢复！'
+        ,skin: 'confirm-del-all'
+        ,anim: 6
+        ,btn: ['确认删除', '关闭']
+        ,success: function(layero, index){
+            $(layero).attr('data-allow', '0');
+            doTime(16, layero)
+        }
+        ,yes: function(index, layero){
+            if($(layero).attr('data-allow') != 1){
+                layer.tips('请在倒计时结束后操作', layero, {tips: [2, '#ff517e']});
+                return false;
+            }
+            var load = layer.load();
+            op = op?op:'';
+            $.post("{php echo webUrl('database/admin/del/run')}"
+                ,{'op':op}
+                ,function(d){
+                    layer.close(load);
+                    if(d.errno == 0){
+                        layer.msg(d.message, {
+                            icon: 1
+                        });
+                        setTimeout("location.reload();", 1000)
+                    }else{
+                        console.log(d);
+                        layer.msg(d.message, {
+                            icon: 2
+                        });
+                    }
+                }
+                ,'json'
+            );
+        }
+        ,cancel: function(index, layero){
+            
+        }
+    }); 
+}
+
+
+</script>
+{php include $this->mytemplate('common/footer', 'web')}

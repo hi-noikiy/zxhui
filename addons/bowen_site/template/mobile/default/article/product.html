@@ -1,0 +1,79 @@
+{php include $this->mytemplate('common/header-base')}
+<div id="wrapper" class="insi-page">
+	{php include $this->mytemplate('common/top-nav')}
+	{php include $this->mytemplate('common/banner2')}
+    <!--====================S main====================-->
+    <section class="main">
+        <!--section class="full-page-title-wrap clearfix" skinobjectzone="menu_2532">
+            <h2>{$article['title']}</h2>
+            <em class="full-page-title-line"></em>
+        </section-->
+    	<div class="page-width clearfix">
+    		<!-- S content -->
+    		<section class="content float-right">
+    			<div id="a1portalSkin_mainArea" class="content-wrapper">
+    				<!-- Start_Module_225327 -->
+    				<a name="34201" id="34201"></a>
+    				<div class="module-default">
+    					<div class="module-inner">
+    						<div id="a1portalSkin_ctr225327225327_mainArea" class="module-content">
+                                <div class="qhd-content">
+                                    {php echo m('ui')->html_lazy($article['content'])}
+                                </div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</section>
+    		<!-- S content -->
+    		<!-- S sidebar -->
+    		<section class="sidebar float-left">
+    			<div id="a1portalSkin_sidebarAreaA" class="sidebar-content">
+    				<!-- Start_Module_225326 -->
+    				<a name="34200" id="34200"></a>
+    				<div class="module module-hlbg">
+    					<div class="module-inner">
+    						<div class="module-hlbg-title clearfix">
+    							<h3 class="" style="">
+    								{$lastclass['title']}
+    							</h3>
+    						</div>
+    						<div id="a1portalSkin_ctr225326225326_mainArea" class="module-hlbg-content">
+    							<!-- Start_Module_225326 -->
+    							<!-- S product-category -->
+    							<div class="category category-225326 product-category">
+    								<ul>
+    									{loop $navs $n}
+                                        {if $n['status'] == '1'}
+    									<li class="{if $article['secondclass'] == $n['id']}current{/if}">
+    										<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}">{$n['title']}</a>
+    									</li>
+                                        {/if}
+    									{/loop}
+    								</ul>
+    							</div>
+    							<script type="text/javascript">
+    							$(document).ready(function() {
+                                	$('.category-225326 ul').find('li:last').addClass('last');
+                                	$('.category-225326 > ul > li > a, .category-225326 > ul > li > i').click(function() {
+                                		if ($(this).parent('li').find('ul')) {
+                                			$(this).parent('li').find('ul').slideDown('fast');
+                                			$(this).parent('li').siblings('li').find('ul').slideUp('fast');
+                                			$(this).parent('li').addClass('current').siblings('li').removeClass('current');
+                                		}
+                                	});
+                                
+                                });	
+    							</script>
+    							<!-- E product-category -->
+    							<!-- End_Module_225326 -->
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</section>
+    		<!-- E sidebar -->
+    	</div>
+    </section>
+    <!--====================E main====================-->
+{php include $this->mytemplate('common/footer')}

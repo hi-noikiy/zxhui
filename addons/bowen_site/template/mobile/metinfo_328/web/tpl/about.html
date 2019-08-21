@@ -1,0 +1,95 @@
+    <li class="panel-group" >
+		<div class="panel panel-default">
+            <span class="mmove"><i class="fa fa-arrows"></i></span>
+            <input type="hidden" name="mtype[]" value="about" />
+			<div class="panel-heading" {if !$is_ajax_tpl}onclick="display('about{$mid}');"{/if}>
+				<h5 class="panel-title">
+					<div>
+						{if $settings['home']['metinfo_328']['anchor'][$mid]}{$settings['home']['metinfo_328']['anchor'][$mid]}{else}关于{/if}
+                        {if !$is_ajax_tpl}<span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>{/if}
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="about{$mid}" {if !$is_ajax_tpl}style="display: none;"{/if}>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >板块名称</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="anchor[]" class="form-control" value="{if $settings['home']['metinfo_328']['anchor'][$mid]}{$settings['home']['metinfo_328']['anchor'][$mid]}{else}关于{/if}" required="true" />
+                        <div class="help-block">注：首页顶部导航将会显示这个名称，不能重名</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >唯一标识</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="sign[]" class="form-control" value="{if $settings['home']['metinfo_328']['sign'][$mid]}{$settings['home']['metinfo_328']['sign'][$mid]}{else}about{/if}" placeholder="" />
+                        <div class="help-block">注：首页中，每个板块的唯一ID，不能重复</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >中文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title[]" class="form-control" value="{$settings['home']['metinfo_328']['title'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >英文标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="title_en[]" class="form-control" value="{$settings['home']['metinfo_328']['title_en'][$mid]}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >板块背景图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('background_color[]', $settings['home']['metinfo_328']['background_color'][$mid], '../addons/bowen_site/template/mobile/metinfo_328/static/images/1481175422.jpg');}
+                        <span class='help-block'>注：1572*922</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >分类id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('class_ngi[]', $settings['home']['metinfo_328']['class'][$mid])}
+                        <div class="help-block">注：数据来源，标题为左侧小导航，简介为显示的内容标题，内容为内容</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >文章id</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('article_ngi[]', $settings['home']['metinfo_328']['article'][$mid])}
+                        <div class="help-block">注：该板块数据底部轮播的数据来源；填写在文章简介中，每行一条；该板块，最少要六个内容才会显示</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >底部按钮文字</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="bottom_title[]" class="form-control" value="{if $settings['home']['metinfo_328']['bottom_title'][$mid]}{$settings['home']['metinfo_328']['bottom_title'][$mid]}{else}你以为看到了网站的全部？{/if}" placeholder="" />
+                        <div class="help-block">注：该板块底部文字，不填则不显示</div>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label" >底部按钮链接</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('bottom_url[]', $settings['home']['metinfo_328']['bottom_url'][$mid])}
+                    </div>
+                </div>
+                
+                <hr />
+                <div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_module(this)"><i class='fa fa-remove'></i> 删除该板块</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</li>

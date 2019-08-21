@@ -1,0 +1,122 @@
+{php include $this->mytemplate('common/header-base')}
+
+        <!-- 顶部导航栏 -->
+        <div class="layui-header header header-doc" spring>
+			<div class="layui-main">
+				<a class="logo" href="/">
+				    <img src="{if $settings['global']['tn_logo']}{php echo tomedia($settings['global']['tn_logo'])}{/if}" height="92px" alt="{$settings['global']['title']}" />
+				</a>
+				<div class="layui-form component">
+                    <form method="get" action="{$_W['siteroot']}app/index.php">
+        				<input type="hidden" name="i" value="{$_W['uniacid']}" />
+        				<input type="hidden" name="c" value="entry" />
+        				<input type="hidden" name="m" value="bowen_site" />
+        				<input type="hidden" name="do" value="foreg" />
+        				<input type="hidden" name="r" value="search" />
+        				<input type="text" class="layui-input" name="kw" placeholder="关键词搜索" />
+        			</form>
+				</div>
+				<ul class="layui-nav">
+                    {php $navs = $this->getForegTopNav(false);$topnavs = $navs['top'];$children = $navs['children'];unset($navs);}
+                    {loop $topnavs $tn}
+                    {if $tn['status'] == '1'}
+                    <!-- 1 -->
+            		<li class="layui-nav-item {if $sign == $tn['sign']}layui-this{/if}">
+                        <a href="{$tn['url']}" target="{$tn['target']}">{$tn['title']}</a>
+                    <!-- 1 -->
+                    {if count($children[$tn['id']]) > 0}
+                        <dl class="layui-nav-child">
+                        {loop $children[$tn['id']] $tn_s}
+                        {if $tn_s['status'] == '1'}
+                        <!-- 2 -->
+                            <dd>
+								<a href="{$tn_s['url']}" target="{$tn_s['target']}">{$tn_s['title']}</a>
+							</dd>
+                		<!-- 2 -->
+                        {/if}
+                        {/loop}
+                        </dl>
+                    {/if}
+                    {/if}
+                    {/loop}
+				</ul>
+			</div>
+		</div>
+        
+		<div class="layui-main site-inline">
+			<div class="site-tree">
+				<?php
+                    $children = array();
+            		$category = pdo_fetchall('SELECT * FROM ' . tablename($this->table_classes) . ' WHERE uniacid = \'' . $_W['uniacid'] . '\' AND status = \'1\' ORDER BY parid ASC, displayorder DESC');
+            		foreach ($category as $index => $row) {
+            			if (!empty($row['parid'])) {
+            				$children[$row['parid']][] = $row;
+            				unset($category[$index]);
+            			}
+            		}
+                ?>
+                <div class="layui-form" style="height: 38px; margin: 10px 13px 0 0;">
+                    <select lay-filter="searchClass" lay-search>
+                        <option value="">搜索文档分类</option>
+                        {loop $category $c}
+                        <!-- 1 -->
+                        <option value="{$c['id']}" >{$c['title']}</option>
+                        <!-- 1 -->
+                        {if count($children[$c['id']]) > 0}
+                            {loop $children[$c['id']] $c_s}
+                            <!-- 2 -->
+                    		<option value="{$c_s['id']}" >{$c['title']} - {$c_s['title']}</option>
+                    		<!-- 2 -->
+                            {if count($children[$c_s['id']]) > 0}
+                                {loop $children[$c_s['id']] $c_t}
+                                <!-- 3 -->
+                                <option value="{$c_t['id']}" >{$c['title']} - {$c_s['title']} - {$c_t['title']}</option>
+                                <!-- 3 -->
+                                {/loop}
+                            {/if}
+                            {/loop}
+                        {/if}
+                        {/loop}
+                    </select>
+                </div>
+                
+				<ul class="layui-tree">
+                    {loop $category $c}
+                    <!-- 1 -->
+            		<li class="{if $id == $c['id'] || $lastclass['id'] == $c['id']}layui-this{/if}">
+                            <h2 onclick="window.location.href='{if !empty($c['tourl'])}{$c['tourl']}{else}{php echo foregUrl('class',array('id'=>$c['id']), true)}{/if}'">{$c['title']}</h2>
+                            <!--<h2>{$c['title']}</h2>-->
+                    </li>
+                    <!-- 1 -->
+                    {if count($children[$c['id']]) > 0}
+                        {loop $children[$c['id']] $c_s}
+                        <div class="tree2" data-id="{$c_s['id']}">
+                            <!-- 2 -->
+                    		<li class="site-tree-noicon{if $id == $c_s['id']} layui-this{/if}">
+                                {if count($children[$c_s['id']]) > 0 && $settings['home']['bowen_help']['leftNavFold'] > '0'}<i class="layui-icon layui-icon-triangle-r" id="layui-icon-{$c_s['id']}" style="color: #666; font-size: 18px;"></i>{/if}
+    				            <a href="{if !empty($c_s['tourl'])}{$c_s['tourl']}{else}{php echo foregUrl('class',array('id'=>$c_s['id']), true)}{/if}">
+    				                <cite style="{if count($children[$c_s['id']]) > 0 && $settings['home']['bowen_help']['leftNavFold'] > '0'}padding-left: 0px;{/if}">{$c_s['title']}</cite> <em>{$c_s['subtitle']}</em>
+    				            </a>
+    				        </li>
+                    		<!-- 2 -->
+                            <div id="tree3_of_{$c_s['id']}" class="{if $id != $c_s['id'] && $settings['home']['bowen_help']['leftNavFold'] > '0'}layui-hide-sm{if $settings['home']['bowen_help']['leftNavFold'] == 2} layui-hide-xs{/if} needhide{/if}">
+                            {if count($children[$c_s['id']]) > 0}
+                                {loop $children[$c_s['id']] $c_t}
+                                {php $c_t['value'] = iunserializer($c_t['value'])}
+                                <!-- 3 -->
+                                <li class="site-tree-noicon tree3{if $id == $c_t['id']} layui-this{/if}">
+        				            <a href="{if !empty($c_t['tourl'])}{$c_t['tourl']}{else}{php echo foregUrl('class',array('id'=>$c_t['id']), true)}{/if}">
+                                        <cite><i style="color: #999; font-size: 16px;">●</i> {$c_t['title']}</cite> <em>{$c_t['subtitle']}</em>
+        				            </a>
+        				        </li>
+                                <!-- 3 -->
+                                {/loop}
+                            {/if}
+                            </div>
+                        </div>                        
+                        {/loop}
+                    {/if}
+                    {/loop}
+					
+				</ul>
+			</div>

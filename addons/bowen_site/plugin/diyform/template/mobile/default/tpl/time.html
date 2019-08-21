@@ -1,0 +1,9 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+	<div class="layui-input-block">
+		<input type="text" name="field_data{$kw}" autocomplete="off" placeholder="HH:mm:ss" class="layui-input timepicker" lay-verify="{if $v1['tp_must']==1}required{/if}" />
+	</div>
+</div>
+<!-- phpDesigner :: Timestamp [2018/7/7 15:33:51] -->

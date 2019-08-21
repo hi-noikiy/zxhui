@@ -1,0 +1,44 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('setting/tab')}
+
+<div class="alert we7-page-alert">
+	<p><i class="wi wi-info-sign"></i> 温馨提醒：点击链接可直接复制。</p>
+</div>
+<table class="layui-table" id="cover_list" lay-filter="cover_list"></table>
+<script>
+	
+layui.use('table', function(){
+    var table = layui.table;
+    
+    table.render({
+        elem: '#cover_list'
+        ,url: "{php echo webUrl('setting/cover/listinfo')}"
+        ,method: 'post'
+        ,cols: [[
+            {field: 'id', title: 'ID', width:'5%', align: 'center'}
+            ,{field: 'title', title: '名称', width:'20%'}
+            ,{field: 'url', title: '链接', width:'75%', event: 'view_url', style:'cursor: pointer;'}
+        ]]
+        ,done: function(){
+            $("td").each(function() {
+                var td_data = $(this).context.innerText;
+                
+                if($(this).attr('lay-event') == 'view_url' && td_data.length > 2){
+                    //console.log(td_data)
+                    util.clip(this, td_data)
+                }
+           	})
+        }
+    });
+    
+    table.on('tool(cover_list)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'view_url'){
+            util.clip(this, data.url);
+        }
+    });
+});
+
+</script>
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/7/6 10:31:55] -->

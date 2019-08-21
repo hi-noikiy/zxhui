@@ -1,0 +1,366 @@
+<style>
+    .dragged { position: absolute; opacity: 0.5; z-index: 2000;}
+    .input-group-addon{ cursor: move !important;}
+</style>
+
+<form action="" method="post" class="form-horizontal form">
+
+    <div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('info');">
+				<h5 class="panel-title">
+					<div>
+						参数设置
+                        <span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body" id="info" style="display: none;">
+            
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >顶部导航背景透明度</label></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" name="topnav_back_transparency" class="form-control" value="{if $settings['home']['advertising_design']['topnav_back_transparency']}{$settings['home']['advertising_design']['topnav_back_transparency']}{else}1{/if}" min="0.1" step="0.1" max="1" />
+                        <div class="help-block">只能为正数；<code>大小范围：0.1~1</code>；0为透明，1为不透明</div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+	<div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('banner');">
+				<h5 class="panel-title">
+					<div>
+						轮播图设置
+                        <span class="color-green" style="font-size: 13px;">支持拖动标题排序</span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body" id="banner">
+				
+				<ol class='banner' id="items">
+					{loop $settings['home']['banner'] $item}
+                    {php include $this->mytemplate('tpl/banner')}
+                    {/loop}
+				</ol>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8">
+						<a class="layui-btn layui-btn-primary btn-add-banner" href="javascript:;" onclick="addBanner();"><i class="fa fa-plus" title=""></i> 增加一张轮播图</a>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('service');">
+				<h5 class="panel-title">
+					<div>
+                        我们的服务 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="service" style="display: none;">
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >对应分类</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('service_class_ngi', $settings['home']['advertising_design']['service_class'])}
+                        <div class="help-block">注：首页我们的服务数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('about');">
+				<h5 class="panel-title">
+					<div>
+                        关于我们 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="about" style="display: none;">
+				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >对应文章</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('about_article_ngi', $settings['home']['advertising_design']['about_article'])}
+                        <div class="help-block">注：首页关于我们的数据来源；填写该文章的ID或者直接填写该文章的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('cases');">
+				<h5 class="panel-title">
+					<div>
+                        成功案例 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="cases" style="display: none;">
+				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >对应分类</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('cases_class_ngi', $settings['home']['advertising_design']['cases_class'])}
+                        <div class="help-block">注：首页成功案例数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('whychoseus');">
+				<h5 class="panel-title">
+					<div>
+                        为什么选择我们 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="whychoseus" style="display: none;">
+				
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >对应文章</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo mytpl_form_field_link('wcu_article_ngi', $settings['home']['advertising_design']['wcu_article'])}
+                        <div class="help-block">注：首页为什么选择我们的数据来源；填写该文章的ID或者直接填写该文章的链接，系统自动提取ID</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >板块背景图_pc</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('wcu_background', $settings['home']['advertising_design']['wcu_background'], '../addons/bowen_site/template/mobile/t2static/images/choose-bg.jpg');}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >板块背景图_mobile</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('wcu_mbackground', $settings['home']['advertising_design']['wcu_mbackground'], '../addons/bowen_site/template/mobile/t2static/images/choose-mbg.jpg');}
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('news');">
+				<h5 class="panel-title">
+					<div>
+                        首页三个资讯 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="news" style="display: none;">
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label must" >资讯一</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="col-sm-4 col-xs-6">
+                            <input type="text" name="newsone_title" class="form-control" value="{$settings['home']['advertising_design']['newsone_title']}" placeholder="首页资讯一标题" />
+                        </div>
+                        <div class="col-sm-7 col-xs-5">
+                            {php echo mytpl_form_field_link('newsone_class_ngi', $settings['home']['advertising_design']['newsone_class'])}
+                            <div class="help-block">注：首页资讯一数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >资讯二</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="col-sm-4 col-xs-6">
+                            <input type="text" name="newstwo_title" class="form-control" value="{$settings['home']['advertising_design']['newstwo_title']}" placeholder="首页资讯二标题" />
+                        </div>
+                        <div class="col-sm-7 col-xs-5">
+                            {php echo mytpl_form_field_link('newstwo_class_ngi', $settings['home']['advertising_design']['newstwo_class'])}
+                            <div class="help-block">注：首页资讯二数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >资讯三</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="col-sm-4 col-xs-6">
+                            <input type="text" name="newsthree_title" class="form-control" value="{$settings['home']['advertising_design']['newsthree_title']}" placeholder="首页资讯三标题" />
+                        </div>
+                        <div class="col-sm-7 col-xs-5">
+                            {php echo mytpl_form_field_link('newsthree_class_ngi', $settings['home']['advertising_design']['newsthree_class'])}
+                            <div class="help-block">注：首页资讯三数据来源分类；填写该分类的ID或者直接填写该分类的链接，系统自动提取ID</div>
+                        </div>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('contact');">
+				<h5 class="panel-title">
+					<div>
+                        联系我们 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="contact" style="display: none;">
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label must" >标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="contact_title" class="form-control" value="{if $settings['home']['advertising_design']['contact_title']}{$settings['home']['advertising_design']['contact_title']}{else}联系我们{/if}" placeholder="" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >内容</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <textarea name="contact_content" class="form-control" rows="5">{$settings['home']['advertising_design']['contact_content']}</textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >首页背景图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('contact_background', $settings['home']['advertising_design']['contact_background'], '../addons/bowen_site/template/mobile/t2static/images/contact-bg.jpg');}
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('tabar');">
+				<h5 class="panel-title">
+					<div>
+                        手机端底部菜单 <span class="label layui-bg-green pull-right" >展开/收缩</span>
+                    </div>
+				</h5>
+			</div>
+			<div class="panel-body" id="tabar" style="display: none;">
+				
+				<div class="form-group">
+                    <label class="col-sm-2 control-label must" >首页</label>
+                    <div class="col-sm-2 col-xs-12">
+                        <input type="text" name="tabar_1_title" class="form-control" value="{if $settings['home']['advertising_design']['tabar_1_title']}{$settings['home']['advertising_design']['tabar_1_title']}{else}首页{/if}" placeholder="请输入标题" />
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <input type="text" name="tabar_1_url" class="form-control" value="{$settings['home']['advertising_design']['tabar_1_url']}" placeholder="留空为首页链接" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >电话</label>
+                    <div class="col-sm-2 col-xs-12">
+                        <input type="text" name="tabar_2_title" class="form-control" value="{if $settings['home']['advertising_design']['tabar_2_title']}{$settings['home']['advertising_design']['tabar_2_title']}{else}电话{/if}" placeholder="请输入标题" />
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <input type="text" name="tabar_2_url" class="form-control" value="{$settings['home']['advertising_design']['tabar_2_url']}" />
+                        <div class="help-block">注：一键拨号，格式为<code>tel:178*****155</code></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >短信</label>
+                    <div class="col-sm-2 col-xs-12">
+                        <input type="text" name="tabar_3_title" class="form-control" value="{if $settings['home']['advertising_design']['tabar_3_title']}{$settings['home']['advertising_design']['tabar_3_title']}{else}短信{/if}" placeholder="请输入标题" />
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <input type="text" name="tabar_3_url" class="form-control" value="{$settings['home']['advertising_design']['tabar_3_url']}" />
+                        <div class="help-block">注：一键短信，格式为<code>sms:178*****155</code></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label must" >联系</label>
+                    <div class="col-sm-2 col-xs-12">
+                        <input type="text" name="tabar_4_title" class="form-control" value="{if $settings['home']['advertising_design']['tabar_4_title']}{$settings['home']['advertising_design']['tabar_4_title']}{else}联系{/if}" placeholder="请输入标题" />
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <input type="text" name="tabar_4_url" class="form-control" value="{$settings['home']['advertising_design']['tabar_4_url']}" placeholder="留空为上方关于我们的链接" />
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+				<input class="layui-btn col-lg-2" value="提  交" onclick="checkSubmit()" />
+				<input id="submit" type="submit" name="submit" class="layui-btn col-lg-2 hidden" />
+			</div>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+function addBanner() {
+	$(".btn-add-banner").button("loading");
+	$.ajax({
+		url: "{php echo webUrl('tpl/banner')}",
+		cache: true
+	}).done(function(html) {
+		$(".btn-add-banner").button("reset");
+		$(".banner").append(html);
+	});
+}
+
+function delete_item(obj) {
+	$(obj).closest('.item').remove();
+}
+
+function display(obj)
+{
+    if($("#" + obj).is(":hidden")){
+        $("#" + obj).show();
+    }else{
+          $("#" + obj).hide();
+    }
+}
+
+function checkSubmit()
+{
+    var advtitles = '';
+    advtitles = $('input[name="advtitle[]"').map(function(){ return $(this).val(); }).get();
+    var check_empty = 0;
+    for(var i=0;i<advtitles.length;i++){
+        if(advtitles[i] == ''){
+            check_empty++;
+        }
+    }
+    if(check_empty>0){
+        alert('请将 我们的优势-4个小标题 补充完整');
+        return false;
+    }
+    $("#submit").trigger("click");
+}
+</script>

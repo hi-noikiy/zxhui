@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head id="Head">
+	<script type="text/javascript">
+		var allpane = 'headerAreaA|mainArea|footerAreaA|bottomAreaA|fixedBottomArea|fixed-left|fixed-right|popup-area';
+	</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="Bowen" />
+    <meta name="release" content="{RELEASE}" />
+	<title>{$_W['page']['title']}</title>
+    <meta name="keywords" content="{$settings['global']['keyword']}" />
+	<meta name="description" content="{$settings['global']['description']}" />
+	<link rel="shortcut icon" href="{if $settings['global']['ico']}{php echo tomedia($settings['global']['ico'])}{/if}" />
+	<meta http-equiv="PAGE-ENTER" content="RevealTrans(Duration=0,Transition=1)" />
+	<link id="qhddefaultcontent9798_css" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/qhdcontent.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_content_css?ver=1_0" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/content.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_menu_css?ver=1_0" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/menu.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_jquery_fancybox_1_3_4_css?ver=1_0" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/jquery.fancybox-1.3.4.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_pgwslideshow_css?ver=1_0" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/pgwslideshow.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_animate_min_css?ver=1_0" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/animate.min.css" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_style_css?ver=1_2" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/style.css?v=201804111142" />
+	<link id="_Portals__default_Skins_BiologyGene_03_Html_css_style_cyan_css" rel="stylesheet" type="text/css" href="{M_URL}template/mobile/default/static/css/style-cyan.css" />
+	<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_508079_akma6ioln5rpy14i.css" />
+    <style>	
+    html {
+    	background-image: url({M_URL}template/mobile/default/static/img/bg-rep-04.png);
+    }
+    .icon-menu.mnav{color: #21bbc7;}
+    .portfolio-img .opacity-overlay {
+        height: 1200%;
+        top: -525%;
+    }
+    {if $settings['global']['color']['1']}
+        .header-v1 .main-nav .sf-menu li.sfHover .first-level{ color: {$settings['global']['color']['1']};}
+        .header-v1 .main-nav .sf-menu li.current, .header-v1 .main-nav .sf-menu li.current .first-level, .header-v1 .main-nav .sf-menu li.current .first-level:visited{ color: {$settings['global']['color']['1']};}
+        .header-v1 .main-nav .sf-menu li li, .header-v1 .main-nav .sf-menu li.sfHover li.sfHover, .header-v1 .main-nav .sf-menu li.sfHover li.sfHover > a, .header-v1 .main-nav .sf-menu li li a, .header-v1 .main-nav .sf-menu li li a, .header-v1 .main-nav .sf-menu li li a{ background-color: {$settings['global']['color']['1']};}
+        .header-v1 .main-nav .sf-menu li:hover, .header-v1 .main-nav .sf-menu li.sfHover, .header-v1 .main-nav .sf-menu li.sfHover > a, .header-v1 .main-nav .sf-menu a:focus, .header-v1 .main-nav .sf-menu a:hover, .header-v1 .main-nav .sf-menu a:active { color: {$settings['global']['color']['1']};}
+        a:hover { color: {$settings['global']['color']['1']};}
+        .drawer-section { background-color: {$settings['global']['color']['1']};}
+        .icon-menu.mnav{color: {$settings['global']['color']['1']};}
+    {/if}
+    {if $settings['global']['color']['2']}
+        .header-v1 .main-nav .sf-menu li li:hover, .header-v1 .main-nav .sf-menu li.sfHover li.sfHover, .header-v1 .main-nav .sf-menu li.sfHover li.sfHover > a, .header-v1 .main-nav .sf-menu li li a:focus, .header-v1 .main-nav .sf-menu li li a:hover, .header-v1 .main-nav .sf-menu li li a:active{ background-color: {$settings['global']['color']['2']};}
+        .carousel-btn .selected{ background: {$settings['global']['color']['2']};}
+        .module-hlbg-title{ background: {$settings['global']['color']['2']};}
+        .category ul li.current a{ color: {$settings['global']['color']['2']};}
+        .category ul li a:hover { color: {$settings['global']['color']['2']};}
+        .full-page-menu-content ul li.current a{ background: {$settings['global']['color']['2']};}
+        .full-page-menu-content ul li a:hover{ background: {$settings['global']['color']['2']};}
+        .module-full-screen-more a:hover, .module-full-screen-more a:active { background-color: {$settings['global']['color']['2']}; border-color: {$settings['global']['color']['2']};}
+        .touch-menu ul li a:hover, .touch-menu ul li a:active { background-color: {$settings['global']['color']['2']};}
+    {/if}
+	</style>
+	<!--[if lt IE 9]>
+		<script src="{M_URL}template/mobile/default/static/js/html5.js"></script>
+	<![endif]-->
+	<!--[if IE 6]>
+		<script type="text/javascript" src="{M_URL}template/mobile/default/static/js/ie7.js"></script>
+		<script type="text/javascript" src="{M_URL}template/mobile/default/static/js/dd_belatedpng.js"></script>
+		<script type="text/javascript">
+        DD_belatedPNG.fix('.top img, .footer img, .bottom img, .form-btn, .module-icon-default');
+		</script>
+	<![endif]-->
+	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+</head>
+<!-- 外部样式 -->
+<body class="font-zh-CN" style="background:url({M_URL}template/mobile/default/static/img/bg-img-04.jpg) top center fixed;">
+	<script src="{M_URL}template/mobile/default/static/js/a1portalcore.js" type="text/javascript"></script>
+	<script src="{M_URL}template/mobile/default/static/js/a1portal.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery-1.7.2.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/superfish.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery.caroufredsel.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery.touchswipe.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery.tools.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery.fancybox-1.3.4.pack.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/pgwslideshow.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/jquery.fixed.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/cloud-zoom.1.0.2.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/device.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/html5media-1.2.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/animate.min.js"></script>
+	<script src="{M_URL}template/mobile/default/static/js/custom.js?v=201805301552"></script>
+    <script src="{M_URL}static/js/lazyimg.js"></script>
+
+    <!-- layui -->
+    <link rel="stylesheet" href="{M_URL}static/layui/css/layui.css?v=20180403" />
+    <script src="{M_URL}static/layui/layui.js?v=20180403"></script>
+    
+    <script src="{M_URL}static/js/common.js"></script>

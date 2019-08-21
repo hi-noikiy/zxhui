@@ -1,0 +1,165 @@
+{mytemplate 'common/header'}
+{mytemplate 'common/banner2'}
+<main class="news_list_page_met_11_3 met-news">
+	<div class="container met-news-body">
+		<div class="row">
+			<div class="col-md-9 met-news-body">
+				<div class="row">
+					<div class="met-news-nav">
+						<div class="container p-x-0">
+							<div class="subcolumn-nav text-xs-center">
+								<ul class="news_list_page_met_11_3-ul clearfix m-b-0 p-x-0 ulstyle">
+                                    
+                                    <li class="nav-item {if $id == $all['id']}active{/if}">
+        								<a href="{php echo foregUrl('class',array('id'=>$all['id']), true)}" title="{$lastclass['title']}" class="{if $id == $all['id']}active{/if}">全部</a>
+        							</li>
+                                    {loop $navs $n}
+                                    {if $n['status'] == '1'}
+                					<li class="nav-item {if $id == $n['id'] || $class_info['parid'] == $n['id']}active{/if}">
+                						<a href="{php echo foregUrl('class',array('id'=>$n['id']), true)}" title="{$n['title']}" class="{if $id == $n['id']}active{/if}">{$n['title']}</a>
+                					</li>
+                                    {/if}
+                					{/loop}
+                                    
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="met-news-list">
+						<ul class="ulstyle met-pager-ajax imagesize" data-scale='400x400' m-id='12'>
+							
+                            {loop $articles $item}
+                            {if $item['status'] == '1'}
+    							<li class='border-bottom1'>
+    								<h4>
+    									<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" target="_self">
+                                        {$item['title']}
+                                        </a>
+    								</h4>
+    								<p class="des font-weight-300">
+                                        {if $item['description']}
+                                            {php $item['description'] = deleteRN($item['description'])}
+                                        {else}
+                                            {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                                        {/if}
+                                        {php echo m('common')->msubstr($item['description'], 0, 180)}
+    								</p>
+    								<p class="info font-weight-300">
+    									<span>
+    										<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}" class="btn btn-squared waves-effect waves-light ">查看更多</a>
+    									</span>
+    									<span>
+    										<i class="icon wb-time m-r-5 font-weight-300" aria-hidden="true"></i> {php echo date('Y-m-d', $item['createtime'])}
+    									</span>
+    									<span>
+    										<i class="icon wb-eye m-r-5 font-weight-300" aria-hidden="true"></i> {if $item['reading']}{$item['reading']}{else}0{/if}
+    									</span>
+    								</p>
+    							</li>
+                            {/if}
+                            {/loop}
+                            
+						</ul>
+						
+						<?php
+                        $param = array(
+                            'html' => array(
+                                's' => '<div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">', 
+                                'e' => '</div></div>', 
+                                'ac' => 'Ahover', 
+                                'fpnl' => array(
+                                    'fl' => 'null', 
+                                    'p' => 'class="PreSpan"', 
+                                    'n' => 'class="NextSpan"'
+                                )
+                            ),
+                            'li' => 'null',
+                            'always_show' => 1,
+                            'nopages' => '
+                                <div class="m-t-20 text-xs-center hidden-sm-down" m-type="nosysdata"><div class="met_pager">
+                                    <span class="PreSpan">
+    									上一页
+    								</span>
+    								<a href="'.$_W['siteurl'].'" class="Ahover">1</a>
+    								<span class="NextSpan">
+    									下一页
+    								</span>
+                                </div></div>'
+                        );
+                        echo pagination_foreg($count, $pindex, $psize, array('before' => 5, 'after' => 4), $param);
+                        ?>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="row">
+					<aside class="sidebar_met_11_3 met-sidebar panel panel-body m-b-0" boxmh-h m-id='13' m-type='nocontent'>
+						<div class="news-list-tab nav-tabs-horizontal" data-plugin="nav-tabs">
+							<ul class="nav nav-tabs nav-tabs-solid ulstyle" role="tablist">
+								<li class="nav-item" role="presentation">
+									<a data-toggle="tab" href="#news-list1" role="tab" aria-expanded="true" class="nav-link active">
+									浏览排行                </a>
+								</li>
+								<li class="nav-item" role="presentation">
+									<a data-toggle="tab" href="#news-list2" role="tab" aria-expanded="false" class="nav-link">
+									最新发布                </a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active animation-fade" id="news-list1" role="tabpanel">
+									<ul class="list-group ulstyle">
+										{php $hot_articles = $this->getArticles(array('status' => 1, 'firstclass' => $all['id']), array('displayorder DESC', 'reading DESC'), array(0,10));}
+                                        {if !empty($hot_articles)}
+                                        {php $hi = 1;}
+                                            {loop $hot_articles $item}
+                                            <li class="">
+    											<span class="tag tag-pill up tag-{if $hi <= 3}warning{else}default{/if}">
+    												{$hi}
+    											</span>
+    											<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}">{$item['title']}</a>
+    											<span class="time">
+    												{php echo date('Y-m-d H:i:s', $item['createtime'])}
+    											</span>
+    										</li>
+                                            {php $hi++;}
+                                            {/loop}
+                                        {else}
+                                            <li class="">
+    											<a href="JavaScript:;" title="{$item['title']}">-- 暂无数据 --</a>
+    										</li>
+                                        {/if}
+									</ul>
+								</div>
+								<div class="tab-pane animation-fade" id="news-list2" role="tabpanel">
+									<ul class="list-group ulstyle">
+										{php $new_articles = $this->getArticles(array('status' => 1, 'firstclass' => $all['id']), array('displayorder DESC', 'createtime DESC'), array(0,10));}
+                                        {if !empty($new_articles)}
+                                        {php $ni = 1;}
+                                            {loop $new_articles $item}
+                                            <li class="">
+    											<span class="tag tag-pill up tag-{if $ni <= 3}warning{else}default{/if}">
+    												{$ni}
+    											</span>
+    											<a href="{php echo foregUrl('article',array('id'=>$item['id']), true)}" title="{$item['title']}">{$item['title']}</a>
+    											<span class="time">
+    												{php echo date('Y-m-d H:i:s', $item['createtime'])}
+    											</span>
+    										</li>
+                                            {php $ni++;}
+                                            {/loop}
+                                        {else}
+                                            <li class="">
+    											<a href="JavaScript:;" title="{$item['title']}">-- 暂无数据 --</a>
+    										</li>
+                                        {/if}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+{mytemplate 'common/footer'}

@@ -1,0 +1,16 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+	<div class="layui-input-block">
+		<select name="field_data{$kw}" lay-verify="{if $v1['tp_must']==1}required{/if}" lay-search >
+			<option value="">请选择 {$v1['tp_name']}</option>
+            {if !empty($v1['tp_text'])}
+                {loop $v1['tp_text'] $k2 $v2}
+                <option value="{$v2}">{$v2}</option>
+                {/loop}
+            {/if}
+		</select>
+	</div>
+</div>
+<!-- phpDesigner :: Timestamp [2018/7/7 21:46:42] -->

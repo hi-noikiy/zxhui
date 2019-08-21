@@ -1,0 +1,17 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+	<div class="layui-input-block" id="input-{$kw}">
+		<div class="layui-upload">
+			<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;" >
+				<div class="layui-upload-list" id="showUpImg-{$k1}">
+                    {loop $data[$k1] $s}
+                    <img src="{media $s}" class="layui-upload-img" />
+                    {/loop}
+                </div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<!-- phpDesigner :: Timestamp [2018/7/8 20:36:51] -->

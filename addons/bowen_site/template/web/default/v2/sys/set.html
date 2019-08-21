@@ -1,0 +1,227 @@
+<title>系统设置</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+		<a><cite>系统设置</cite></a>
+	</div>
+</div>
+
+<style>
+.layui-form-switch{margin-top: 0;}
+</style>
+<div class="layui-fluid layui-form" lay-filter="BOWEN_app-sys-set-form">
+    
+
+    <div class="layui-tab" lay-filter="BOWEN_app-sys-set-tab">
+        
+        <div class="layui-card">
+            <div class="layui-card-header layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li lay-id="function" class="layui-this">功能开关</li>
+            		<li lay-id="base">参数设置</li>
+            	</ul>
+            </div>
+    		<div class="layui-card-body">
+                
+            </div>
+        </div>
+        
+    	<div class="layui-tab-content">
+            
+            <!-- 功能开关 Begin -->
+            <div class="layui-tab-item layui-show">
+                
+                <div class="layui-card">
+            		<div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                            <p>前两个开关都开启的情况下，域名管理功能才会生效。</p>
+                        </blockquote>
+                    </div>
+                </div>
+                
+            	<div class="layui-card">
+            		<div class="layui-card-header layuiadmin-card-header-auto">
+            			是否开启系统首页功能
+                        <span class="pull-right">
+                            <input type="checkbox" name="showhomepage" value="1" lay-skin="switch" lay-text="开启|关闭">
+                        </span>
+            		</div>
+            		<div class="layui-card-body">
+                        <script type="text/html" template>
+                            {{# if(global.ims_family == 'v'){ }}
+                            每次更新系统(不是更新本模块)后，需要在这里开启并关闭一次才能正常运行<br />
+                            {{# } }}
+                            <span class="layui-badge">这里是系统全局设置，如果关闭，访问域名就会直接打开登录页。</span>
+                        </script>
+            		</div>
+            	</div>
+                
+                <div class="layui-card">
+            		<div class="layui-card-header layuiadmin-card-header-auto">
+            			是否用本模块接管系统首页功能
+                        <span class="pull-right">
+                            <input type="checkbox" name="site_welcome_module" value="1" lay-skin="switch" lay-text="开启|关闭">
+                        </span>
+            		</div>
+            		<div class="layui-card-body">
+                        关闭后，本模块的域名管理功能将会失效
+            		</div>
+            	</div>
+                
+                <div class="layui-card">
+            		<div class="layui-card-header layuiadmin-card-header-auto">
+            			是否开启伪静态功能
+                        <span class="pull-right">
+                            <input type="checkbox" name="is_rewrite" value="1" lay-skin="switch" lay-text="开启|关闭">
+                        </span>
+            		</div>
+            		<div class="layui-card-body">
+                        开启前请确定已经设置过伪静态规则！<a href="https://wiki.we7pc.com/71/class_42.html#article_78" target="_blank" style="color: #1E9FFF;">伪静态设置教程</a>
+            		</div>
+            	</div>
+    
+            </div>
+            <!-- 功能开关 End -->
+            
+            <!-- 参数设置 Begin -->
+            <div class="layui-tab-item">
+                
+                <div class="layui-card">
+            		<div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                            <p>整站的设置</p>
+                        </blockquote>
+                    </div>
+                </div>
+                
+            	<div class="layui-card">
+                    <div class="layui-card-header">
+                        参数设置
+            		</div>
+            		<div class="layui-card-body">
+                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">后台模板</label>
+                            <div class="layui-input-block">
+                                <select name="webtheme" id="BOWEN_app-sys-set-form-webtheme" lay-verify="required"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item hidden">
+                            <label class="layui-form-label">兼容其他首页</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="compatible_site_welcome_module" placeholder="请输入标题" autocomplete="off" class="layui-input" />
+								<div style="color: red !important;">&#x6B64;&#x6E90;&#x7801;&#x7531;&#xFF1A;&#x5F00;&#x5427;&#x6E90;&#x7801;&#x793E;&#x533A;www.kai8.top&#x53D1;&#x5E03;</div>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="BOWEN_app-sys-set-submit">立即提交</button>
+                            </div>
+                        </div>
+                        
+            		</div>
+                </div>
+                
+            </div>
+            <!-- 参数设置 End -->
+            
+        </div>
+    </div>
+</div>   
+<script type="text/html" id="BOWEN_app_sys_set_form_webthemeTpl">
+{{#  layui.each(d.data.webthemes, function(index, item){ }}
+    <option value="{{ item }}">{{ item }}</option>
+{{#  }); }}
+{{#  if(d.data.length === 0){ }}
+    无数据
+{{#  } }} 
+</script>
+<script type="text/javascript">
+layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,layer = layui.layer
+    ,myutil = layui.myutil
+    ,form = layui.form
+    ,laytpl = layui.laytpl;
+    
+    //此处解决局部刷新时未渲染问题
+    form.render();
+    
+    admin.req({
+        url: myutil.webUrl('sys/getSetData')
+        ,type: 'post'
+        ,cache: false
+        ,dataType:"json"
+        ,success: function(d){
+            if(d.errno==0){
+                var getTpl = BOWEN_app_sys_set_form_webthemeTpl.innerHTML
+                ,view = document.getElementById('BOWEN_app-sys-set-form-webtheme');
+                laytpl(getTpl).render(d, function(html){
+                    view.innerHTML = html;
+                    form.val("BOWEN_app-sys-set-form", d.data);//初始赋值
+                });
+            }
+        }
+    });
+    
+    form.on('switch()', function(data){
+        var status = data.elem.checked?1:0;
+        admin.req({
+            url: myutil.webUrl('sys/setData')
+            ,type: 'post'
+            ,data: {op:data.elem.name, status:status}
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno==0){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1500
+                    });
+                }else{
+                    console.log(d);
+                    layer.msg(d.message, {
+                        icon: 2
+                        ,time: 1500
+                    }, function(){
+                        admin.events.refresh();
+                    });
+                }
+            }
+        });
+    });
+    
+    form.on('submit(BOWEN_app-sys-set-submit)', function(data){
+        admin.req({
+            url: myutil.webUrl('sys/postSysData')
+            ,type: 'post'
+            ,data: data.field
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno==0){
+                    layer.msg(d.message, {
+                        icon: 1
+                        ,time: 1500
+                    });
+                }else{
+                    console.log(d);
+                    layer.msg(d.message, {
+                        icon: 2
+                        ,time: 1500
+                    }, function(){
+                        admin.events.refresh();
+                    });
+                }
+            }
+        });
+        
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+});
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/11 12:17:22] -->

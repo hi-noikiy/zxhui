@@ -1,0 +1,22 @@
+<?php defined('IN_IA') or exit('Access Denied');?><div class="header on">
+	<div class="wrapper">
+    	<a class="logo" href="<?php  echo $this->mogucms_url()?>"><span><img src="<?php  if($setting['logo1']) { ?><?php  echo $_W['attachurl'];?><?php  echo $setting['logo1'];?><?php  } else if($fdset['logo1']) { ?><?php  echo $_W['attachurl'];?><?php  echo $fdset['logo1'];?><?php  } else { ?>../addons/mogucms_guanwang/template/style/images/logo.png<?php  } ?>"></span><em><img src="<?php  if($setting['logo2']) { ?><?php  echo $_W['attachurl'];?><?php  echo $setting['logo2'];?><?php  } else if($fdset['logo2']) { ?><?php  echo $_W['attachurl'];?><?php  echo $fdset['logo2'];?><?php  } else { ?>../addons/mogucms_guanwang/template/style/images/logo2.png<?php  } ?>"></em></a>
+        <div class="nav">
+			<a class="navico" href="javascript:;"><span><img src="../addons/mogucms_guanwang/template/style/images/nav_ico2.png"></span><em><img src="../addons/mogucms_guanwang/template/style/images/nav_ico.png"></em></a>
+        	<ul>
+            	<li><a href="<?php  echo $this->mogucms_url()?>"><?php  if(!empty($menu['home'])) { ?><?php  echo $menu['home'];?><?php  } else { ?>首页<?php  } ?></a></li>
+            	<?php  if($menu['solve'] != "1") { ?><li <?php  if($_GPC["do"] == "solve" || $_GPC['do']=="solvedetail") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('solve')?>"><?php  if(!empty($menu['solve2'])) { ?><?php  echo $menu['solve2'];?><?php  } else { ?>解决方案<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['xiaochengxu'] != "1") { ?><li <?php  if($_GPC["do"] == "xiaochengxu") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('xiaochengxu')?>"><?php  if(!empty($menu['xiaochengxu2'])) { ?><?php  echo $menu['xiaochengxu2'];?><?php  } else { ?>小程序<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['dingzhi'] != "1") { ?><li <?php  if($_GPC["do"] == "customize") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('customize')?>"><?php  if(!empty($menu['dingzhi2'])) { ?><?php  echo $menu['dingzhi2'];?><?php  } else { ?>定制开发<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['daili'] != "1") { ?><li <?php  if($_GPC["do"] == "daili") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('daili')?>"><?php  if(!empty($menu['daili2'])) { ?><?php  echo $menu['daili2'];?><?php  } else { ?>代理加盟<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['news'] != "1") { ?><li <?php  if($_GPC["do"] == "news") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('news')?>"><?php  if(!empty($menu['news2'])) { ?><?php  echo $menu['news2'];?><?php  } else { ?>新闻资讯<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['about'] != "1") { ?><li <?php  if($_GPC["do"] == "about") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('about')?>"><?php  if(!empty($menu['about2'])) { ?><?php  echo $menu['about2'];?><?php  } else { ?>关于我们<?php  } ?></a></li><?php  } ?>
+            	<?php  if($menu['contact'] != "1") { ?><li <?php  if($_GPC["do"] == "contact") { ?>class="on"<?php  } ?>><a href="<?php  echo $this->mogucms_url('contact')?>"><?php  if(!empty($menu['contact2'])) { ?><?php  echo $menu['contact2'];?><?php  } else { ?>联系我们<?php  } ?></a></li><?php  } ?>
+				<?php  if($menu['help'] != "1") { ?><li><a href="<?php  echo $this->mogucms_url('help')?>"><?php  if(!empty($menu['help2'])) { ?><?php  echo $menu['help2'];?><?php  } else { ?>帮助中心<?php  } ?></a></li><?php  } ?>
+				<?php  if(!empty($menu['defname1'])) { ?><li><a href="<?php  echo $menu['defurl1'];?>" target="_blank"><?php  echo $menu['defname1'];?></a></li><?php  } ?>
+				<?php  if(!empty($menu['defname2'])) { ?><li><a href="<?php  echo $menu['defurl2'];?>" target="_blank"><?php  echo $menu['defname2'];?></a></li><?php  } ?>
+            </ul>
+        </div>
+        <div class="loginreg"><a href="<?php  if(!empty($setting['loginurl'])) { ?><?php  echo $setting['loginurl'];?><?php  } else { ?><?php  echo $this->mogucms_url('login')?><?php  } ?>">登录</a><?php  if($loginset['iszhuche']!="1") { ?>|<a href="<?php  if(!empty($setting['regurl'])) { ?><?php  echo $setting['regurl'];?><?php  } else { ?><?php  echo $this->mogucms_url('register')?><?php  } ?>">注册</a><?php  } ?></div>
+    </div>
+</div>

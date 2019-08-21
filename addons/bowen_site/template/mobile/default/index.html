@@ -1,0 +1,16 @@
+{php include $this->mytemplate('common/header-base')}
+	<div id="wrapper" class="home-page">
+		{php include $this->mytemplate('common/top-nav')}
+        
+        <?php
+        if(!empty($settings['home']['default']['mtype'])){
+            $num = count($settings['home']['default']['mtype']);
+            for($mid = 0; $mid < $num; $mid++){
+                include $this->mytemplate("tpl/home/".$settings['home']['default']['mtype'][$mid], 'mobile');             
+            }
+        }else{
+            include $this->mytemplate("tpl/home/index_old", 'mobile');
+        }
+        ?>
+
+{php include $this->mytemplate('common/footer')}

@@ -1,0 +1,277 @@
+<title>基础设置</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="/">主页</a>
+        <a><cite>系统</cite></a>
+        <a><cite>应用</cite></a>
+        <a><cite>系统公众号</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+
+
+    <div class="layui-tab" lay-filter="BOWEN_app-sys-plugin-wechat-tab">
+
+        <div class="layui-card">
+            <div class="layui-card-header layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li lay-id="oauth" class="layui-this">系统公众号</li>
+                    <li lay-id="wechat" >消息提醒</li>
+                </ul>
+            </div>
+            <div class="layui-card-body">
+
+            </div>
+        </div>
+
+        <div class="layui-tab-content">
+
+            <!-- 系统公众号 Begin -->
+            <div class="layui-tab-item layui-show">
+
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="text-indent: 2em;">
+                            <p>用于系统运行的主公众号，目前该功能作用不大，后期将作为整个系统的通知使用</p>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div class="layui-card layui-form" lay-filter="BOWEN_app-sys-plugin-wechat-form">
+                    <div class="layui-card-header">
+                        系统oauth设置
+                    </div>
+                    <div class="layui-card-body">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">系统公众号</label>
+                            <div class="layui-input-block">
+                                <select name="account" id="BOWEN_app-sys-plugin-wechat-form-oauthAccount"></select>
+                                <div class="layui-form-mid layui-word-aux"></div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">系统主域名</label>
+                            <div class="layui-input-block">
+                                <input name="host" class="layui-input" autocomplete="off" />
+                                <div class="layui-form-mid layui-word-aux">适用于开启了授权接入功能的系统，用于任务触发时采用该链接发送请求。例如：http://www.baidu.com 注意：结尾没有/</div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="BOWEN_app-sys-plugin-wechat-submit">提交</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- 系统公众号 End -->
+
+            <!-- 消息提醒 Begin -->
+            <div class="layui-tab-item">
+
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <blockquote class="layui-elem-quote" style="font-size: 14px;">
+                            
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div id="BOWEN_app_sys_plugin_wechat_form"></div>
+
+                <script type="text/html" id="BOWEN_app_sys_plugin_wechat_formTpl">
+                    {{#  layui.each(d.data, function(index, item){ }}
+                    <form class="layui-card layui-form">
+
+                        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{{ item.title }}</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="tplid" placeholder="请填写模板ID" autocomplete="off" class="layui-input" value="{{# if(item.param.template_id){ }}{{ item.param.template_id }}{{# } }}">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">{{ item.tpl_title }} {{ item.template_id_short }}</div>
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">{{ item.title }}-选择通知人</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input layui-input-group" readonly="true" style="background-color: #f8f8f8;">
+                                    <span>
+                                        <button class="layui-btn layui-btn-primary selector" data-type="fans" data-inputname="openid[]" type="button">选择通知人</button>
+                                    </span>
+                                    <div class="multi-img-details">
+                                        {{# if(item.param.sets){ }}
+                                        {{#  layui.each(item.param.sets, function(index2, fan){ }}
+                                        <div class="multi-item fans-selector" data-openid="{{ fan.openid }}">
+                                            <img class="img-responsive img-thumbnail" onerror="this.src='../web/resource/images/nopic.jpg'; this.title='图片未找到.';" src="{{ fan.fans_info.tag.avatar }}" title="{{ fan.fans_info.tag.nickname }}">
+                                            <div class="img-nickname">{{ fan.fans_info.tag.nickname }}</div>
+                                            <input type="hidden" name="openid[]" value="{{ fan.openid }}">
+                                            <em class="close delSelect" title="删除这张图片" data-delclass="multi_item">×</em>
+                                        </div>
+                                        {{#  }); }}
+                                        {{# } }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" data-to="{{ item.sign }}" lay-submit lay-filter="BOWEN_app-sys-plugin-wechat-form-submit">提交</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                    {{#  }); }}
+                </script>
+            </div>
+            <!-- 消息提醒 End -->
+
+        </div>
+    </div>
+</div>
+<script type="text/html" id="BOWEN_app_sys_plugin_wechat_form_oauthAccountTpl">
+    <option value="">不借用任何权限</option>
+    {{#  layui.each(d.data.oauth_accounts, function(index, item){ }}
+    <option value="{{ item.uniacid }}">{{ item.title }}</option>
+    {{#  }); }}
+    {{#  if(d.data.length === 0){ }}
+    无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['admin', 'layer', 'myutil', 'form', 'laytpl', 'selector', 'element'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,layer = layui.layer
+            ,myutil = layui.myutil
+            ,form = layui.form
+            ,laytpl = layui.laytpl
+            ,selector = layui.selector
+            ,element = layui.element
+            ,is_showSignYet = 0;
+
+        form.render();
+
+        element.on('tab(BOWEN_app-sys-plugin-wechat-tab)', function(data){
+            var a = $(this).attr('lay-id');
+            if(a == 'wechat' && is_showSignYet == 0){
+                show_wechat();
+                is_showSignYet = 1;
+            }
+        });
+
+        admin.req({
+            url: myutil.webUrl('sys/plugin/wechat/get')
+            ,type: 'post'
+            ,cache: false
+            ,dataType:"json"
+            ,success: function(d){
+                if(d.errno==0){
+                    var getTpl = BOWEN_app_sys_plugin_wechat_form_oauthAccountTpl.innerHTML
+                        ,oauthAccount_view = document.getElementById('BOWEN_app-sys-plugin-wechat-form-oauthAccount');
+                    laytpl(getTpl).render(d, function(html){
+                        oauthAccount_view.innerHTML = html;
+                        form.val("BOWEN_app-sys-plugin-wechat-form", d.data);
+                    });
+                }
+            }
+        });
+
+        form.on('submit(BOWEN_app-sys-plugin-wechat-submit)', function(data){
+            admin.req({
+                url: myutil.webUrl('sys/plugin/wechat/post')
+                ,type: 'post'
+                ,data: data.field
+                ,cache: false
+                ,dataType:"json"
+                ,success: function(d){
+                    if(d.errno==0){
+                        layer.msg(d.message, {
+                            icon: 1
+                            ,time: 1500
+                        }, function(){
+                            admin.events.refresh();
+                        });
+                    }else{
+                        console.log(d);
+                        layer.msg(d.message, {
+                            icon: 2
+                            ,time: 1500
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        /** 消息提醒-设置 Begin */
+        var show_wechat = function(){
+            var render_tpl = function(){
+                admin.req({
+                    url: myutil.webUrl('set/notice/msg')
+                    ,type: 'post'
+                    ,data: {'level':'sys'}
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno==0){
+                            var getTpl = BOWEN_app_sys_plugin_wechat_formTpl.innerHTML
+                                ,noticeForm_view = document.getElementById('BOWEN_app_sys_plugin_wechat_form');
+                            laytpl(getTpl).render(d, function(html){
+                                noticeForm_view.innerHTML = html;
+                                selector.render();
+                            });
+                        }
+                    }
+                });
+            }
+            render_tpl();
+
+            form.on('submit(BOWEN_app-sys-plugin-wechat-form-submit)', function(data){
+                var to = $(data.elem).data('to');
+                if(!to)layer.msg('none');
+                data.field.to = to;
+                data.field.level = 'sys';
+                admin.req({
+                    url: myutil.webUrl('set/notice/msg/post')
+                    ,type: 'post'
+                    ,data: data.field
+                    ,cache: false
+                    ,dataType:"json"
+                    ,success: function(d){
+                        if(d.errno==0){
+                            layer.msg(d.message, {
+                                icon: 1
+                                ,time: 1500
+                            }, function(){
+                                render_tpl();
+                            });
+                        }else{
+                            console.log(d);
+                            layer.msg(d.message, {
+                                icon: 2
+                                ,time: 1500
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+        }
+        /** 消息提醒-设置 End */
+
+    });
+</script>
+<!-- phpDesigner :: Timestamp [2018/11/18 11:55:22] -->

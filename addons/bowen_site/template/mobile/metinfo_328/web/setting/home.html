@@ -1,0 +1,197 @@
+<form action="" method="post" class="form-horizontal form">
+    
+    <div class="panel-group" >
+		<div class="panel panel-default">
+			<div class="panel-heading" onclick="display('info');">
+				<h5 class="panel-title">
+					<div>
+						参数设置
+                        <span class="color-green" style="font-size: 13px;"></span>
+                        <span class="label layui-bg-green pull-right" >展开/收缩</span>
+					</div>
+				</h5>
+			</div>
+			<div class="panel-body layui-anim layui-anim-scale" id="info" style="display: none;">
+            
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >首页顶部电话</label></label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="phone_num" class="form-control" value="{$settings['home']['metinfo_328']['phone_num']}" />
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >首页顶部板块导航偏移</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" name="info[block_nav_left]" class="form-control" value="{if $settings['home']['metinfo_328']['info']['block_nav_left']}{$settings['home']['metinfo_328']['info']['block_nav_left']}{else}0{/if}" placeholder="" />
+                            <span class="input-group-addon">px</span>
+                        </div>
+                        <div class="help-block">注：格式为数字；负数向左偏移，正数向右偏移。</div>
+                    </div>
+                </div>
+                
+                <div class="page-heading">
+                	<h4>自定义配色</h4>
+                </div>
+                <hr />
+                <input type="hidden" name="info[color][0]" value="#00dfb9|#2cc0a7" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" >
+                        1号颜色
+                    </label>
+                    <div class="col-sm-3 col-xs-12">
+                        <div class="input-group ">
+                            <input type="color" name="info[color][1]" class="form-control" value="{if $settings['home']['metinfo_328']['info']['color']['1']}{$settings['home']['metinfo_328']['info']['color']['1']}{else}#00dfb9{/if}" />
+                  			<span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="$(this).parent().siblings('input').val('#00dfb9')">重置</button>
+                  			</span>
+                   		</div>
+                        <span class='help-block'>
+                            注：站点主色调
+                        </span>
+                    </div>
+                    
+                    <label class="col-sm-2 control-label" >
+                        2号颜色
+                    </label>
+                    <div class="col-sm-3 col-xs-12">
+                        <div class="input-group ">
+                            <input type="color" name="info[color][2]" class="form-control" value="{if $settings['home']['metinfo_328']['info']['color']['2']}{$settings['home']['metinfo_328']['info']['color']['2']}{else}#2cc0a7{/if}" />
+                  			<span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="$(this).parent().siblings('input').val('#2cc0a7')">重置</button>
+                  			</span>
+                   		</div>
+                        <span class='help-block'>
+                            注：新闻列表的日期背景色、各列表页分类导航主体色
+                        </span>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	</div>
+    
+    <ol class="contents">
+        {php unset($settings['home']['metinfo_328']['phone_num']);}
+        <?php
+        $num = !empty($settings['home']['metinfo_328']['mtype'])?count($settings['home']['metinfo_328']['mtype']):8;
+        if(empty($settings['home']['metinfo_328']['mtype'])){$settings['home']['metinfo_328']['mtype'] = array(0 => 'banner',1 => 'icon',2 => 'product',3 => 'joint',4 => 'worth',5 => 'mark',6 => 'about',7 => 'contact');}
+        for($mid = 0; $mid < $num; $mid++){
+            include $this->mytemplate("web/tpl/".$settings['home']['metinfo_328']['mtype'][$mid], 'mobile');
+        }
+        ?>
+    </ol>
+    
+	<div class="form-group">
+		<div class="col-sm-9 col-xs-12">
+			<div class="help-block">
+				<input type="hidden" name="token" value="{$_W['token']}" />
+				<input id="submit" type="submit" name="submit" value="提  交" class="layui-btn col-lg-2" />
+                <a class="layui-btn layui-btn-primary" onclick="module_selector();">唤出板块选择器</a>
+			</div>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+function addBanner() {
+	$(".btn-add-banner").button("loading");
+	$.ajax({
+		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+		,cache: false
+        ,type :'post'
+        ,data :{fname:'banner-s'}
+	}).done(function(html) {
+		$(".btn-add-banner").button("reset");
+		$(".banner").append(html);
+	});
+}
+
+function delete_item(obj) {
+	$(obj).closest('.item').remove();
+}
+
+function delete_module(obj) {
+	$(obj).closest('.panel-group').remove();
+}
+
+function add_demo_content(obj, style){
+    var con = {
+        1 :'<span class="w1">9</span>'+
+            '<span class="w2">'+
+                '<span class="w21">年专注 · 互联网+</span>'+
+                '<span class="w22">WEBSITE</span>'+
+                '<span class="w23">始于 2009 - 2018 展望未来<br/>专注于小程序开发，专业于解决方案</span>'+
+            '</span>',
+        2 :'<span class="w2 wc">'+
+                '<span class="w21">设计控，也醉了</span>'+
+                '<span class="w22">I·DESIGN</span>'+
+                '<span class="w23">不是非要高大上，只是醉心于设计<br/>我们想，再上一个好案例</span>'+
+            '</span>',
+        3 :'<span class="w2 cc">'+
+                '<span class="w21">技术派，论研发</span>'+
+                '<span class="w22">DEVELOPER</span>'+
+                '<span class="w23">我说，业界没有最好的技术，只有最棒的技术开发者<br/>定制研发，为您的客户和团队</span>'+
+            '</span>',
+        4 :'<span class="w2 cc">'+
+                '<span class="w21">先入为主，布局未来</span>'+
+                '<span class="w22">LAYOUT</span>'+
+                '<span class="w23">全面布局<em>PC</em>端与<em>移动</em>端<br/>抢占头等商机<br/>基于<em>Html5</em>响应式布局，智能识别多种终端设备</span>'+
+            '</span>'
+    };
+    $(obj).closest('.form-group').children('.bannercontent').val(con[style]);
+}
+
+function module_selector(){
+    layui.use('layer', function(){
+      var layer = layui.layer;
+      
+      layer.open({
+          title: '板块选择器'
+          ,offset: 'r'
+          ,area: '300px'
+          ,shade: 0
+          ,content: '<div class="panel-body tm">'+
+                        '<a href="JavaScript:;" data="banner" class="btn btn-default btn-sm">轮播图</a>'+
+                        '<a href="JavaScript:;" data="icon" class="btn btn-default btn-sm">业务</a>'+
+                        '<a href="JavaScript:;" data="product" class="btn btn-default btn-sm">产品展示</a>'+
+                        '<a href="JavaScript:;" data="joint" class="btn btn-default btn-sm">合作伙伴</a>'+
+                        '<a href="JavaScript:;" data="worth" class="btn btn-default btn-sm">品质</a>'+
+                        '<a href="JavaScript:;" data="mark" class="btn btn-default btn-sm">增值</a>'+
+                        '<a href="JavaScript:;" data="about" class="btn btn-default btn-sm">关于</a>'+
+                        '<a href="JavaScript:;" data="contact" class="btn btn-default btn-sm">联系</a>'+
+                        '<a href="JavaScript:;" data="richtext" class="btn btn-default btn-sm">富文本</a>'+
+                    '</div>'+
+                    '<!--div class="panel-body">'+
+                        ''+
+                        '<div class="text text-danger"></div>'+
+                    '</div-->'
+          ,btn: '关闭'
+        });
+    });
+    
+    $(function () {
+        require(['jquery.caret'],function(){
+            $("a[href='JavaScript:;']").click(function () {
+                var fthemes = this.getAttribute("data"); 
+                addModules(fthemes);
+            })
+        })
+    })
+    
+    function addModules(fname){
+        $(".tm .btn").button("loading");
+    	$.ajax({
+    		url: "{php echo webUrl('tpl/tpl_app_setting')}"
+    		,cache: false
+            ,type :'post'
+            ,data :{fname:fname}
+    	}).done(function(html) {
+    		$(".tm .btn").button("reset");
+    		$(".contents").append(html);
+    	});
+    }
+}
+
+</script>

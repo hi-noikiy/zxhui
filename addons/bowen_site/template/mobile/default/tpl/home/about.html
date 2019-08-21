@@ -1,0 +1,43 @@
+
+        <!-- 了解我们 -->
+        {php $profile_article[$mid] = $this->getArticleInfo($settings['home']['default']['article'][$mid]);}
+        <section class="main">
+			<div class="module-full-screen module-full-screen-gray" style="{if $settings['home']['default']['background_color'][$mid]}background-color: {$settings['home']['default']['background_color'][$mid]};{/if}">
+				<div class="module-inner not-animated" data-animate="fadeInDown" data-delay="200">
+					<div class="page-width">
+						<div class="module-full-screen-title">
+							<h2>{$settings['home']['default']['title'][$mid]}</h2>
+							<div class="module-title-content">
+								<i class="mark-left"></i>
+								<h3>{$settings['home']['default']['title_en'][$mid]}</h3>
+								<i class="mark-right">
+								</i>
+							</div>
+							<em class="module-full-screen-title-line">
+							</em>
+						</div>
+						<div id="a1portalSkin_ctr225312225312_mainArea" class="module-full-screen-content">
+                            
+							<div class="qhd-content">
+                                <div style="text-indent: 2rem;">
+                                    <p>
+								    {$profile_article[$mid]['description']}
+                                    </p>
+                                </div>
+                                {if $settings['home']['default']['thumb'][$mid]}
+								<p style="text-align: center;">
+									<br />
+									<a href="{php echo foregUrl('article',array('id'=>$settings['home']['default']['article'][$mid]), true)}" target="_blank">
+                                        <img src="{M_URL}/template/mobile/default/static/img/lazy-689x131.jpg" alt="{$profile_article[$mid]['title']}" class="lazyload" data-src="{php echo tomedia($settings['home']['default']['thumb'][$mid])}" />
+									</a>
+								</p>
+                                {/if}
+							</div>
+                            
+						</div>
+					</div>
+				</div>
+			</div>
+        </section>
+        <!-- 了解我们 -->
+        

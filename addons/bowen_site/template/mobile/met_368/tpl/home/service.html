@@ -1,0 +1,39 @@
+        <section class="service_list_met_11_4 text-xs-center color" m-id='5'>
+			<div class="container">
+				<div class="title-box">
+					<div class="head">
+						<h2 class="title">
+							{if $settings['home']['met_368'][$k1]['title']}{$settings['home']['met_368'][$k1]['title']}{else}科学规范的全流程教育服务{/if}
+						</h2>
+						<p class="desc">
+							{if $settings['home']['met_368'][$k1]['title_en']}{$settings['home']['met_368'][$k1]['title_en']}{else}针对学生特点，制定个性化的课程体系{/if}
+						</p>
+					</div>
+				</div>
+				<ul class=" blocks-xs-2 blocks-md-3 blocks-lg-6 blocks-xxl-6">
+                    {php $service_a[$mid] = $this->getClasseArticles($settings['home']['met_368'][$k1]['class'], array('status'=>1), array('displayorder DESC', 'createtime DESC'));}
+					{php $sn[$mid] = 0;}
+                    {loop $service_a[$mid] $item}
+                    {php $sn[$mid]++;}
+					<li class="item">
+						<i class="icon fa-{if $item['icon']}{$item['icon']}{else}check-circle{/if}" aria-hidden="true">
+							<span class="num">
+								{php echo sprintf("%02d", $sn[$mid])}
+							</span>
+						</i>
+						<h3 class='m-t-20 m-b-5 font-weight-300'>
+							{$item['title']}
+						</h3>
+						<p class='m-b-0 font-weight-300'>
+							{if $item['description']}
+                                {php $item['description'] = deleteRN($item['description'])}
+                            {else}
+                                {php $item['description'] = m('ui')->html_to_text($item['content'])}
+                            {/if}
+                            {$item['description']}
+						</p>
+					</li>
+					{/loop}
+				</ul>
+			</div>
+		</section>

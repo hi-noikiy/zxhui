@@ -1,0 +1,173 @@
+{php include $this->mytemplate('common/header')}
+{php include $this->mytemplate('content/tab')}
+
+<div class="alert we7-page-alert">
+	<p><i class="wi wi-info-sign"></i> 功能描述：分类功能主要也是一个页面展示和文章归类。比如产品中心这类，我们需要将该分类下的文章全部展现在一个页面的时候，直接打开该分类链接即可</p>
+    <p><strong class="text-danger"><i class="wi wi-info-sign"></i> 功能说明：文章分类是支持二级的。一级分类创建，直接点击 【+ 新建分类】按钮即可；二级分类创建，在对应一级分类那儿点击【+】进行创建。</strong></p>
+    <p><i class="wi wi-info-sign"></i> 补充说明：本处的显示状态，支持直接点击切换</p>
+</div>
+
+    <style type="text/css">
+        .uploader-modal{
+            z-index: 99999;
+        }
+    </style>
+	<div class="we7-padding-bottom clearfix">
+        折叠/展开：
+        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="display($('.lower_level'))">全部</a>
+        <a class="layui-btn layui-btn-primary layui-btn-sm" onclick="display($('.level_3'))">三级</a>
+		<div class="pull-right">
+            <a class="layui-btn layui-btn-warm" href="{php echo webUrl('content/classes/upgradeCategory')}">分类修复</a>
+            <a class="layui-btn" href="{php echo webUrl('content/classes', array('op' => 'add'))}">+ 新建分类</a>
+		</div>
+	</div>
+	<table class="table we7-table table-hover article-list">
+        <col width="50" />
+		<col width="100"/>
+        <col width="50"/>
+		<col width="200"/>
+        <col width="250"/>
+		<col width="90"/>
+		<col width="280"/>
+		<tr>
+            <th>折/展</th>
+			<th class="text-left">排序</th>
+            <th>ID</th>
+			<th class="text-left">分类名称</th>
+            <th>模板</th>
+			<th>状态</th>
+			<th class="text-right">操作</th>
+		</tr>
+        {loop $category $c}
+        {php $c['value'] = iunserializer($c['value'])}
+        <!-- 1 -->
+		<tr>
+            <td onclick="display($('.top_is_{$c['id']}'))">
+                <i class="layui-icon hands">{if count($children[$c['id']]) > 0}&#xe643;{else}&#xe63f;{/if}</i>   
+            </td>
+            <td class="text-left">
+                {$c['displayorder']}
+            </td>
+            <td> 
+                {$c['id']}
+            </td>
+            <td class="text-left"> 
+                <span>{$c['title']}</span>
+            </td>
+            <td> 
+                {if $c['themes']}{$class_themes[$c['themes']]['title']}{else}文章页面{/if}
+            </td>
+            <td>
+                <label data="{$c['status']}" class="label label-default {if !empty($c['status'])}label-success{/if}" onclick="changeStatus(this,'{$c['id']}');">{if !empty($c['status'])}显示{else}隐藏{/if}</label>
+            </td>
+            <td class="text-right we7-padding-right">
+                <a class="btn btn-default btn-sm" href="{php echo foregUrl('class', array('id' => $c['id']), true)}" title="预览" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg" target="_blank"><i class="fa fa-search"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('content/articles', array('class' => $c['id'].'|0|0'))}" title="查看分类下文章" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-list-ul"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op' => 'add', 'id' => $c['id']))}" title="添加" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></a>
+                <a class="btn btn-default btn-sm js-clip" href="JavaScript:;" data-url="{php echo foregUrl('class',array('id'=>$c['id']),true)}" title="复制链接"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-link"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op' => 'edit', 'id' => $c['id']))}" title="编辑" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op'=>'delete','id'=>$c['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+            </td>
+		</tr>
+        <!-- 1 -->
+        {if count($children[$c['id']]) > 0}
+            {loop $children[$c['id']] $c_s}
+            {php $c_s['value'] = iunserializer($c_s['value'])}
+            <!-- 2 -->
+    		<tr class="bg-light-gray lower_level level_2 lower_of_{$c['id']} top_is_{$c['id']}">
+                <td onclick="display($('.lower_of_{$c_s['id']}'))">
+                    <i class="layui-icon hands">{if count($children[$c_s['id']]) > 0}&#xe643;{else}&#xe63f;{/if}</i>   
+                </td>
+                <td class="text-left">
+                    <span class="pad-bottom "></span>{$c_s['displayorder']}
+                </td>
+                <td> 
+                    <span style="margin-left: 25px;">{$c_s['id']}</span>
+                </td>
+                <td class="text-left"> 
+                    <span style="margin-left: 25px;">{$c_s['title']}</span>
+                </td>
+                <td> 
+                    <span style="">{if $c_s['themes']}{$class_themes[$c_s['themes']]['title']}{else}文章页面{/if}</span>
+                </td>
+                <td>
+                    <label style="margin-left: 25px;">
+                        <label data="{$c_s['status']}" class="label label-default {if !empty($c_s['status'])}label-success{/if}" onclick="changeStatus(this,'{$c_s['id']}');">{if !empty($c_s['status'])}显示{else}隐藏{/if}</label>
+                    </label>
+                </td>
+                <td class="text-right we7-padding-right">
+                    <a class="btn btn-default btn-sm" href="{php echo foregUrl('class', array('id' => $c_s['id']), true)}" title="预览" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg" target="_blank"><i class="fa fa-search"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('content/articles', array('class' => $c['id'].'|'.$c_s['id'].'|0'))}" title="查看分类下文章" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-list-ul"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op' => 'add', 'id' => $c_s['id']))}" title="添加" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i></a>
+                    <a class="btn btn-default btn-sm js-clip" href="JavaScript:;" data-url="{php echo foregUrl('class',array('id'=>$c_s['id']),true)}" title="复制链接"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-link"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op' => 'edit', 'id' => $c_s['id']))}" title="编辑"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op'=>'delete','id'=>$c_s['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+                </td>
+    		</tr>
+    		<!-- 2 -->
+            {if count($children[$c_s['id']]) > 0}
+                {loop $children[$c_s['id']] $c_t}
+                {php $c_t['value'] = iunserializer($c_t['value'])}
+                <!-- 3 -->
+                <tr class="bg-light-gray2 lower_level level_3 lower_of_{$c_s['id']} top_is_{$c['id']}">
+                    <td>
+                        <i class="layui-icon">&#xe63f;</i>   
+                    </td>
+                    <td class="text-left">
+                        <span style="margin-left: 50px;" class="pad-bottom "></span>{$c_t['displayorder']}
+                    </td>
+                    <td> 
+                        <span style="margin-left: 50px;">{$c_t['id']}</span>
+                    </td>
+                    <td class="text-left"> 
+                        <span style="margin-left: 50px;">{$c_t['title']}</span>
+                    </td>
+                    <td> 
+                        <span style="">{if $c_t['themes']}{$class_themes[$c_t['themes']]['title']}{else}文章页面{/if}</span>
+                    </td>
+                    <td>
+                        <label style="margin-left: 50px;">
+                            <label data="{$c_t['status']}" class="label label-default {if !empty($c_t['status'])}label-success{/if}" onclick="changeStatus(this,'{$c_t['id']}');">{if !empty($c_t['status'])}显示{else}隐藏{/if}</label>
+                        </label>
+                    </td>
+                    <td class="text-right we7-padding-right">
+                        <a class="btn btn-default btn-sm" href="{php echo foregUrl('class', array('id' => $c_t['id']), true)}" title="预览" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg" target="_blank"><i class="fa fa-search"></i></a>
+                        <a class="btn btn-default btn-sm" href="{php echo webUrl('content/articles', array('class' => $c['id'].'|'.$c_s['id'].'|'.$c_t['id']))}" title="查看分类下文章" data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-list-ul"></i></a>
+                        <a class="btn btn-default btn-sm js-clip" href="JavaScript:;" data-url="{php echo foregUrl('class',array('id'=>$c_t['id']),true)}" title="复制链接"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-link"></i></a>
+                        <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op' => 'edit', 'id' => $c_t['id']))}" title="编辑"  data-toggle="tooltip" data-placement="bottom" class="btn btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-default btn-sm" href="{php echo webUrl('content/classes', array('op'=>'delete','id'=>$c_t['id']))}" title="删除"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm('此操作不可恢复，确认删除？');return false;"><i class="fa fa-trash-o"></i></a>
+                    </td>
+        		</tr>
+                <!-- 3 -->
+                {/loop}
+            {/if}
+            {/loop}
+        {/if}
+        {/loop}
+        
+	</table>
+    <script type="text/javascript">
+        function changeStatus(obj,id){
+            $(obj).html($(obj).html() + "...");
+            $.post('{php echo webUrl("content/classes/changeStatus")}',
+                {id:id, data:obj.getAttribute("data")},
+                function(d){
+                    $(obj).html($(obj).html().replace("...",""));
+                    $(obj).attr("data",d.data.status);
+                    var status_name = '显示';
+                    if(d.data.status==0){
+                        var status_name = '隐藏';
+                    }
+                    if(d.errno==0){
+                        $(obj).toggleClass("label-success");
+                        $(obj).html(status_name);
+                    }else{
+                        layer.msg(d.message, {icon:2});
+                    }
+                },"json"
+            );
+        }
+    </script>
+
+{php include $this->mytemplate('common/footer')}
+<!-- phpDesigner :: Timestamp [2018/8/18 17:40:52] -->

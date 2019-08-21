@@ -1,0 +1,30 @@
+                <li class="item">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">banner图</label>
+                        <div class="col-sm-3">
+                            {php echo tpl_form_field_image('bannerimg[]', $item['bannerimg']);}
+                            <div class="help-block">注：1920*743 或 1680*650</div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">显示：</span>
+                                <select name="bannerstyle[]" class="form-control">
+                                    <option value="0" {if $item['bannerstyle'] == '0'}selected="true"{/if}>全部显示</option>
+                                    <option value="1" {if $item['bannerstyle'] == '1'}selected="true"{/if}>只在手机端显示</option>
+                                    <option value="2" {if $item['bannerstyle'] == '2'}selected="true"{/if}>只在PC端显示</option>
+                                </select>
+                            </div>
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">标题：</span>
+                                <input class="form-control" name="bannertitle[]" value="{$item['bannertitle']}"/>
+                            </div>
+                            <div class="input-group form-group">
+                                <span class="input-group-addon">链接：</span>
+                                {php echo mytpl_form_field_link('bannerurl[]', $item['bannerurl'], '', array('width'=>'100%'))}
+                            </div>
+                        </div>
+                        <input type="hidden" name="bannercontent[]" value="{$item['bannercontent']}" />
+                        <a class="btn btn-default" href='javascript:;' onclick="delete_item(this)"><i class='fa fa-remove'></i> 删除</a>
+                    </div>
+                    <hr/>
+                </li>

@@ -1,0 +1,47 @@
+<div class="layui-form-item">
+	<label class="layui-form-label {if $v1['tp_must']==1}must{/if}">
+		{$v1['tp_name']}
+	</label>
+	<div class="layui-input-block {if $v1['tp_must']==1}checkbox{/if}"  >
+        {if !empty($v1['tp_text'])}
+            {loop $v1['tp_text'] $k2 $v2}
+            <input type="checkbox" name="field_data{$kw}[{$k2}]" lay-skin="primary" lay-filter="{$k1}_{$k2}" title="{$v2}" value="{$v2}" />
+            {/loop}
+        {/if}
+	</div>
+</div>
+{if $v1['tp_must']==1}
+<script type="text/javascript">
+layui.use(['form', 'jquery'], function(){
+    var $ = layui.jquery
+    ,form = layui.form;
+    
+    var sendAction = 0, checkNum = 0;
+    
+    for (var i=0;i<={$k2};i++)
+    {
+        form.on('checkbox({$k1}_'+i+')', function(data){
+            if(data.elem.checked == true){
+                checkNum++;
+            }
+            if(data.elem.checked == false){
+                checkNum--;
+            }
+            if(checkNum>0 && sendAction == 0){
+                var num_checkbox_checked = $("#num_checkbox_checked").html();
+                num_checkbox_checked++
+                $("#num_checkbox_checked").html(num_checkbox_checked);
+                sendAction++
+            }
+            if(checkNum == 0 && sendAction == 1){
+                var num_checkbox_checked = $("#num_checkbox_checked").html();
+                num_checkbox_checked--
+                $("#num_checkbox_checked").html(num_checkbox_checked);
+            }
+        });
+    }
+ 
+});
+</script>
+{/if}
+<!-- phpDesigner :: Timestamp [2018/7/7 15:35:40] -->

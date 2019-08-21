@@ -1,0 +1,39 @@
+
+<header id="fh5co-header">
+	<div class="layout header-box">
+		<div class="container">
+			<div class="navbar">
+				<div class="navbar-head">
+					<h1 style="{if $settings['global']['style']['logo']['margin_top']}margin-top: {$settings['global']['style']['logo']['margin_top']}px;{/if}">
+						<a href="{php echo foregUrl()}" title="{$settings['global']['title']}"><img  src="{php echo tomedia($settings['global']['tn_logo'])}" /></a>
+					</h1>
+				</div>
+				<div class="navbar-body">
+					<div class="nav-navicon" id="nav-main1">
+						<ul class="nav  nav-inline  nav-menu navbar-right">
+                            {php $topnavs = $this-> getForegTopNav();}
+                            {loop $topnavs $tn}
+                            {if $tn['status'] == '1'}
+                            <li class="{if $sign == $tn['sign']}current{/if}">
+                                <a class="first-level" href="{$tn['url']}" target="{$tn['target']}">{$tn['title']}{if !empty($tn['s'])}<span class="downward"></span>{/if}</a>
+                                {if !empty($tn['s'])}
+                                <ul class="drop-menu">
+                                    {loop $tn['s'] $tn_s}
+                                    {if $tn_s['status'] == '1'}
+            						<li class="">
+                                        <a class="" href="{$tn_s['url']}" title="{$tn_s['title']}" target="{$tn_s['target']}">{$tn_s['title']}</a>
+           							</li>
+                                    {/if}
+                                    {/loop}
+						        </ul>
+                                {/if}
+                            </li>
+                            {/if}
+                            {/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
