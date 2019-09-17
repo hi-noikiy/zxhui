@@ -399,6 +399,12 @@ function message_setting() {
 
 
 function message_store_notice() {
+
+    // 移除云端监测
+    if (true) {
+        return true;
+    }
+
 	load()->model('cloud');
 	$data = cloud_get_store_notice();
 	if (is_error($data)) {
