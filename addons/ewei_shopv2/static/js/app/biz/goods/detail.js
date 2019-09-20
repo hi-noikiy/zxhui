@@ -1,4 +1,4 @@
-define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/cart', 'biz/plugin/diyform', 'biz/sale/coupon/couponpicker', 'biz/goods/wholesalePicker'], function (core, tpl, picker, favorite, cart, diyform, couponpicker, wholesalePicker) {
+define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/cart', 'biz/plugin/diyform', 'biz/sale/coupon/couponpicker', 'biz/goods/wholesalePicker', 'biz/sale/gift-plus/gift-plus'], function (core, tpl, picker, favorite, cart, diyform, couponpicker, wholesalePicker, giftPlusPicker) {
     var modal = {};
     modal.init = function (params) {
         modal.seckillinfo = params.seckillinfo;
@@ -11,6 +11,11 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
         modal.attachurl_local = params.attachurl_local;
         modal.attachurl_remote = params.attachurl_remote;
         modal.coupons = params.coupons;
+
+        // 超级赠品
+        modal.gift_plus = params.gift_plus;
+        modal.gift_groups = params.gift_groups;
+
         modal.new_temp = params.new_temp;
         modal.liveid = params.liveid;
         modal.officType = 0;
@@ -77,6 +82,17 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
         modal.couponPicker = function (action) {
             couponpicker.show({coupons: modal.coupons})
         };
+
+        // 超级赠品
+        modal.giftPlusPicker = function(action) {
+            giftPlusPicker.show({
+                gift_groups: modal.gift_groups
+            })
+        };
+        $('.gift-plus-selector').click(function () {
+            modal.giftPlusPicker();
+        });
+
         modal.hideDetail();
         modal.hideParams();
         modal.hideComment();
@@ -492,7 +508,13 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
                     $('.option-selector').html("已选: 数量x" + total + " " + optiontitle);
                     if (action == 'buy') {
                         var giftid = $("#giftid").val();
-                        if ($("#giftid") && giftid == '') {
+
+                        // 超级赠品
+                        var gift_plus_id = $('#gift_plus_id').val(),
+                            gift_group_id = $('#gift_group_id').val(),
+                            gift_group_type = $('#gift_group_type').val();
+
+                        if (($('#giftid') && giftid == '') || ($('#gift_plus_id') && gift_plus_id == '') || ($('#gift_group_id') && gift_group_id == '')) {
                             FoxUI.alert("请选择赠品！");
                             $(".picker-modal").remove()
                         } else {
@@ -511,6 +533,12 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
                                             total: modal.total,
                                             gdid: ret.result.goods_data_id,
                                             giftid: giftid,
+
+                                            // 超级赠品
+                                            gift_plus_id: gift_plus_id,
+                                            gift_group_id: gift_group_id,
+                                            gift_group_type: gift_group_type,
+
                                             liveid: modal.liveid
                                         }), true)
                                     }, true, true);
@@ -523,6 +551,12 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
                                     optionid: modal.optionid,
                                     total: modal.total,
                                     giftid: giftid,
+
+                                    // 超级赠品
+                                    gift_plus_id: gift_plus_id,
+                                    gift_group_id: gift_group_id,
+                                    gift_group_type: gift_group_type,
+
                                     liveid: modal.liveid
                                 }), false)
                             }

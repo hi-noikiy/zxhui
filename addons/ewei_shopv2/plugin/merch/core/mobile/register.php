@@ -159,6 +159,19 @@ class Register_EweiShopV2Page extends PluginMobileLoginPage
 		include $this->template('_message');
 		exit();
 	}
+
+	/**
+	 * 重写分享
+	 * @return bool|void
+	 */
+	public function shopShare()
+	{
+		global $_W;
+
+		parent::shopShare();
+
+		$_W['shopshare']['link'] = mobileUrl('merch.register', '', true);
+	}
 }
 
 ?>

@@ -633,7 +633,7 @@
 {if $gifts && $goods['total'] > 0}
 <div class="fui-cell-group  fui-sale-group nomargin">
     <div class="fui-cell fui-sale-cell sendgoods">
-        <div class="fui-cell-label">赠品</div>
+        <div class="fui-cell-label">赠品1</div>
         {if count($gifts)>1}
             <div class="fui-cell-text fui-cell-giftclick">
                 <label id="gifttitle">请选择赠品</label>
@@ -645,6 +645,28 @@
                     {$gifttitle}<input type="hidden" name="giftid" id="giftid" value="{$item['id']}">
                 </div>
             {/loop}
+        {/if}
+        <div class="fui-cell-remark"></div>
+    </div>
+</div>
+{/if}
+
+<!--超级赠品-->
+{if $gift_plus && $goods['total'] > 0}
+<div class="fui-cell-group  fui-sale-group nomargin">
+    <div class="fui-cell fui-sale-cell sendgoods">
+        <div class="fui-cell-label">超级赠品</div>
+        {if count($gift_plus) > 1}
+        <div class="fui-cell-text fui-cell-giftclick">
+            <label id="gift_plus_title">请选择赠品</label>
+            <input type="hidden" name="giftid" id="gift_plus_id" value="">
+        </div>
+        {else}
+        {loop $gifts $item}
+        <div class='fui-cell-text' onclick="javascript:window.location.href='{php echo mobileUrl('goods/gift',array('id'=>$item['id']))}'">
+            {$gifttitle}<input type="hidden" name="giftid" id="gift_plus_id" value="{$item['id']}">
+        </div>
+        {/loop}
         {/if}
         <div class="fui-cell-remark"></div>
     </div>

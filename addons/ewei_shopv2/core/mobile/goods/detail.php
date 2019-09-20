@@ -69,15 +69,16 @@ class Detail_EweiShopV2Page extends MobilePage {
         $giftgoods = array();
         $gifts = pdo_fetchall("select id,goodsid,giftgoodsid,thumb,title from ".tablename('ewei_shop_gift')." where uniacid = ".$uniacid." and activity = 2 and status = 1 and starttime <= ".time()." and endtime >= ".time()."  ");
         foreach($gifts as $key => &$value){
+            $value['thumb'] = tomedia($value['thumb']);
             $gid = explode(",",$value['goodsid']);
             foreach ($gid as $ke => $val){
                 if($val==$id){
                     $giftgoods = explode(",",$value['giftgoodsid']);
-                    foreach($giftgoods as $k => $val){
-                        
-                        $giftinfo = pdo_fetch("select id,title,thumb,marketprice from ".tablename('ewei_shop_goods')." where uniacid = ".$uniacid." and deleted = 0 and total > 0 and status = 2 and id = ".$val." ");
+                    foreach($giftgoods as $k => $v){
+                        $giftinfo = pdo_fetch("select id,title,thumb,marketprice from ".tablename('ewei_shop_goods')." where uniacid = ".$uniacid." and deleted = 0 and total > 0 and status = 2 and id = ".$v." ");
                         if($giftinfo){
                             $isgift = 1;
+                            $giftinfo['thumb'] = tomedia($giftinfo['thumb']);
                             $gifts[$key]['gift'][$k] = $giftinfo;
                             $gifttitle = !empty($value['gift'][$k]['title']) ? $value['gift'][$k]['title'] : '赠品';
                         }
@@ -87,6 +88,41 @@ class Detail_EweiShopV2Page extends MobilePage {
             if(empty($value['gift'])){
                 unset($gifts[$key]);
             }
+        }
+
+        // 超级赠品
+        $is_gift_plus = 0;
+        $gift_plus_info = [];
+        $gift_plus_title = '';
+        $gift_plus = pdo_fetchall("select id,goodsid,giftgoodsid,thumb,title from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and activity = 2 and status = 1 and starttime <= " . time() . " and endtime >= " . time());
+        foreach ($gift_plus as $key => &$value) {
+            $value['thumb'] = tomedia($value['thumb']);
+            $goods_id = explode(',', $value['goodsid']);
+            foreach ($goods_id as $k => $v) {
+                if ((int)$v === $id) {
+                    $gift_goods_id = explode(',', $value['giftgoodsid']);
+                    foreach ($gift_goods_id as $kk => $vv) {
+                        $goods_info = pdo_fetch('SELECT id,title,thumb,marketprice,gift_price FROM' . tablename('ewei_shop_goods') . ' WHERE uniacid = :uniacid AND deleted = 0 AND total > 0 AND id = :id', [':uniacid' => $uniacid, ':id' => $vv]);
+                        if ($goods_info) {
+                            $is_gift_plus = 1;
+                            $goods_info['thumb'] = tomedia($goods_info['thumb']);
+                            $gift_plus[$key]['gift'][$kk] = $goods_info;
+                            $gift_plus_title = !empty($value['gift'][$kk]['title']) ? $value['gift'][$kk]['title'] : '超级赠品';
+                        }
+                    }
+                }
+            }
+
+            if (empty($value['gift'])) {
+                unset($gift_plus[$key]);
+            }
+        }
+        $gift_groups = [];
+        if ($isgift && $is_gift_plus) {
+            $gift_groups = [
+                'gift' => $gifts,
+                'gift_plus' => $gift_plus
+            ];
         }
 
         //商品

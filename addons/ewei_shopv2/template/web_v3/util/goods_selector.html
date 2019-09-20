@@ -7,6 +7,11 @@
         <td>
             商品价格
         </td>
+        {if ($_W['isfounder'])}
+        <td>
+            赠品结算价
+        </td>
+        {/if}
         <td>
             库存
         </td>
@@ -33,6 +38,11 @@
             <td>
                 ¥{$goods['marketprice']}
             </td>
+            {if ($_W['isfounder'])}
+            <td>
+                ¥{$goods['gift_price']}
+            </td>
+            {/if}
             <td>
                 {$goods['total']}
             </td>

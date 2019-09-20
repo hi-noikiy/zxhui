@@ -611,6 +611,8 @@
     <div class='content'>{if empty($share['goods_detail_text'])}请点击右上角<br/>通过【发送给朋友】<br/>邀请好友购买{else}{$share['goods_detail_text']}{/if}</div>
 </div>
 
+<!--超级赠品弹窗-->
+{template 'sale/gift-plus/util/picker'}
 
 <!--优惠券弹层完成-->
 {template 'sale/coupon/util/couponpicker'}
@@ -623,6 +625,11 @@
             attachurl_local:"{$GLOBALS['_W']['attachurl_local']}",
             attachurl_remote:"{$GLOBALS['_W']['attachurl_remote']}",
             coupons: {php echo json_encode($coupons)},
+
+            // 超级赠品
+            gift_plus: {php echo json_encode($gift_plus)},
+            gift_groups: {php echo json_encode($gift_groups)},
+
             new_temp: {php echo intval($new_temp)},
             liveid: {php echo intval($liveid)},
             close_preview: {php echo intval($close_preview)}//是否关闭商品详情图片的放大预览

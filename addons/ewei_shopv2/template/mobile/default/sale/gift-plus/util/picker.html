@@ -1,0 +1,56 @@
+<link rel="stylesheet" type="text/css" href="../addons/ewei_shopv2/template/mobile/default/static/css/gift-plus.css">
+<script id="tpl_get-gift-plus" type="text/html">
+	<div class="gift-plus-picker option-picker">
+		<div id="gift-groups-tab" class="fui-tab fui-tab-danger" style="margin-bottom: 0">
+			<a data-tab="giftTab" class="tab">赠品</a>
+			<a data-tab="giftPlusTab" class="tab active">超级赠品</a>
+		</div>
+		<div class="option-picker-inner coupon-picker">
+			<div data-content="giftTab" class="tab-content">
+				<div class="coupon-list mini">
+					<%each gift_groups.gift[0].gift as gift%>
+					<div class="coupon-item">
+						<div class="coupon-left">
+							<img src="<%gift.thumb%>" alt="<%gift.title%>">
+						</div>
+						<div class="coupon-right">
+							<div class="title"><%gift.title%></div>
+							<div class="price text-danger">
+								免费<span class="original text-default"><%gift.marketprice%></span>
+							</div>
+						</div>
+						<div class="coupon-after"></div>
+					</div>
+					<%/each%>
+				</div>
+				<div class="text-center" style="margin-top: 1rem;">
+					<div class="btn btn-sm btn-danger btn-selected" data-type="gift" data-id="<%gift_groups.gift[0].id%>" data-title="<%gift_groups.gift_plus[0].gift[0].title%>">选中</div>
+				</div>
+			</div>
+			<div data-content="giftPlusTab" class="tab-content active">
+				<div class="coupon-list mini">
+					<%each gift_groups.gift_plus[0].gift as gift%>
+					<div class="coupon-item">
+						<div class="coupon-left">
+							<img src="<%gift.thumb%>" alt="<%gift.title%>">
+						</div>
+						<div class="coupon-right">
+							<div class="title"><%gift.title%></div>
+							<div class="price text-danger">
+								免费<span class="original text-default"><%gift.marketprice%></span>
+							</div>
+						</div>
+						<div class="coupon-after"></div>
+					</div>
+					<%/each%>
+				</div>
+				<div class="text-center" style="margin-top: 1rem;">
+					<div class="btn btn-sm btn-danger btn-selected" data-type="gift_plus" data-id="<%gift_groups.gift_plus[0].id%>" data-title="<%gift_groups.gift_plus[0].gift[0].title%>">选中</div>
+				</div>
+			</div>
+		</div>
+		<div class="fui-navbar">
+			<a class="nav-item btn btn-default btn-cancel" style="color: #666">关闭</a>
+		</div>
+	</div>
+</script>
