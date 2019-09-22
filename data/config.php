@@ -4,10 +4,10 @@ defined('IN_IA') or exit('Access Denied');
 $config = array();
 
 $config['db']['master']['host'] = '127.0.0.1';
-$config['db']['master']['username'] = 'chinazxhui';
-$config['db']['master']['password'] = 'SZzR287wEccpTbJR';
+$config['db']['master']['username'] = 'zxhui_www';
+$config['db']['master']['password'] = '7FKFAZAbmc';
 $config['db']['master']['port'] = '3306';
-$config['db']['master']['database'] = 'chinazxhui';
+$config['db']['master']['database'] = 'zxhui_www';
 $config['db']['master']['charset'] = 'utf8';
 $config['db']['master']['pconnect'] = 0;
 $config['db']['master']['tablepre'] = 'ims_';
@@ -47,6 +47,13 @@ $config['upload']['image']['limit'] = 5000;
 $config['upload']['attachdir'] = 'attachment';
 $config['upload']['audio']['extentions'] = array('mp3');
 $config['upload']['audio']['limit'] = 5000;
+
+// --------------------------  CONFIG REDIS  --------------------------- //
+$config['setting']['redis']['server'] = '127.0.0.1';
+$config['setting']['redis']['port'] = 6379;
+$config['setting']['redis']['pconnect'] = 1;
+$config['setting']['redis']['timeout'] = 30;
+$config['setting']['redis']['session'] = 1;
 
 // --------------------------  CONFIG MEMCACHE  --------------------------- //
 $config['setting']['memcache']['server'] = '';
