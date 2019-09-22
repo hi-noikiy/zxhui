@@ -33,6 +33,10 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
             lotterydiscountprice:0,
             gift_price:0,
             giftid:0,
+
+            // 超级赠品
+            gift_plus_id: 0,
+
             show_card:false,
             city_express_state:false
         },
@@ -960,6 +964,17 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
     modal.submit = function (obj, token) {
         var $this = $(obj);
         var giftid = parseInt($("#giftid").val());
+
+        if (isNaN(giftid)) {
+            giftid = 0;
+        }
+
+        // 超级赠品
+        var gift_plus_id = parseInt($('#gift_plus_id').val());
+        if (isNaN(gift_plus_id)) {
+            gift_plus_id = 0;
+        }
+
         if (modal.params.mustbind) {
 
             /*FoxUI.alert("请先绑定手机", "提示", function () {
@@ -1037,6 +1052,10 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
             'goods': modal.params.goods,
             'card_id': modal.params.card_id,
             'giftid': giftid,
+
+            // 超级赠品
+            'gift_plus_id': gift_plus_id,
+
             'gdid': modal.params.gdid,
             'liveid': modal.params.liveid,
             'diydata': diyformdata,

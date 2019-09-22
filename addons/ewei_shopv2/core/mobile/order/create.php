@@ -629,6 +629,26 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             }
                         }
                     }
+
+                    // 超级赠品
+                    if ($gift_plus_id) {
+                        $gift_plus = pdo_fetch("select id,title,thumb,activity,giftgoodsid,goodsid from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $gift_plus_id . " and status = 1 and starttime <= " . time() . " and endtime >= " . time());
+                        if (!strstr($gift_plus['goodsid'], (string)$goodsid)) {
+                            $this->message('赠品与商品不匹配或者商品没有赠品!', '', 'error');
+                        }
+
+                        $giftGood = array();
+                        if (!empty($gift_plus['giftgoodsid'])) {
+                            $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
+                            if ($gift_goods_id) {
+                                foreach ($gift_goods_id as $key => $value) {
+                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                }
+                                $giftGood = array_filter($giftGood);
+                            }
+                        }
+                    }
+
                 }
                 if (!empty($bargain_act)) {
                     $data['marketprice'] = $bargain_act['now_price'];//??
@@ -2886,6 +2906,38 @@ EOF;
             }
         }
 
+        // 超级赠品
+        $gift_plus_id = intval($_GPC['gift_plus_id']);
+        if ($gift_plus_id) {
+            $new_goods = [];
+            foreach ($goods as $key => $value) {
+                $new_goods[$value['goodsid']] = $value;
+            }
+            $goods = $new_goods;
+
+            $gift_plus_goods = [];
+            $gift_plus = pdo_fetch("select giftgoodsid from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $gift_plus_id . " and status = 1 and starttime <= " . time() . " and endtime >= " . time());
+            if ($gift_plus['giftgoodsid']) {
+                $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
+                foreach ($gift_goods_id as $key => $value) {
+                    $gift_info = pdo_fetch("select id as goodsid,title,thumb from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total>0 and id = " . $value . " and deleted = 0 ");
+                    if (empty($gift_info)) {
+                        continue;
+                    }
+                    $gift_plus_goods[$value] = $gift_info;
+                    $gift_plus_goods[$value]['total'] = 1;
+                    $gift_plus_goods[$value]['is_gift'] = 1;
+
+                    // 赋值到商品列表
+                    $goods[$value] = $gift_plus_goods[$value];
+                }
+
+                // if (!empty($gift_plus_goods)) {
+                //     $goods = array_merge($goods, $gift_plus_goods);
+                // }
+            }
+        }
+
         foreach ($goods as $g) {
             if (empty($g)) {
                 continue;
@@ -2940,6 +2992,13 @@ EOF;
                 . ' buyagain,buyagain_islong,buyagain_condition, buyagain_sale ,verifygoodslimittype,verifygoodslimitdate  '.$threensql
                 . ' FROM ' . tablename('ewei_shop_goods') . ' where id=:id and uniacid=:uniacid  limit 1';
             $data = pdo_fetch($sql, array(':uniacid' => $uniacid, ':id' => $goodsid));
+
+            // 超级赠品
+            if ($g['is_gift']) {
+                $data['is_gift'] = 1;
+                $data['marketprice'] = 0;
+            }
+
             $data['seckillinfo'] = plugin_run('seckill::getSeckill', $goodsid, $optionid, true, $_W['openid']);
             if($data['ispresell']>0 && ($data['preselltimeend'] == 0 || $data['preselltimeend'] > time())){
                 $data['marketprice'] = $data['presellprice'];
@@ -4317,6 +4376,14 @@ EOF;
                 if(count($allgoods) == 1 && $order['couponprice'] > 0){
                     $order_goods['realprice'] = $order_goods['realprice']-$order['couponprice'];
                 }
+
+                // 超级赠品
+                if ($goods['is_gift']) {
+                    $order_goods['is_gift_plus'] = 1;
+                } else {
+                    $order_goods['is_gift_plus'] = 0;
+                }
+
                 pdo_insert('ewei_shop_order_goods', $order_goods);
 
 
@@ -4542,6 +4609,14 @@ EOF;
                         $order_goods['canbuyagain'] = 1;
                     }
                 }
+
+                // 超级赠品
+                if ($goods['is_gift']) {
+                    $order_goods['is_gift_plus'] = 1;
+                } else {
+                    $order_goods['is_gift_plus'] = 0;
+                }
+
                 pdo_insert('ewei_shop_order_goods', $order_goods);
 
 
@@ -4674,6 +4749,14 @@ EOF;
                         $order_goods['canbuyagain'] = 1;
                     }
                 }
+
+                // 超级赠品
+                if ($goods['is_gift']) {
+                    $order_goods['is_gift_plus'] = 1;
+                } else {
+                    $order_goods['is_gift_plus'] = 0;
+                }
+
                 pdo_insert('ewei_shop_order_goods', $order_goods);
 
 

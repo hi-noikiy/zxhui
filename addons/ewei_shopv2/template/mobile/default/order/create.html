@@ -421,7 +421,7 @@
                     {if $taskgoodsprice || $taskreward || !empty($bargain_id)}
                     {php $total = 1;}
                     x1<input class="num shownum" type="hidden" name="" value="1"/>
-                    {elseif $changenum && !$isgift}
+                    {elseif $changenum && !$isgift && !$is_gift_plus}
                     <div class="fui-number small" data-value="{$total}" data-unit="{$g['unit']}" data-maxbuy="{$g['totalmaxbuy']}" data-minbuy="{$g['minbuy']}" data-goodsid="{$g['goodsid']}">
                         <div class="minus">-</div>
                         <input class="num shownum" type="tel" name="" value="{$total}"/>
@@ -490,6 +490,16 @@
 
     </div>
 </div>
+
+<!--赠品-->
+{if $giftid > 0}
+<input type="hidden" name="giftid" id="giftid" value="{$giftid}">
+{/if}
+
+<!--超级赠品-->
+{if $gift_plus_id}
+<input type="hidden" name="gift_plus_id" id="gift_plus_id" value="{$gift_plus_id}">
+{/if}
 
 {if $isgift}
 <input type="hidden" name="giftid" id="giftid" value="{$giftid}">

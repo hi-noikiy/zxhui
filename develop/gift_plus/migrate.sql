@@ -21,3 +21,6 @@ CREATE TABLE `ims_ewei_shop_gift_plus` (
   `share_desc` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='超级赠品表' ROW_FORMAT=COMPACT;
+
+-- 2019-09-22 13:46:11
+ALTER TABLE `ims_ewei_shop_order_goods` ADD `is_gift_plus` tinyint(3) NOT NULL DEFAULT 0 COMMENT '是否为超级赠品' AFTER `belongto`;
