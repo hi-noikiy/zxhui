@@ -1,6 +1,11 @@
 <?php
 defined('IN_IA') or exit('Access Denied');
 
+/**
+ * 提示
+ * cache 为 mysql 的时候 redis 和 memcache 的 session 要设置为0
+ */
+
 $config = array();
 
 $config['db']['master']['host'] = '127.0.0.1';
@@ -53,14 +58,14 @@ $config['setting']['redis']['server'] = '127.0.0.1';
 $config['setting']['redis']['port'] = 6379;
 $config['setting']['redis']['pconnect'] = 1;
 $config['setting']['redis']['timeout'] = 30;
-$config['setting']['redis']['session'] = 1;
+$config['setting']['redis']['session'] = 0;
 
 // --------------------------  CONFIG MEMCACHE  --------------------------- //
 $config['setting']['memcache']['server'] = '';
 $config['setting']['memcache']['port'] = 11211;
 $config['setting']['memcache']['pconnect'] = 1;
 $config['setting']['memcache']['timeout'] = 30;
-$config['setting']['memcache']['session'] = 1;
+$config['setting']['memcache']['session'] = 0;
 
 // --------------------------  CONFIG PROXY  --------------------------- //
 $config['setting']['proxy']['host'] = '';
