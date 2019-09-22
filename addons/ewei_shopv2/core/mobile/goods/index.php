@@ -43,6 +43,26 @@ class Index_EweiShopV2Page extends MobilePage {
 		include $this->template();
 	}
 
+	// 超级赠品
+    function gift_plus()
+    {
+        global $_W, $_GPC;
+        $uniacid = $_W['uniacid'];
+        $id = intval($_GPC['id']);
+
+        $gift_plus = pdo_fetch("select * from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $id . " and starttime <= " . time() . " and endtime >= " . time() . " and status = 1");
+        $gift_goods_id = explode(",", $gift_plus['giftgoodsid']);
+        $gift_goods = array();
+        if (!empty($gift_goods_id)) {
+            foreach ($gift_goods_id as $key => $value) {
+                $gift_goods[$key] = pdo_fetch("select id,status,title,thumb,marketprice,total from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and deleted = 0  and id = " . $value);
+            }
+            $giftgoods = array_filter($gift_goods);
+        }
+
+        include $this->template();
+    }
+
 	function get_list() {
 
 

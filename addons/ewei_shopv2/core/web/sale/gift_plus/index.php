@@ -144,11 +144,11 @@ class Index_EweiShopV2Page extends WebPage
 
             if (!empty($id)) {
                 pdo_update('ewei_shop_gift_plus', $data, array('id' => $id));
-                plog('sale.gift.edit', '编辑超级赠品 ID: ' . $id . ' <br/>赠品名称: ' . $data['title']);
+                plog('sale.gift_plus.edit', '编辑超级赠品 ID: ' . $id . ' <br/>赠品名称: ' . $data['title']);
             } else {
                 pdo_insert('ewei_shop_gift_plus', $data);
                 $id = pdo_insertid();
-                plog('sale.gift.add', '添加超级赠品 ID: ' . $id . '  <br/>赠品名称: ' . $data['title']);
+                plog('sale.gift_plus.add', '添加超级赠品 ID: ' . $id . '  <br/>赠品名称: ' . $data['title']);
             }
 
             show_json(1, array('url' => webUrl('sale/gift_plus/edit', array('type' => $type, 'id' => $id))));
@@ -177,7 +177,7 @@ class Index_EweiShopV2Page extends WebPage
 
             if ($giftid) {
                 foreach ($giftid as $key => $value) {
-                    $gift[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and status = 2 and id = ' . $value . ' and deleted = 0 and total > 0 ');
+                    $gift[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and id = ' . $value . ' and deleted = 0 and total > 0 ');
                 }
             }
 
@@ -201,7 +201,7 @@ class Index_EweiShopV2Page extends WebPage
 
         foreach ($items as $item) {
             pdo_update('ewei_shop_gift_plus', array('deleted' => 1, 'status' => 0), array('id' => $item['id']));
-            plog('sale.gift.delete', '删除超级赠品 ID: ' . $item['id'] . ' 赠品名称: ' . $item['title'] . ' ');
+            plog('sale.gift_plus.delete', '删除超级赠品 ID: ' . $item['id'] . ' 赠品名称: ' . $item['title'] . ' ');
         }
 
         show_json(1, array('url' => referer()));
@@ -221,13 +221,13 @@ class Index_EweiShopV2Page extends WebPage
 
         foreach ($items as $item) {
             pdo_update('ewei_shop_gift_plus', array('status' => intval($_GPC['status'])), array('id' => $item['id']));
-            plog('sale.gift.edit', '修改超级赠品状态<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title'] . '<br/>状态: ' . $_GPC['status'] == 1 ? '上架' : '下架');
+            plog('sale.gift_plus.edit', '修改超级赠品状态<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title'] . '<br/>状态: ' . $_GPC['status'] == 1 ? '上架' : '下架');
         }
 
         show_json(1, array('url' => referer()));
     }
 
-    public function delete1()
+    public function remove()
     {
         global $_W;
         global $_GPC;
@@ -241,7 +241,7 @@ class Index_EweiShopV2Page extends WebPage
 
         foreach ($items as $item) {
             pdo_delete('ewei_shop_gift_plus', array('id' => $item['id']));
-            plog('sale.gift.edit', '彻底删除超级赠品<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title']);
+            plog('sale.gift_plus.edit', '彻底删除超级赠品<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title']);
         }
 
         show_json(1, array('url' => referer()));
@@ -261,7 +261,7 @@ class Index_EweiShopV2Page extends WebPage
 
         foreach ($items as $item) {
             pdo_update('ewei_shop_gift_plus', array('deleted' => 0), array('id' => $item['id']));
-            plog('sale.gift.edit', '恢复超级赠品<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title']);
+            plog('sale.gift_plus.edit', '恢复超级赠品<br/>ID: ' . $item['id'] . '<br/>赠品名称: ' . $item['title']);
         }
 
         show_json(1, array('url' => referer()));
