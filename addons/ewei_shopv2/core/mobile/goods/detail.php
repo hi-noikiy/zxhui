@@ -1407,6 +1407,21 @@ EOF;
         show_json(1,$gift);
     }
 
+    // 获取超级赠品信息
+    function query_gift_plus()
+    {
+        global $_W, $_GPC;
+
+        $uniacid = intval($_W['uniacid']);
+        $id = intval($_GPC['id']);
+        $gift = pdo_fetch("select * from " . tablename('ewei_shop_gift_plus') . " where id=:id and status=1 and uniacid =:uniacid limit 1", array(
+            ':id' => $id,
+            ':uniacid' => $uniacid
+        ));
+
+        show_json(1, $gift);
+    }
+
     /* 计算一个商品的运费
      * @param type $goods 商品数据
      * @param type $param 重量或数量

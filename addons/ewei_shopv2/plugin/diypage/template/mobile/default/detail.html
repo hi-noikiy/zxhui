@@ -611,8 +611,54 @@
     <div class='content'>{if empty($share['goods_detail_text'])}请点击右上角<br/>通过【发送给朋友】<br/>邀请好友购买{else}{$share['goods_detail_text']}{/if}</div>
 </div>
 
-<!--超级赠品弹窗-->
+<!--超级赠品弹层-->
+{if $is_gift_plus && $goods['total'] > 0}
+
 {template 'sale/gift-plus/util/picker'}
+
+<div id='gift-plus-picker-modal' style="margin:-100%;">
+    <div class='gift-picker'>
+        <div class='fui-cell-title text-center' style="background: white;">请选择赠品</div>
+        <div class="fui-cell-group fui-sale-group" style="margin-top:0; overflow-y: auto;">
+            <div class="fui-cell">
+                <div class="fui-cell-text dispatching">
+                    <div class="dispatching-info" style="max-height:12rem;overflow-y: auto ">
+                        {loop $gift_plus $item}
+                        <div class="fui-list goods-item align-start" data-gift_plus_id="{$item['id']}">
+                            <div class="fui-list-media">
+                                <input type="radio" name="checkbox" class="fui-radio fui-radio-danger gift-item" value="{$item['id']}" style="display: list-item; list-style: none;">
+                            </div>
+                            <div class="fui-list-inner">
+                                {loop $item['gift'] $gift}
+                                <div class="fui-list">
+                                    <div class="fui-list-media image-media" style="position: initial;">
+                                        <a href="javascript:void(0);">
+                                            <img class="round" src="{php echo tomedia($gift['thumb'])}" data-lazyloaded="true">
+                                        </a>
+                                    </div>
+                                    <div class="fui-list-inner">
+                                        <a href="javascript:void(0);">
+                                            <div class="text">
+                                                {$gift['title']}
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class='fui-list-angle'>
+                                        <span class="price">&yen;<del class='marketprice'>{$gift['marketprice']}</del></span>
+                                    </div>
+                                </div>
+                                {/loop}
+                            </div>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn btn-danger block fullbtn">确定</div>
+    </div>
+</div>
+{/if}
 
 <!--优惠券弹层完成-->
 {template 'sale/coupon/util/couponpicker'}

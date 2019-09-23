@@ -344,6 +344,41 @@ define(['core', 'tpl', 'biz/goods/picker', 'biz/member/favorite', 'biz/member/ca
                 })
             })
         });
+
+        // 超级赠品
+        $(".fui-cell-gift-plus-click").click(function () {
+            modal.giftPlusPicker = new FoxUIModal({
+                content: $('#gift-plus-picker-modal').html(),
+                extraClass: 'picker-modal',
+                maskClick: function () {
+                    modal.giftPlusPicker.close()
+                }
+            });
+            modal.giftPlusPicker.container.find('.btn-danger').click(function () {
+                modal.giftPlusPicker.close()
+            });
+            modal.giftPlusPicker.show();
+            var gift_plus_id = $("#gift_plus_id").val();
+            $(".gift-item").each(function () {
+                if ($(this).val() == gift_plus_id) {
+                    $(this).prop("checked", "true")
+                }
+            });
+            modal.giftPlusPicker.container.find('.gift-item').on('click', function () {
+                $.ajax({
+                    url: core.getUrl('goods/detail/query_gift_plus', {id: $(this).val()}),
+                    cache: true,
+                    success: function (data) {
+                        data = window.JSON.parse(data);
+                        if (data.status > 0) {
+                            $("#gift_plus_id").val(data.result.id);
+                            $("#gift_plus_title").text(data.result.title)
+                        }
+                    }
+                })
+            })
+        });
+
         $(".offic-list-tab a").off("click").on("click", function () {
             var _this = $(this);
             modal.officType = _this.attr("data-type");
