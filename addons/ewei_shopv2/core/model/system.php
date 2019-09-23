@@ -729,7 +729,18 @@ class System_EweiShopV2Model
 		{
 			unset($config[$key]["items"][5]["items"][1]);
 		}
-		if( p("merch") ) 
+
+		// 多商户超级赠品
+		if ($plugin === 'merch') {
+
+		    $config['manage_menu']['sale']['items'][] = [
+		        'title' => '超级赠品',
+                'route' => 'gift_plus',
+                'keywords' => '营销'
+            ];
+        }
+
+		if( p("merch") )
 		{
 			$params = array( ":uniacid" => $_W["uniacid"], ":merchid" => $_W["merchid"] );
 			$_condition = "and uniacid=:uniacid and id=:merchid";

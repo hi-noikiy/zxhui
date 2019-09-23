@@ -19,6 +19,7 @@ CREATE TABLE `ims_ewei_shop_gift_plus` (
   `share_title` varchar(255) NOT NULL,
   `share_icon` varchar(255) NOT NULL,
   `share_desc` text NOT NULL,
+  `merchant_id` int(11) NOT NULL DEFAULT 0 COMMENT '商户ID'
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='超级赠品表' ROW_FORMAT=COMPACT;
 

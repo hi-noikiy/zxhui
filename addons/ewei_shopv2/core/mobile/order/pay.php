@@ -173,7 +173,7 @@ class Pay_EweiShopV2Page extends MobileLoginPage
 			if( isset($set["pay"]) && $set["pay"]["weixin"] == 1 && $jie !== 1 && !empty($set["pay"]["weixin_id"]) ) 
 			{
 				$options = array( );
-				if( is_array($setting["payment"]["wechat"]) && $setting["payment"]["wechat"]["switch"] ) 
+				if( !empty($setting["payment"]["wechat"]) && is_array($setting["payment"]["wechat"]) && $setting["payment"]["wechat"]["switch"] )
 				{
 					load()->model("payment");
 					$setting = uni_setting($_W["uniacid"], array( "payment" ));
