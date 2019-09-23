@@ -609,7 +609,26 @@ class Create_EweiShopV2Page extends MobileLoginPage
 
                 } else if( $data['isverify'] == 2 ) {
 
-                    //核销不管赠品
+                    // 核销不管赠品
+                    // 核销检查超级赠品
+                    if ($gift_plus_id) {
+                        $gift_plus = pdo_fetch("select id,title,thumb,activity,giftgoodsid,goodsid from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $gift_plus_id . " and status = 1 and starttime <= " . time() . " and endtime >= " . time());
+
+                        if (!strstr($gift_plus['goodsid'], (string)$goodsid)) {
+                            $this->message('赠品与商品不匹配或者商品没有赠品!', '', 'error');
+                        }
+
+                        $giftGood = array();
+                        if (!empty($gift_plus['giftgoodsid'])) {
+                            $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
+                            if ($gift_goods_id) {
+                                foreach ($gift_goods_id as $key => $value) {
+                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                }
+                                $giftGood = array_filter($giftGood);
+                            }
+                        }
+                    }
                 }else{
                     if ($giftid) {
                         $gift = pdo_fetch("select id,title,thumb,activity,giftgoodsid,goodsid from " . tablename('ewei_shop_gift') . "
