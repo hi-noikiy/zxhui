@@ -8,44 +8,43 @@ define(["biz"],
         model.selectedPool = {};
         model.merchid = 0;
         model.no_merchid = 0;
-        model.url =  function (routes, merch) {
+        model.url = function (routes, merch) {
             if (merch) {
-                var url = './merchant.php?c=site&a=entry&m=ewei_shopv2&do=web&merchant_id=' + merch + '&r=' + routes.replace(/\//ig, '.')
+                var url = './merchant.php?c=site&a=entry&m=ewei_shopv2&do=web&r=' + routes.replace(/\//ig, '.')
             } else {
                 var url = './index.php?c=site&a=entry&m=ewei_shopv2&do=web&r=' + routes.replace(/\//ig, '.')
             }
             return url
         };
-        model.post_url = model.url('util.goods_selector_merchant', model.merchid);
-        model.open = function (callback, type, merchid, multi, api_url, selected_ids,no_merchid,platform){
+        model.post_url = model.url('util.goods_selector', model.merchid);
+        model.open = function (callback, type, merchid, multi, api_url, selected_ids, no_merchid, platform) {
             model.merchid = merchid;
-            model.no_merchid =no_merchid;
-            model.post_url = model.url('util.goods_selector_merchant', merchid);
+            model.no_merchid = no_merchid;
+            model.post_url = model.url('util.goods_selector', merchid);
             model.platform = platform;
             var elename = 'goods_selector';
-            if (api_url && api_url.length>0){
+            if (api_url && api_url.length > 0) {
                 model.post_url = api_url
             }
             if (multi) {
                 model.multi = true
-            }else{
+            } else {
                 model.multi = false
             }
-            console.log(model);return;
             if (type == 'creditshop') {
                 model.post_url += '&creditshop=1'
             } else if (type == 'group') {
                 model.post_url += '&group=1'
             } else if (type == 'quick') {
                 model.post_url += '&quick=1'
-            }else if(type == 2){
+            } else if (type == 2) {
                 model.post_url += '&pagetype=2';
             }
             if (merchid) {
                 model.post_url += '&merchid=' + merchid
             }
             model.callback = callback;
-            if (typeof(model.callback) == 'string'){
+            if (typeof (model.callback) == 'string') {
                 var url = model.url('util.goods_selector.js', merchid);
                 model.name = elename;
                 $('#goods-selector-modal').remove();
@@ -78,9 +77,9 @@ define(["biz"],
                     model.ele.find("textarea[name=" + model.name + "]").html("")
                 }
                 model.listen();
-                if (selected_ids && selected_ids.length>0){
-                    $.each(selected_ids, function (i,v) {
-                        model.selectedPool[v] = {id:v};
+                if (selected_ids && selected_ids.length > 0) {
+                    $.each(selected_ids, function (i, v) {
+                        model.selectedPool[v] = {id: v};
                         model.selectStatus()
                     })
                 }
@@ -102,13 +101,13 @@ define(["biz"],
             });
 
             var gs = $('.goods-selector');
-            $.each(gs, function (index,v) {
+            $.each(gs, function (index, v) {
                 var op_switch = $(this).data('switch');
                 var hrefs = $(v).find('.goods-selector-op');
-                $.each(hrefs,function (index,hrefobj) {
+                $.each(hrefs, function (index, hrefobj) {
                     var href = $(hrefobj).attr('href');
-                    href += ('&nooption='+ (op_switch == '0' ? '1':'0'));
-                    $(hrefobj).attr('href',href);
+                    href += ('&nooption=' + (op_switch == '0' ? '1' : '0'));
+                    $(hrefobj).attr('href', href);
                 })
             });
 
@@ -134,9 +133,9 @@ define(["biz"],
                 model.ele = $("#goods_selector_" + model.name);
                 model.option_switch = $(model.ele).attr("data-switch");
                 var href = $(this).attr('href');
-                href = href.replace('nooption=undefined','nooption='+model.option_switch==0?1:0);
-                href += '&nooption='+ (model.option_switch==0 ? '1':'0');
-                $(this).attr('href',href);
+                href = href.replace('nooption=undefined', 'nooption=' + model.option_switch == 0 ? 1 : 0);
+                href += '&nooption=' + (model.option_switch == 0 ? '1' : '0');
+                $(this).attr('href', href);
                 var goodsid = $(this).data("id");
                 var thismodal = $("#goods-selector-opmodal-" + goodsid);
                 var json = $("#goods_selector_" + name).find(".goods-selector-textarea").html();
@@ -276,9 +275,9 @@ define(["biz"],
                 if (model.callback) {
                     goods.act = 1;
                     eval(model.callback + "(goods)");
-                    if(!model.multi){
+                    if (!model.multi) {
                         $('.modal.in').find('.close').trigger('click')
-                    }else{
+                    } else {
                         $(this).removeClass("selectit").removeClass("label-primary").addClass("cancelit").addClass("label-danger").text("取消")
                     }
                 }
@@ -447,7 +446,7 @@ define(["biz"],
                     goodsgroup: goodsgroup,
                     condition: condition,
                     no_merchid: model.no_merchid,
-                    platform:model.platform,
+                    platform: model.platform,
                 },
                 success: function (htm) {
                     model.ele.find(".content").empty().html(htm);

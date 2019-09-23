@@ -115,7 +115,7 @@
                                 myrequire(['web/goods_selector_merchant'],function (Gselector) {
                                     $('.select_goods').click(function () {
                                         var ids = select_goods_ids();
-                                        Gselector.open('goods_show','',0,true,'',ids);
+                                        Gselector.open('goods_show', '', '{$merchant_id}', true, '', ids);
                                     });
                                 });
                                 function goods_show(data) {

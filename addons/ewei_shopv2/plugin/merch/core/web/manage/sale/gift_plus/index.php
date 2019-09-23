@@ -70,7 +70,7 @@ class Index_EweiShopV2Page extends MerchWebPage
     {
         global $_W, $_GPC;
 
-        $merchant_id = intval($_GPC['merchant_id']);
+        $merchant_id = intval($_W['merchid']);
         $uniacid = intval($_W['uniacid']);
         $type = trim($_GPC['type']);
         $id = intval($_GPC['id']);
