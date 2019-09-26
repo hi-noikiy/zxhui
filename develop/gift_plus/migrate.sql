@@ -38,3 +38,6 @@ ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_price_market` DECIMAL(10,2) NU
 ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_price` DECIMAL(10,2) NULL DEFAULT '0.00' COMMENT '赠品结算价' AFTER `is_gift_plus`;
 ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_cost` DECIMAL(10,2) NULL DEFAULT '0.00' COMMENT '赠品成本价' AFTER `gift_plus_price`;
 ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_market` DECIMAL(10,2) NULL DEFAULT '0.00' COMMENT '赠品成本价' AFTER `gift_plus_cost`;
+
+-- 2019-09-26 15:11:35
+ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_plus_merchid` int(11) NOT NULL DEFAULT 0 COMMENT '赠品使用商户' AFTER `gift_price_market`;

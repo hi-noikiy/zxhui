@@ -294,7 +294,7 @@ class List_EweiShopV2Page extends MerchWebPage {
 
 
             // 订单商品 && 超级赠品
-            $order_goods = pdo_fetchall('select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields,op.specs,og.single_refundid,og.single_refundstate,og.id as ogid,og.nocommission,og.is_gift_plus,og.gift_price,og.gift_price_cost,og.gift_price_market from ' . tablename('ewei_shop_order_goods') . ' og '
+            $order_goods = pdo_fetchall('select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields,op.specs,og.single_refundid,og.single_refundstate,og.id as ogid,og.nocommission,og.is_gift_plus,og.gift_price,og.gift_price_cost,og.gift_price_market,og.gift_plus_merchid from ' . tablename('ewei_shop_order_goods') . ' og '
                 . ' left join ' . tablename('ewei_shop_goods') . ' g on g.id=og.goodsid '
                 . ' left join ' . tablename('ewei_shop_goods_option') . ' op on og.optionid = op.id '
                 . ' where og.uniacid=:uniacid and og.orderid=:orderid order by og.single_refundstate desc ', array(':uniacid' => $uniacid, ':orderid' => $value['id']));
@@ -375,11 +375,9 @@ class List_EweiShopV2Page extends MerchWebPage {
 
                 // 超级赠品
                 if ($og['is_gift_plus'] === '1') {
-                    $merchant = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_merch_user') . ' WHERE id = :id', [':id' => $value['gift_plus_merchid']]);
-                    $value['has_gift_plus'] = 1;
+                    $merchant = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_merch_user') . ' WHERE id = :id', [':id' => $og['gift_plus_merchid']]);
                     $og['gift_plus_merchant'] = $merchant['merchname'];
                 } else {
-                    $value['has_gift_plus'] = 0;
                     $og['gift_plus_merchant'] = '';
                 }
             }

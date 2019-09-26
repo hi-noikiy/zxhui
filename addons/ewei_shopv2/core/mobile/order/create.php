@@ -2705,6 +2705,10 @@ EOF;
         $real_price = $_GPC['real_price'];//优惠券使用的价格
         $cardid = intval($_GPC['card_id']);//会员卡ID
 
+        // 超级赠品 && 记录ID
+        $id = intval($_GPC['id']);
+        $gift_plus_merchid = pdo_fetchcolumn('SELECT merchid FROM ' . tablename('ewei_shop_goods') . ' WHERE id = :id', [':id' => $id]);
+
         $open_redis = function_exists('redis') && !is_error(redis());
 
         if( $open_redis ) {
@@ -2946,14 +2950,11 @@ EOF;
                     $gift_plus_goods[$value] = $gift_info;
                     $gift_plus_goods[$value]['total'] = 1;
                     $gift_plus_goods[$value]['is_gift_plus'] = 1;
+                    $gift_plus_goods[$value]['gift_plus_merchid'] = $gift_plus_merchid;
 
                     // 赋值到商品列表
                     $goods[$value] = $gift_plus_goods[$value];
                 }
-
-                // if (!empty($gift_plus_goods)) {
-                //     $goods = array_merge($goods, $gift_plus_goods);
-                // }
             }
         }
 
@@ -3017,6 +3018,7 @@ EOF;
                 $data['is_gift_plus'] = 1;
                 $data['gift_price_cost'] = $data['costprice'];
                 $data['gift_price_market'] = $data['marketprice'];
+                $data['gift_plus_merchid'] = $g['gift_plus_merchid'];
                 $data['marketprice'] = 0;
                 unset($data['costprice']);
             }
@@ -4413,6 +4415,7 @@ EOF;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                     $order_goods['gift_price_market'] = $goods['gift_price_market'];
+                    $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
 
                     $gift_plus_data['price'] += $goods['gift_price'] * $goods['total'];
                     $gift_plus_data['cost'] += $goods['gift_price_cost'] * $goods['total'];
@@ -4556,10 +4559,10 @@ EOF;
                 $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
 
                 // 超级赠品
-                $order['gift_plus_merchid'] = 0;
+                $order['is_gift_plus'] = 0;
                 if ($goods['is_gift_plus']) {
                     // 记录使用该赠品的商户
-                    $order['gift_plus_merchid'] = $order['merchid'];
+                    $order['is_gift_plus'] = 1;
                 }
 
                 $order['merchid'] = $merchid;
@@ -4661,6 +4664,7 @@ EOF;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                     $order_goods['gift_price_market'] = $goods['gift_price_market'];
+                    $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4807,6 +4811,7 @@ EOF;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                     $order_goods['gift_price_market'] = $goods['gift_price_market'];
+                    $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
