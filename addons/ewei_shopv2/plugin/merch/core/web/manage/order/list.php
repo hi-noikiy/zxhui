@@ -293,8 +293,8 @@ class List_EweiShopV2Page extends MerchWebPage {
             }
 
 
-            //订单商品
-            $order_goods = pdo_fetchall('select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields,op.specs,og.single_refundid,og.single_refundstate,og.id as ogid,og.nocommission from ' . tablename('ewei_shop_order_goods') . ' og '
+            // 订单商品 && 超级赠品
+            $order_goods = pdo_fetchall('select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields,op.specs,og.single_refundid,og.single_refundstate,og.id as ogid,og.nocommission,og.is_gift_plus from ' . tablename('ewei_shop_order_goods') . ' og '
                 . ' left join ' . tablename('ewei_shop_goods') . ' g on g.id=og.goodsid '
                 . ' left join ' . tablename('ewei_shop_goods_option') . ' op on og.optionid = op.id '
                 . ' where og.uniacid=:uniacid and og.orderid=:orderid order by og.single_refundstate desc ', array(':uniacid' => $uniacid, ':orderid' => $value['id']));
@@ -372,7 +372,22 @@ class List_EweiShopV2Page extends MerchWebPage {
                     }
                     $og['goods_diyformdata'] = $diyformdata;
                 }
+
+                // 超级赠品
+                if ($og['is_gift_plus'] === '1') {
+                    $merchant = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_merch_user') . ' WHERE id = :id', [':id' => $value['merchid']]);
+                    $value['has_gift_plus'] = 1;
+                    $value['gift_plus_merchant']['name'][] = $merchant['merchname'];
+                } else {
+                    $value['has_gift_plus'] = 0;
+                }
             }
+
+            // 超级赠品
+            if (!empty($value['gift_plus_merchant'])) {
+                $value['gift_plus_merchant'] = implode(',', $value['gift_plus_merchant']['name']);
+            }
+
             unset($og);
             if (!empty($level) && empty($agentid)) {
 

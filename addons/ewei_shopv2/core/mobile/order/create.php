@@ -2945,7 +2945,7 @@ EOF;
                     }
                     $gift_plus_goods[$value] = $gift_info;
                     $gift_plus_goods[$value]['total'] = 1;
-                    $gift_plus_goods[$value]['is_gift'] = 1;
+                    $gift_plus_goods[$value]['is_gift_plus'] = 1;
 
                     // 赋值到商品列表
                     $goods[$value] = $gift_plus_goods[$value];
@@ -3008,14 +3008,16 @@ EOF;
                 . ' status,deduct,manydeduct,`virtual`,discounts,deduct2,ednum,edmoney,edareas,edareas_code,diyformtype,diyformid,diymode,'
                 . ' dispatchtype,dispatchid,dispatchprice,merchid,merchsale,cates,'
                 . ' isdiscount,isdiscount_time,isdiscount_discounts, virtualsend,'
-                . ' buyagain,buyagain_islong,buyagain_condition, buyagain_sale ,verifygoodslimittype,verifygoodslimitdate  '.$threensql
+                . ' buyagain,buyagain_islong,buyagain_condition, buyagain_sale ,verifygoodslimittype,verifygoodslimitdate,gift_price,costprice  '.$threensql
                 . ' FROM ' . tablename('ewei_shop_goods') . ' where id=:id and uniacid=:uniacid  limit 1';
             $data = pdo_fetch($sql, array(':uniacid' => $uniacid, ':id' => $goodsid));
 
             // 超级赠品
-            if ($g['is_gift']) {
-                $data['is_gift'] = 1;
+            if ($g['is_gift_plus']) {
+                $data['is_gift_plus'] = 1;
                 $data['marketprice'] = 0;
+                $data['gift_price_cost'] = $data['costprice'];
+                unset($data['costprice']);
             }
 
             $data['seckillinfo'] = plugin_run('seckill::getSeckill', $goodsid, $optionid, true, $_W['openid']);
@@ -4397,8 +4399,10 @@ EOF;
                 }
 
                 // 超级赠品
-                if ($goods['is_gift']) {
+                if ($goods['is_gift_plus']) {
                     $order_goods['is_gift_plus'] = 1;
+                    $order_goods['gift_price'] = $goods['gift_price'];
+                    $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4535,6 +4539,12 @@ EOF;
                 //生成子订单号
                 $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
 
+                // 超级赠品
+                $order['gift_plus_merchid'] = 0;
+                if ($goods['is_gift_plus']) {
+                    // 记录使用该赠品的商户
+                    $order['gift_plus_merchid'] = $order['merchid'];
+                }
 
                 $order['merchid'] = $merchid;
                 $order['parentid'] = $orderid;
@@ -4630,8 +4640,10 @@ EOF;
                 }
 
                 // 超级赠品
-                if ($goods['is_gift']) {
+                if ($goods['is_gift_plus']) {
                     $order_goods['is_gift_plus'] = 1;
+                    $order_goods['gift_price'] = $goods['gift_price'];
+                    $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4662,6 +4674,11 @@ EOF;
                 //生成子订单号
                 $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
 
+                // 超级赠品
+                if ($goods['is_gift_plus']) {
+                    // 记录使用该赠品的商户
+                    $order['gift_plus_merchid'] = $order['merchid'];
+                }
 
                 $order['merchid'] = $merchid;
                 $order['parentid'] = $orderid;
@@ -4770,8 +4787,10 @@ EOF;
                 }
 
                 // 超级赠品
-                if ($goods['is_gift']) {
+                if ($goods['is_gift_plus']) {
                     $order_goods['is_gift_plus'] = 1;
+                    $order_goods['gift_price'] = $goods['gift_price'];
+                    $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }

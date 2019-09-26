@@ -107,6 +107,7 @@
                 订单编号:  {$item['ordersn']}
                 {if !empty($item['refundstate']) && $item['refundstate'] !=3}<label class='label label-danger'>{$r_type[$item['rtype']]}申请</label>{/if}
                 {if !empty($item['refundstate']) && $item['refundstate'] !=3 && $item['rstatus'] == 4}<label class='label label-default'>客户退回物品</label>{/if}
+                {if $item['has_gift_plus']}<span class='text-danger'>超级赠品 [{$item['gift_plus_merchant']}]</span>{/if}
             </td>
             <td colspan='4' style='text-align:right;font-size:12px;' class='aops'>
                 {if $item['statusvalue'] == 2 && !empty($item['addressid'])}

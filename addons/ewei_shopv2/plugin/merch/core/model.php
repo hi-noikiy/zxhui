@@ -1148,6 +1148,7 @@ class MerchModel extends PluginModel
 		global $_W;
 		$data = array( );
 		$list = $this->getMerchPrice($merchid, 1);
+		// 可提现金额
 		$data["status0"] = $list["realprice"];
 		$orderids = $list["orderids"];
 		$params = array( ":uniacid" => $_W["uniacid"], ":merchid" => $merchid );
@@ -1165,6 +1166,7 @@ class MerchModel extends PluginModel
 				$status1orderids = array_merge($status1orderids, iunserializer($v["orderids"]));
 			}
 		}
+		// 待审核金额
 		$data["status1"] = round($status1price, 2);
 		$data["commission1"] = 0;
 		if( !empty($status1orderids) ) 
@@ -1196,6 +1198,7 @@ class MerchModel extends PluginModel
 				$status2orderids = array_merge($status2orderids, iunserializer($v["orderids"]));
 			}
 		}
+        // 待结算金额
 		$data["status2"] = round($status2price, 2);
 		$data["commission2"] = 0;
 		if( !empty($status2orderids) ) 
@@ -1227,6 +1230,7 @@ class MerchModel extends PluginModel
 				$status3orderids = array_merge($status3orderids, iunserializer($v["orderids"]));
 			}
 		}
+        // 已结算金额
 		$data["status3"] = round($status3price, 2);
 		$data["commission3"] = 0;
 		if( !empty($status3orderids) ) 
