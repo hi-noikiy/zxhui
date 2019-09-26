@@ -275,7 +275,7 @@
                             <span style="font-weight: bold;margin-right: 10px;color: #2d2d31">
                               
                                 {if $item['iswxappcreate']==0}<span class="shop">商城</span>{else}<span class="min_program">小程序</span>{/if}
-                                {if $item['giftSign']==1}<span class="min_program" style=" border:1px solid orange; color: orange;">赠品</span>{/if}
+                                {if $item['giftSign']==1 || $item['has_gift_plus']}<span class="min_program" style=" border:1px solid orange; color: orange;">赠品</span>{/if}
                                 {if $item['is_cashier'] == 1}<span class="shop">收银台</span>{/if}{php echo date('Y-m-d',$item['createtime'])}&nbsp {php echo date('H:i:s',$item['createtime'])}
 
                             </span>
@@ -367,7 +367,7 @@
 
                                     </div>
                                     <span style="float: right;text-align: right;display: inline-block;width:130px;">
-                                        ￥{php echo number_format($g['realprice']/$g['total'],2)}<br/>
+                                        ￥{php echo $g['is_gift_plus'] ? number_format($g['gift_price'], 2) : number_format($g['realprice']/$g['total'],2)}<br/>
                                         x{$g['total']}<br/>
                                         {if $g['single_refundstate']==8}
                                             <span class="text-danger">已拒绝</span>

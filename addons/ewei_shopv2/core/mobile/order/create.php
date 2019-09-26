@@ -3015,8 +3015,9 @@ EOF;
             // 超级赠品
             if ($g['is_gift_plus']) {
                 $data['is_gift_plus'] = 1;
-                $data['marketprice'] = 0;
                 $data['gift_price_cost'] = $data['costprice'];
+                $data['gift_price_market'] = $data['marketprice'];
+                $data['marketprice'] = 0;
                 unset($data['costprice']);
             }
 
@@ -4403,6 +4404,7 @@ EOF;
                     $order_goods['is_gift_plus'] = 1;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
+                    $order_goods['gift_price_market'] = $goods['gift_price_market'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4644,6 +4646,7 @@ EOF;
                     $order_goods['is_gift_plus'] = 1;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
+                    $order_goods['gift_price_market'] = $goods['gift_price_market'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4791,6 +4794,7 @@ EOF;
                     $order_goods['is_gift_plus'] = 1;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
+                    $order_goods['gift_price_market'] = $goods['gift_price_market'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
