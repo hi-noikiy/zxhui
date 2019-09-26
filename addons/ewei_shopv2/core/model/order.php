@@ -1097,6 +1097,20 @@ class Order_EweiShopV2Model
 		foreach( $goods as $gk => &$g ) 
 		{
 			$merchid = $g["merchid"];
+
+            // 超级赠品
+            if ($g['is_gift_plus']) {
+                $ch_order[$merchid]['gift_plus_price'] +=$g['gift_price'] * $g['total'];
+                $ch_order[$merchid]['gift_plus_cost'] +=$g['gift_price_cost'] * $g['total'];
+                $ch_order[$merchid]['gift_plus_market'] +=$g['gift_price_market'] * $g['total'];
+                $ch_order[$merchid]['is_gift_plus'] = 1;
+
+            } else {
+                $ch_order[$merchid]['gift_plus_price'] += 0;
+                $ch_order[$merchid]['gift_plus_cost'] += 0;
+                $ch_order[$merchid]['gift_plus_market'] += 0;
+            }
+
 			$ch_order[$merchid]["goods"][] = $g["goodsid"];
 			$ch_order[$merchid]["grprice"] += $g["ggprice"];
 			$ch_order[$merchid]["goodsprice"] += $tmp_goods[$gk]["marketprice"] * $g["total"];

@@ -4317,9 +4317,17 @@ EOF;
             pdo_update('ewei_shop_bargain_actor', array('order' => $orderid), array('id' => $goods[0]['bargain_id'], 'openid' => $_W['openid']));
         }
         if ($multiple_order == 0) {
-            //开始创建一个订单
+
+            // 超级赠品
+            $gift_plus_data = [
+                'price' => 0,
+                'cost' => 0,
+                'market' => 0
+            ];
+
+            // 开始创建一个订单
             $exchangepriceset = $_SESSION['exchangepriceset'];
-            //保存订单商品
+            // 保存订单商品
             $exchangetitle = '';
             foreach ($allgoods as $goods) {
                 $order_goods = array();
@@ -4405,6 +4413,10 @@ EOF;
                     $order_goods['gift_price'] = $goods['gift_price'];
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                     $order_goods['gift_price_market'] = $goods['gift_price_market'];
+
+                    $gift_plus_data['price'] += $goods['gift_price'] * $goods['total'];
+                    $gift_plus_data['cost'] += $goods['gift_price_cost'] * $goods['total'];
+                    $gift_plus_data['market'] += $goods['gift_price_market'] * $goods['total'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
@@ -4417,18 +4429,20 @@ EOF;
                     plugin_run("seckill::setSeckill" , $goods['seckillinfo'] , $goods , $_W['openid'],  $orderid , 0 , $order['createtime']);
 
                 }
-
-
             }
 
-        } else if($multiple_order = 2)  {
+            // 超级赠品 && 更新订单数据
+            pdo_update('ewei_shop_order', ['id' => $orderid], ['gift_plus_price' => $gift_plus_data['price'], 'gift_plus_cost' => $gift_plus_data['cost'], 'gift_plus_market' => $gift_plus_data['market']]);
+            unset($gift_plus_data);
+
+        } else if($multiple_order == 2)  {
             //套餐开始创建多个子订单
 
             //记录订单商品中的订单id
             $og_array = array();
             $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array,$orderid);
 
-            //子订单保存订单商品
+            // 子订单保存订单商品
             foreach ($allgoods as $goods) {
 
                 if ($goods['isverify'] == 2) {
@@ -4652,15 +4666,14 @@ EOF;
                 }
 
                 pdo_insert('ewei_shop_order_goods', $order_goods);
-
-
             }
-        } else {
-            //开始创建多个子订单
 
-            //记录订单商品中的订单id
+        } else {
+            // 开始创建多个子订单
+
+            // 记录订单商品中的订单id
             $og_array = array();
-            $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array,$orderid);
+            $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid);
             foreach ($merch_array as $key => $value) {
                 $merchid = $key;
                 $is_exchange = (p('exchange') && $_SESSION['exchange']);
@@ -4674,15 +4687,8 @@ EOF;
                     }
                 }
 
-                //生成子订单号
+                // 生成子订单号
                 $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
-
-                // 超级赠品
-                if ($goods['is_gift_plus']) {
-                    // 记录使用该赠品的商户
-                    $order['gift_plus_merchid'] = $order['merchid'];
-                }
-
                 $order['merchid'] = $merchid;
                 $order['parentid'] = $orderid;
                 $order['isparent'] = 0;
@@ -4727,6 +4733,12 @@ EOF;
                     }
                 }
 
+                // 超级赠品
+                $order['is_gift_plus'] = intval($ch_order_data[$merchid]['is_gift_plus']);
+                $order['gift_plus_price'] = $ch_order_data[$merchid]['gift_plus_price'];
+                $order['gift_plus_cost'] = $ch_order_data[$merchid]['gift_plus_cost'];
+                $order['gift_plus_market'] = $ch_order_data[$merchid]['gift_plus_market'];
+
                 pdo_insert('ewei_shop_order', $order);
 
                 //子订单id
@@ -4745,7 +4757,7 @@ EOF;
                 }
             }
 
-            //子订单保存订单商品
+            // 子订单保存订单商品
             foreach ($allgoods as $goods) {
 
                 $goodsid = $goods['goodsid'];
@@ -4800,8 +4812,6 @@ EOF;
                 }
 
                 pdo_insert('ewei_shop_order_goods', $order_goods);
-
-
             }
         }
 

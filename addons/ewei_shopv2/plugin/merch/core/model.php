@@ -1148,6 +1148,10 @@ class MerchModel extends PluginModel
 		global $_W;
 		$data = array( );
 		$list = $this->getMerchPrice($merchid, 1);
+        echo '<pre>';
+        print_r($list);
+        echo '</pre>';
+        die;
 		// 可提现金额
 		$data["status0"] = $list["realprice"];
 		$orderids = $list["orderids"];
@@ -1298,14 +1302,22 @@ class MerchModel extends PluginModel
 		}
 		if( 0 < $flag ) 
 		{
-			$sql = "select o.id,o.agentid,comprice.commission_price,comprice.order_id from " . tablename("ewei_shop_merch_user") . " u " . " left join " . tablename("ewei_shop_order") . " o on u.id=o.merchid" . " left join " . tablename("ewei_shop_merch_commission_orderprice") . " comprice on o.id=comprice.order_id" . " where 1 " . $condition;
+		    // 超级赠品
+			$sql = "select o.id,o.agentid,comprice.commission_price,comprice.order_id,o.gift_plus_merchid from " . tablename("ewei_shop_merch_user") . " u " . " left join " . tablename("ewei_shop_order") . " o on u.id=o.merchid" . " left join " . tablename("ewei_shop_merch_commission_orderprice") . " comprice on o.id=comprice.order_id" . " where 1 " . $condition;
 			$order = pdo_fetchall($sql, $params);
+
 			$commission = 0;
 			if( !empty($order) ) 
 			{
 				foreach( $order as $k => $v ) 
 				{
 					$orderids[] = $v["id"];
+
+					// 超级赠品
+                    if ($v['gift_plus_merchid']) {
+                        continue;
+                    }
+
 					if( !empty($v["order_id"]) ) 
 					{
 						$commission += $v["commission_price"];

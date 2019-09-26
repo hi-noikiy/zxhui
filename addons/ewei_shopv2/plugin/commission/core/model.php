@@ -1721,8 +1721,8 @@ if (!class_exists('CommissionModel')) {
                 return;
             }
             // 超级赠品 && 不参与分佣
-            $order = pdo_fetch('select id,openid,ordersn,goodsprice,agentid,paytime,officcode,gift_plus_merchid from ' . tablename('ewei_shop_order') . ' where id=:id and status>=0 and uniacid=:uniacid limit 1', array(':id' => $orderid, ':uniacid' => $_W['uniacid']));
-            if (empty($order) || $order['gift_plus_merchid']) {
+            $order = pdo_fetch('select id,openid,ordersn,goodsprice,agentid,paytime,officcode,is_gift_plus from ' . tablename('ewei_shop_order') . ' where id=:id and status>=0 and uniacid=:uniacid limit 1', array(':id' => $orderid, ':uniacid' => $_W['uniacid']));
+            if (empty($order) || $order['is_gift_plus']) {
                 return;
             }
             $openid = $order['openid'];
