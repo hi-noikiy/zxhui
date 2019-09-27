@@ -15,7 +15,7 @@ class User_EweiShopV2Page extends PluginWebPage
         $pindex = max(1, intval($_GPC["page"]));
         $psize = 20;
         $params = array( ":uniacid" => $_W["uniacid"] );
-        $condition = "";
+        $condition = " and type=0";
         $keyword = trim($_GPC["keyword"]);
         if( !empty($keyword) ) 
         {
@@ -297,7 +297,7 @@ class User_EweiShopV2Page extends PluginWebPage
                 $_GPC["creditrate"] = 0;
             }
 
-            $data = array( "uniacid" => $_W["uniacid"], "merchname" => trim($_GPC["merchname"]), "salecate" => trim($_GPC["salecate"]), "realname" => trim($_GPC["realname"]), "mobile" => trim($_GPC["mobile"]), "address" => trim($_GPC["address"]), "tel" => trim($_GPC["tel"]), "lng" => $_GPC["map"]["lng"], "lat" => $_GPC["map"]["lat"], "accounttime" => strtotime($_GPC["accounttime"]), "accounttotal" => intval($_GPC["accounttotal"]), "maxgoods" => intval($_GPC["maxgoods"]), "groupid" => intval($_GPC["groupid"]), "cateid" => intval($_GPC["cateid"]), "isrecommand" => intval($_GPC["isrecommand"]), "remark" => trim($_GPC["remark"]), "status" => $status, "desc" => trim($_GPC["desc1"]), "logo" => save_media($_GPC["logo"]), "payopenid" => trim($_GPC["payopenid"]), "payrate" => trim($_GPC["payrate"], "%"), "pluginset" => iserializer($_GPC["pluginset"]), "creditrate" => intval($_GPC["creditrate"]), "iscredit" => intval($_GPC["iscredit"]), "iscreditmoney" => intval($_GPC["iscreditmoney"]) );
+            $data = array( "uniacid" => $_W["uniacid"], "merchname" => trim($_GPC["merchname"]), "salecate" => trim($_GPC["salecate"]), "realname" => trim($_GPC["realname"]), "mobile" => trim($_GPC["mobile"]), "address" => trim($_GPC["address"]), "tel" => trim($_GPC["tel"]), "lng" => $_GPC["map"]["lng"], "lat" => $_GPC["map"]["lat"], "accounttime" => strtotime($_GPC["accounttime"]), "accounttotal" => intval($_GPC["accounttotal"]), "maxgoods" => intval($_GPC["maxgoods"]), "groupid" => intval($_GPC["groupid"]), "cateid" => intval($_GPC["cateid"]), "isrecommand" => intval($_GPC["isrecommand"]), "remark" => trim($_GPC["remark"]), "status" => $status, "desc" => trim($_GPC["desc1"]), "logo" => save_media($_GPC["logo"]), "payopenid" => trim($_GPC["payopenid"]), "payrate" => trim($_GPC["payrate"], "%"), "coststatus" => intval($_GPC["coststatus"]), "pluginset" => iserializer($_GPC["pluginset"]), "creditrate" => intval($_GPC["creditrate"]), "iscredit" => intval($_GPC["iscredit"]), "iscreditmoney" => intval($_GPC["iscreditmoney"]));
             if( $diyform_flag ) 
             {
                 $data["diyformdata"] = iserializer($fdata);
@@ -309,18 +309,24 @@ class User_EweiShopV2Page extends PluginWebPage
                 $data["jointime"] = time();
             }
 
-            $account = array( "uniacid" => $_W["uniacid"], "merchid" => $id, "username" => $username, "pwd" => $pwd, "salt" => $salt, "status" => 1, "perms" => serialize(array(  )), "isfounder" => 1 );
+            $account = array( "uniacid" => $_W["uniacid"], "merchid" => $id, "username" => $username, "pwd" => $pwd, "salt" => $salt, "status" => 1, "perms" => serialize(array(  )), "isfounder" => 1);
             $item = pdo_fetch("select * from " . tablename("ewei_shop_merch_user") . " where id=:id and uniacid=:uniacid limit 1", array( ":id" => $id, ":uniacid" => $_W["uniacid"] ));
             if( empty($item) ) 
             {
                 $item["applytime"] = time();
                 pdo_insert("ewei_shop_merch_user", $data);
                 $id = pdo_insertid();
+                $code =  $this->createShopQrcode($id);
+                pdo_update("ewei_shop_merch_user", array( "code" => $code ), array( "id" => $id ));
+
                 $account["merchid"] = $id;
                 pdo_insert("ewei_shop_merch_account", $account);
                 $accountid = pdo_insertid();
+
                 pdo_update("ewei_shop_merch_user", array( "accountid" => $accountid ), array( "id" => $id ));
                 plog("merch.user.add", "添加商户 ID: " . $data["id"] . " 商户名: " . $data["merchname"] . "<br/>帐号: " . $data["username"] . "<br/>子帐号数: " . $data["accounttotal"] . "<br/>到期时间: " . date("Y-m-d", $data["accounttime"]));
+
+
             }
             else
             {
@@ -339,6 +345,9 @@ class User_EweiShopV2Page extends PluginWebPage
                 plog("merch.user.edit", "编辑商户 ID: " . $data["id"] . " 商户名: " . $item["merchname"] . " -> " . $data["merchname"] . "<br/>帐号: " . $item["username"] . " -> " . $data["username"] . "<br/>子帐号数: " . $item["accounttotal"] . " -> " . $data["accounttotal"] . "<br/>到期时间: " . date("Y-m-d", $item["accounttime"]) . " -> " . date("Y-m-d", $data["accounttime"]));
             }
 
+            // $aa = pdo_fetch("select * from " . tablename("ewei_shop_merch_account") . " where id=:id limit 1", array( ":id" => $id ));
+            // $merchid = $aa['merchid'];
+            
             show_json(1, array( "url" => webUrl("merch/user", array( "status" => $item["status"] )) ));
         }
 
@@ -347,6 +356,28 @@ class User_EweiShopV2Page extends PluginWebPage
         $groups = $this->model->getGroups();
         $category = $this->model->getCategory();
         include($this->template());
+    }
+
+    //商家二维码生成
+    public function createShopQrcode($id)
+    {
+        global $_W;
+        global $_GPC;
+        $path = IA_ROOT . '/addons/ewei_shopv2/data/qrcode/5/';
+        if (!is_dir($path)) {
+            load()->func('file');
+            mkdirs($path);
+        }
+
+        $url = "https://www.chinazxhui.com/app/index.php?i=4&c=entry&m=ewei_shopv2&do=mobile&r=store.show&id=$id";
+        $file = 'shop_qrcode'.time().'.png';
+        $qrcode_file = $path . $file;
+        if (!is_file($qrcode_file)) {
+            require_once IA_ROOT . '/framework/library/qrcode/phpqrcode.php';
+            QRcode::png($url, $qrcode_file, QR_ECLEVEL_L, 5);
+        }
+
+        return $_W['siteroot'] . 'addons/ewei_shopv2/data/qrcode/5/' . $file;
     }
 
     public function get_show_money()

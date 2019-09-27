@@ -58,6 +58,10 @@
                 {ifp 'goods.add'}
                 <a class='btn btn-sm btn-primary' href="{php echo webUrl('goods/add')}"><i class='fa fa-plus'></i> 添加商品</a>
                 {/if}
+        {if $user['type']==1}
+                <a class='btn btn-sm btn-primary' href="{php echo webUrl('goods/librarys')}"><i class='fa fa-plus'></i>商品库</a>
+        {/if}
+
             </span>
             <div class="input-group col-sm-6 pull-right">
                 <span class="input-group-select">

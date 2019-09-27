@@ -1460,7 +1460,6 @@ class MerchModel extends PluginModel
 				$list["refundprice"] = 0;
 			}
 			$list["realpricerate"] = ((100 - floatval($list["payrate"])) * $list["realprice"]) / 100;
-
 			// 超级赠品
             if ($list['is_gift_plus']) {
                 $list['realprice'] = $list['gift_plus_cost'];

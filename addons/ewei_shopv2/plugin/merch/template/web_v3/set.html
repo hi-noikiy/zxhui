@@ -13,12 +13,14 @@
                 <li {if $_GPC['tab']=='enter'}class="active"{/if}><a href="#tab_enter">入驻设置</a></li>
                 <li {if $_GPC['tab']=='web'}class="active"{/if}><a href="#tab_web">多商户端</a></li>
                 <li {if $_GPC['tab']=='protocol'}class="active"{/if}><a href="#tab_protocol">入驻申请协议</a></li>
+                <li {if $_GPC['tab']=='merchcommission'}class="active"{/if}><a href="#tab_merchcommission">商户分销</a></li>
             </ul>
             <div class="tab-content ">
                 <div class="tab-pane {if empty($_GPC['tab']) || $_GPC['tab']=='basic'}active{/if}" id="tab_basic">{template 'merch/set/basic'}</div>
                 <div class="tab-pane {if $_GPC['tab']=='enter'}active{/if}" id="tab_enter">{template 'merch/set/enter'}</div>
                 <div class="tab-pane {if $_GPC['tab']=='web'}active{/if}" id="tab_web">{template 'merch/set/web'}</div>
                 <div class="tab-pane {if $_GPC['tab']=='protocol'}active{/if}" id="tab_protocol">{template 'merch/set/protocol'}</div>
+                <div class="tab-pane {if $_GPC['tab']=='merchcommission'}active{/if}" id="tab_merchcommission">{template 'merch/set/merchcommission'}</div>
             </div>
         </div>
     {ifp 'merch.set.edit'}

@@ -18,6 +18,12 @@ class Set_EweiShopV2Page extends PluginWebPage
 			$data['reglogo'] = save_media($data['reglogo']);
 			$data['applycashweixin'] = intval($data['applycashweixin']);
 			$data['applycashalipay'] = intval($data['applycashalipay']);
+			$data['is_openmerchcommission'] = intval($data['is_openmerchcommission']);
+			$data['memberradio'] = intval($data['memberradio']);
+			if ($data['memberradio']>100){
+				show_json(0,'多商户分销比例过大');
+			}
+			$data['membertime'] = intval($data['membertime']);
 			$data['applycashcard'] = intval($data['applycashcard']);
 			m('common')->updatePluginset(array('merch' => $data));
 			m('cache')->set('template_' . $this->pluginname, $data['style']);

@@ -9,6 +9,9 @@ class Index_EweiShopV2Page extends MerchWebPage
 	{
 		global $_W;
 		global $_GPC;
+
+        $user = pdo_fetch('select `type` from ' . tablename('ewei_shop_merch_user') . ' where id=:id and uniacid=:uniacid limit 1', array(':id' => $_W['uniaccount']['merchid'], ':uniacid' => $_W['uniacid']));
+
 		if( empty($_W["shopversion"]) ) 
 		{
 			$goodsfrom = strtolower(trim($_GPC["goodsfrom"]));
@@ -115,6 +118,125 @@ class Index_EweiShopV2Page extends MerchWebPage
 		}
 		include($this->template("goods"));
 	}
+    //商品库
+    public function librarys(){
+    global $_W;
+	global $_GPC;
+
+    $user = pdo_fetch('select `user_id` from ' . tablename('ewei_shop_merch_user') . ' where id=:id and uniacid=:uniacid limit 1', array(':id' => $_W['uniaccount']['merchid'], ':uniacid' => $_W['uniacid']));
+
+
+  //  $list = pdo_fetchall('select * from ' . tablename('ewei_shop_goods') . ' where openid=:openid and relationship=1', array(':openid' => $_W["openid"])); 
+
+  		if( empty($_W["shopversion"]) ) 
+		{
+			$goodsfrom = strtolower(trim($_GPC["goodsfrom"]));
+			if( empty($goodsfrom) ) 
+			{
+				header("location: " . webUrl("goods", array( "goodsfrom" => "sale" )));
+			}
+		}
+		$pindex = max(1, intval($_GPC["page"]));
+		$psize = 20;
+		$sqlcondition = $groupcondition = "";
+		$condition = " WHERE g.`uniacid` = :uniacid and g.`merchid`=:merchid";
+		$params = array( ":uniacid" => $_W["uniacid"], ":merchid" => $user['user_id'] );
+		$not_add = 0;
+		$merch_user = $_W["merch_user"];
+		$maxgoods = intval($merch_user["maxgoods"]);
+		if( 0 < $maxgoods ) 
+		{
+			$sql = "SELECT COUNT(1) FROM " . tablename("ewei_shop_goods") . " where uniacid=:uniacid and merchid=:merchid";
+			$goodstotal = pdo_fetchcolumn($sql, $params);
+			if( $maxgoods <= $goodstotal ) 
+			{
+				$not_add = 1;
+			}
+		}
+		if( !empty($_GPC["keyword"]) ) 
+		{
+			$_GPC["keyword"] = trim($_GPC["keyword"]);
+			$sqlcondition = " left join " . tablename("ewei_shop_goods_option") . " op on g.id = op.goodsid";
+			$groupcondition = " group by g.`id`";
+			$condition .= " AND (g.`id` = :id or g.`title` LIKE :keyword or g.`goodssn` LIKE :keyword or g.`productsn` LIKE :keyword or op.`title` LIKE :keyword or op.`goodssn` LIKE :keyword or op.`productsn` LIKE :keyword)";
+			$params[":keyword"] = "%" . $_GPC["keyword"] . "%";
+			$params[":id"] = $_GPC["keyword"];
+		}
+		if( !empty($_GPC["cate"]) ) 
+		{
+			$_GPC["cate"] = intval($_GPC["cate"]);
+			$condition .= " AND FIND_IN_SET(" . $_GPC["cate"] . ",cates)<>0 ";
+		}
+		if( empty($goodsfrom) ) 
+		{
+			$goodsfrom = $_GPC["goodsfrom"];
+		}
+		if( empty($goodsfrom) ) 
+		{
+			$goodsfrom = "sale";
+		}
+		if( $goodsfrom == "sale" ) 
+		{
+			$condition .= " AND g.`status` = 1  and g.`total`>0 and g.`deleted`=0  AND g.`checked`=0";
+			$status = 1;
+		}
+		else 
+		{
+			if( $goodsfrom == "out" ) 
+			{
+				$condition .= " AND g.`total` <= 0 AND g.`status` <> 0 and g.`deleted`=0  AND g.`checked`=0";
+				$status = 1;
+			}
+			else 
+			{
+				if( $goodsfrom == "stock" ) 
+				{
+					$status = 0;
+					$condition .= " AND g.`status` = 0 and g.`deleted`=0 AND g.`checked`=0";
+				}
+				else 
+				{
+					if( $goodsfrom == "cycle" ) 
+					{
+						$status = 0;
+						$condition .= " AND g.`deleted`=1";
+					}
+					else 
+					{
+						if( $goodsfrom == "check" ) 
+						{
+							$status = 0;
+							$condition .= " AND g.`checked`=1 and g.`deleted`=0";
+						}
+					}
+				}
+			}
+		}
+		$sql = "SELECT COUNT(g.`id`) FROM " . tablename("ewei_shop_goods") . "g" . $sqlcondition . $condition . $groupcondition;
+		$total = pdo_fetchcolumn($sql, $params);
+		$list = array( );
+		if( !empty($total) ) 
+		{
+			$sql = "SELECT g.* FROM " . tablename("ewei_shop_goods") . "g" . $sqlcondition . $condition . $groupcondition . " ORDER BY g.`status` DESC, g.`merchdisplayorder` DESC,\r\n                g.`id` DESC LIMIT " . ($pindex - 1) * $psize . "," . $psize;
+			$list = pdo_fetchall($sql, $params);
+			foreach( $list as $key => &$value ) 
+			{
+				$url = mobileUrl("goods/detail", array( "id" => $value["id"] ), true);
+				$value["qrcode"] = m("qrcode")->createQrcode($url);
+			}
+			$pager = pagination2($total, $pindex, $psize);
+		}
+		$categorys = m("shop")->getFullCategory(true);
+		$category = array( );
+		foreach( $categorys as $cate ) 
+		{
+			$category[$cate["id"]] = $cate;
+		}
+    
+    include($this->template("goods/librarys"));
+    } 
+
+
 	public function add() 
 	{
 		$this->post();
@@ -469,3 +591,4 @@ class Index_EweiShopV2Page extends MerchWebPage
 	}
 }
 ?>
+

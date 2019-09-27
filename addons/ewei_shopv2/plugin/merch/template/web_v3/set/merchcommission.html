@@ -1,0 +1,39 @@
+<div class="form-group">
+    <label class="col-lg control-label">是否开启多商户分销</label>
+    <div class="col-sm-8">
+        {ifp 'merch.set.edit'}
+        <label class="radio-inline"><input type="radio"  name="data[is_openmerchcommission]" value="1" {if $data['is_openmerchcommission'] ==1} checked="checked"{/if} /> 开启</label>
+        <label class="radio-inline"><input type="radio"  name="data[is_openmerchcommission]" value="0" {if $data['is_openmerchcommission'] ==0} checked="checked"{/if} /> 不开启</label>
+        <div class='help-block'></div>
+        {else}
+        {if $data['apply_openweb'] ==0}不允许{else}允许{/if}
+        {/if}
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-lg control-label">多商户分销比例</label>
+    <div class="col-sm-9 col-xs-12">
+        {ifp 'merch.set.edit'}
+        <div class="input-group" style="width: 150px;">
+            <input type="text" name="data[merchradio]" class="form-control" value="{$data['merchradio']}" />
+            <div class="input-group-addon">%</div>
+        </div>
+        {else}
+        <div class='form-control-static'>{$data['radio']}</div>
+        {/if}
+        <span class='help-block'>多商户分销比例，按照商品利润的百分比分。请设置好成本价！《单位：%》</span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-lg control-label">会员绑定多商户时间</label>
+    <div class="col-sm-9 col-xs-12">
+        {ifp 'merch.set.edit'}
+        <input type='text' class='form-control' name='data[merchtime]' value="{$data['merchtime']}" style="width: 150px;"/>
+        {else}
+        <div class='form-control-static'>{$data['radio']}</div>
+        {/if}
+        <span class='help-block'>超过时间用户下单重新绑定多商户，默认不重新绑定。</span>
+    </div>
+</div>

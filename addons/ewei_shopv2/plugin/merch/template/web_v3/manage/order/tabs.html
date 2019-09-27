@@ -1,11 +1,11 @@
 <style type='text/css'>
-	.order-list a {
-		position: relative;
-	}
-	.order-list span  {
-	 
-	float:right;margin-right:20px;
-	}
+    .order-list a {
+        position: relative;
+    }
+    .order-list span  {
+
+        float:right;margin-right:20px;
+    }
 </style>
 <ul class="menu-head-top">
     <li {if $_W['action']=='order'} class="active" {/if}><a href="{php echo merchUrl('order')}">订单概述 <i class="fa fa-caret-right"></i></a></li>
@@ -16,39 +16,39 @@
 <ul class='order-list'>
     {ifp 'order.list.status1'}
     <li {if $_W['routes']=='order.list.status1'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status1')}">待发货 <span class='text-danger status1'>--</span></a>
+    <a href="{php echo merchUrl('order/list/status1')}">待发货 <span class='text-danger status1'>--</span></a>
     </li>
     {/if}
-    
+
     {ifp 'order.list.status2'}
     <li {if $_W['routes']=='order.list.status2'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status2')}">待收货 <span class='text-warning status2'>--</span></a>
+    <a href="{php echo merchUrl('order/list/status2')}">待收货 <span class='text-warning status2'>--</span></a>
     </li>
     {/if}
 
     {ifp 'order.list.status0'}
     <li {if $_W['routes']=='order.list.status0'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status0')}">待付款 <span class="status0">--</span></a>
+    <a href="{php echo merchUrl('order/list/status0')}">待付款 <span class="status0">--</span></a>
     </li>
     {/if}
     {ifp 'order.list.status3'}
     <li {if $_W['routes']=='order.list.status3'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status3')}">已完成 <span class='text-primary status3'>--</span></a>
-    </li>
-    {/if}
-    
-     {ifp 'order.list.status_1'}
-    <li {if $_W['routes']=='order.list.status_1'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status_1')}">已关闭 <span class="status_1">--</span></a>
+    <a href="{php echo merchUrl('order/list/status3')}">已完成 <span class='text-primary status3'>--</span></a>
     </li>
     {/if}
 
-             {ifp 'order.list.main'}
-    <li {if $_W['routes']=='order.list' && $_GPC['status']=='' && $_GPC['refund']!='1'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list')}" >全部订单<span class="all">--</span></a>
+    {ifp 'order.list.status_1'}
+    <li {if $_W['routes']=='order.list.status_1'}class="active"{/if}>
+    <a href="{php echo merchUrl('order/list/status_1')}">已关闭 <span class="status_1">--</span></a>
     </li>
     {/if}
-    
+
+    {ifp 'order.list.main'}
+    <li {if $_W['routes']=='order.list' && $_GPC['status']=='' && $_GPC['refund']!='1'}class="active"{/if}>
+    <a href="{php echo merchUrl('order/list')}" >全部订单<span class="all">--</span></a>
+    </li>
+    {/if}
+
     {if $operation == 'detail'}
     <li class="active">
         <a href="#">订单详情</a>
@@ -56,21 +56,21 @@
     {/if}
 </ul>
 {/if}
-  {ifp 'order.list.status4|order.list.status5'}
+{ifp 'order.list.status4|order.list.status5'}
 <div class='menu-header'>维权</div>
 <ul class='order-list'>
     {ifp 'order.list.status4'}
     <li {if $_W['routes']=='order.list.status4'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status4')}">维权申请 <span class='text-danger status4'>--</span></a>
+    <a href="{php echo merchUrl('order/list/status4')}">维权申请 <span class='text-danger status4'>--</span></a>
     </li>
     {/if}
-     
+
     {ifp 'order.list.status5'}
     <li {if $_W['routes']=='order.list.status5'}class="active"{/if}>
-        <a href="{php echo merchUrl('order/list/status5')}">维权完成 <span class="status5">--</span></a>
+    <a href="{php echo merchUrl('order/list/status5')}">维权完成 <span class="status5">--</span></a>
     </li>
     {/if}
-      </ul>
+</ul>
 {/if}
 
 {ifp 'order.export|order.batchsend'}
@@ -87,6 +87,30 @@
         <a href="{php echo merchUrl('order/batchsend')}">批量发货</a>
     </li>
     {/if}
+</ul>
+{/if}
+
+{ifp 'order.groups.index'}
+<div class='menu-header lynn_order'>拼团订单</div>
+<ul class="order-list">
+    <li {if $_GPC['status']==1}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>1))}">待发货<span class='text-danger status1'>--</span></a>
+    </li>
+    <li {if $_GPC['status']==2}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>2))}">待收货<span class='text-warning status2'>--</span></a>
+    </li>
+    <li {if $_GPC['status']==3}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>3))}">待付款<span class=" status3">--</span></a>
+    </li>
+    <li {if $_GPC['status']==4}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>4))}">已完成<span class='text-primary status4'>--</span></a>
+    </li>
+    <li {if $_GPC['status']==5}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>5))}">已关闭<span class="status5">--</span></a>
+    </li>
+    <li {if $_GPC['status']=='all'}class="active"{/if}>
+    <a href="{php echo webUrl('order/groups',array('status'=>'all'))}">全部订单<span class="all">--</span></a>
+    </li>
 </ul>
 {/if}
 <script>

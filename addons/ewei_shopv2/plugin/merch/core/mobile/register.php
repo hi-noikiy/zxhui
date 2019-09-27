@@ -167,9 +167,12 @@ class Register_EweiShopV2Page extends PluginMobileLoginPage
 	public function shopShare()
 	{
 		global $_W;
-
 		parent::shopShare();
-
+        $uniacid = $_W['uniacid'];
+		$arr = pdo_fetch("select cr.title,cr.description,cr.thumb from".tablename('cover_reply')."cr inner join".tablename('rule')."r on r.id = cr.rid where r.name='ewei_shopv2入驻申请入口设置' and cr.uniacid = ".$uniacid);
+		$_W['shopshare']['title'] = $arr['title'];
+		$_W['shopshare']['desc'] = $arr['description'];
+		$_W['shopshare']['imgUrl'] = tomedia($arr['thumb']);
 		$_W['shopshare']['link'] = mobileUrl('merch.register', '', true);
 	}
 }
