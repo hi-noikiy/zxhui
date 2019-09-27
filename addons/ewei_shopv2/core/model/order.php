@@ -1111,6 +1111,24 @@ class Order_EweiShopV2Model
                 $ch_order[$merchid]['gift_plus_market'] += 0;
             }
 
+            // 成本价
+            if ($merchid) {
+                $merchant_info = pdo_fetch("select * from " . tablename("ewei_shop_merch_user") . " where id=:id limit 1", array(
+                    ":id" => $merchid
+                ));
+
+                // 使用成本价结算
+                $flag = intval($merchant_info['coststatus']) === 1;
+                if ($flag) {
+                    // 开启时直接取成本价
+                    $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
+                } else {
+                    // 禁用时成本价为商城销售价格减去抽成部分
+                    $ch_order[$merchid]['costprice'] += ($g['marketprice'] - $g['marketprice'] * $merchant_info['payrate']) * $g['total'];
+                }
+            }
+            // $ch_order[$merchid][]
+
 			$ch_order[$merchid]["goods"][] = $g["goodsid"];
 			$ch_order[$merchid]["grprice"] += $g["ggprice"];
 			$ch_order[$merchid]["goodsprice"] += $tmp_goods[$gk]["marketprice"] * $g["total"];

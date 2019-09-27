@@ -2978,6 +2978,9 @@ EOF;
         $need_deduct_num=0;//需要积分抵扣的订单商品的数量,为了取出最后一个抵扣订单商品
         $need_deduct2_num=0;//需要余额抵扣的订单商品的数量,为了取出最后一个抵扣订单商品
 
+        // 超级赠品 && 成本价
+        $cost_price_total = 0;
+
         foreach ($goods as $g) {
             if (empty($g)) {
                 continue;
@@ -3016,12 +3019,14 @@ EOF;
             // 超级赠品
             if ($g['is_gift_plus']) {
                 $data['is_gift_plus'] = 1;
-                $data['gift_price_cost'] = $data['costprice'];
-                $data['gift_price_market'] = $data['marketprice'];
+                $data['gift_price_cost'] = $data['costprice'] * $goodstotal;
+                $data['gift_price_market'] = $data['marketprice'] * $goodstotal;
                 $data['gift_plus_merchid'] = $g['gift_plus_merchid'];
                 $data['marketprice'] = 0;
-                unset($data['costprice']);
+                // unset($data['costprice']);
             }
+
+            $cost_price_total += $data['costprice'] * $goodstotal;
 
             $data['seckillinfo'] = plugin_run('seckill::getSeckill', $goodsid, $optionid, true, $_W['openid']);
             if($data['ispresell']>0 && ($data['preselltimeend'] == 0 || $data['preselltimeend'] > time())){
@@ -4227,7 +4232,7 @@ EOF;
             }
         }
 
-        if ($multiple_order == 0) {
+        if ($multiple_order === 0) {
             //创建一个订单的字段
             $order_merchid = current(array_keys($merch_array));
             $order['merchid'] = intval($order_merchid);
@@ -4284,7 +4289,6 @@ EOF;
             }
         }
 
-
         if (!empty($address)) {
             $order['address'] = iserializer($address);
         }
@@ -4295,6 +4299,10 @@ EOF;
             $order['ordersn2'] = 100;
         }
 
+        // 成本价
+        $order['costprice'] = $cost_price_total;
+
+        // 订单入库
         pdo_insert('ewei_shop_order', $order);
         $orderid = pdo_insertid();
 
@@ -4318,15 +4326,7 @@ EOF;
         if (!empty($goods[0]['bargain_id']) && p('bargain')) {
             pdo_update('ewei_shop_bargain_actor', array('order' => $orderid), array('id' => $goods[0]['bargain_id'], 'openid' => $_W['openid']));
         }
-        if ($multiple_order == 0) {
-
-            // 超级赠品
-            $gift_plus_data = [
-                'price' => 0,
-                'cost' => 0,
-                'market' => 0
-            ];
-
+        if ($multiple_order === 0) {
             // 开始创建一个订单
             $exchangepriceset = $_SESSION['exchangepriceset'];
             // 保存订单商品
@@ -4409,21 +4409,6 @@ EOF;
                     $order_goods['realprice'] = $order_goods['realprice']-$order['couponprice'];
                 }
 
-                // 超级赠品
-                if ($goods['is_gift_plus']) {
-                    $order_goods['is_gift_plus'] = 1;
-                    $order_goods['gift_price'] = $goods['gift_price'];
-                    $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
-                    $order_goods['gift_price_market'] = $goods['gift_price_market'];
-                    $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
-
-                    $gift_plus_data['price'] += $goods['gift_price'] * $goods['total'];
-                    $gift_plus_data['cost'] += $goods['gift_price_cost'] * $goods['total'];
-                    $gift_plus_data['market'] += $goods['gift_price_market'] * $goods['total'];
-                } else {
-                    $order_goods['is_gift_plus'] = 0;
-                }
-
                 pdo_insert('ewei_shop_order_goods', $order_goods);
 
 
@@ -4434,16 +4419,12 @@ EOF;
                 }
             }
 
-            // 超级赠品 && 更新订单数据
-            pdo_update('ewei_shop_order', ['id' => $orderid], ['gift_plus_price' => $gift_plus_data['price'], 'gift_plus_cost' => $gift_plus_data['cost'], 'gift_plus_market' => $gift_plus_data['market']]);
-            unset($gift_plus_data);
+        } else if($multiple_order === 2)  {
+            // 套餐开始创建多个子订单
 
-        } else if($multiple_order == 2)  {
-            //套餐开始创建多个子订单
-
-            //记录订单商品中的订单id
+            // 记录订单商品中的订单id
             $og_array = array();
-            $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array,$orderid);
+            $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid);
 
             // 子订单保存订单商品
             foreach ($allgoods as $goods) {
@@ -4606,7 +4587,7 @@ EOF;
 
                 pdo_insert('ewei_shop_order', $order);
 
-                //子订单id
+                // 子订单id
                 $ch_orderid = pdo_insertid();
 
                 $merch_array[$merchid]['orderid'] = $ch_orderid;
@@ -4742,6 +4723,7 @@ EOF;
                 $order['gift_plus_price'] = $ch_order_data[$merchid]['gift_plus_price'];
                 $order['gift_plus_cost'] = $ch_order_data[$merchid]['gift_plus_cost'];
                 $order['gift_plus_market'] = $ch_order_data[$merchid]['gift_plus_market'];
+                $order['costprice'] = $ch_order_data[$merchid]['costprice'];
 
                 pdo_insert('ewei_shop_order', $order);
 

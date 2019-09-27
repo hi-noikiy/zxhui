@@ -1273,7 +1273,8 @@ class MerchModel extends PluginModel
 		$conditionrefund = "and u.uniacid=:uniacid and u.id=:merchid and o.status=-1 and o.isparent=0 and o.merchapply<=0 and o.paytype<>3";
 		$params = array( ":uniacid" => $_W["uniacid"], ":merchid" => $merchid );
 		$paramsrefund = array( ":uniacid" => $_W["uniacid"], ":merchid" => $merchid );
-		$con = "u.id,u.merchname,u.payrate,sum(o.price) price,sum(o.goodsprice) goodsprice,sum(o.dispatchprice) dispatchprice,sum(o.discountprice) discountprice,sum(o.deductprice) deductprice,sum(o.deductcredit2) deductcredit2,sum(o.isdiscountprice) isdiscountprice,sum(o.deductenough) deductenough,sum(o.merchdeductenough) merchdeductenough,sum(o.merchisdiscountprice) merchisdiscountprice,sum(o.changeprice) changeprice,sum(o.seckilldiscountprice) seckilldiscountprice";
+		// 成本价
+		$con = "u.id,u.merchname,u.payrate,sum(o.price) price,sum(o.goodsprice) goodsprice,sum(o.dispatchprice) dispatchprice,sum(o.discountprice) discountprice,sum(o.deductprice) deductprice,sum(o.deductcredit2) deductcredit2,sum(o.isdiscountprice) isdiscountprice,sum(o.deductenough) deductenough,sum(o.merchdeductenough) merchdeductenough,sum(o.merchisdiscountprice) merchisdiscountprice,sum(o.changeprice) changeprice,sum(o.seckilldiscountprice) seckilldiscountprice, sum(o.costprice) costprice";
 		$tradeset = m("common")->getSysset("trade");
 		$refunddays = intval($tradeset["refunddays"]);
 		if( 0 < $refunddays ) 
@@ -1354,6 +1355,13 @@ class MerchModel extends PluginModel
 			$list["realprice"] -= $list["commission"];
 		}
 		$list["realpricerate"] = ((100 - floatval($list["payrate"])) * $list["realprice"]) / 100;
+
+		// 成本价 入库的时候已经做了计算
+		if ($list['costprice']) {
+            $list["realprice"] = number_format($list['costprice'], 2);
+            $list["realpricerate"] = number_format($list['costprice'], 2);
+        }
+
 		$list["merchcouponprice"] = $merchcouponprice;
 		$list["price"] += $refundprice;
 		return $list;
@@ -1409,7 +1417,7 @@ class MerchModel extends PluginModel
 			$conditionrefund .= " and o.id=:id Limit 1";
 		}
 		// 超级赠品
-		$con = "o.id,u.merchname,u.payrate,o.price,o.goodsprice,o.dispatchprice,discountprice," . "o.deductprice,o.deductcredit2,o.isdiscountprice,o.deductenough,o.changeprice,o.agentid,o.seckilldiscountprice," . "o.merchdeductenough,o.merchisdiscountprice,o.couponmerchid,o.couponprice,o.couponmerchid,o.ordersn,o.finishtime,o.merchapply," . "r.orderprice,r.applyprice," . "comprice.commission_price,comprice.order_id" . ",o.is_gift_plus,o.gift_plus_price,o.gift_plus_cost,o.gift_plus_market";
+		$con = "o.id,u.merchname,u.payrate,o.price,o.goodsprice,o.dispatchprice,discountprice," . "o.deductprice,o.deductcredit2,o.isdiscountprice,o.deductenough,o.changeprice,o.agentid,o.seckilldiscountprice," . "o.merchdeductenough,o.merchisdiscountprice,o.couponmerchid,o.couponprice,o.couponmerchid,o.ordersn,o.finishtime,o.merchapply," . "r.orderprice,r.applyprice," . "comprice.commission_price,comprice.order_id" . ",o.parentid,o.costprice,o.is_gift_plus,o.gift_plus_price,o.gift_plus_cost,o.gift_plus_market";
 		$sql = "select " . $con . " from " . tablename("ewei_shop_merch_user") . " u " . " left join " . tablename("ewei_shop_order") . " o on u.id=o.merchid" . " left join " . tablename("ewei_shop_order_refund") . " r on o.refundid=r.id" . " left join " . tablename("ewei_shop_merch_commission_orderprice") . " comprice on o.id=comprice.order_id";
 		if( !empty($pindex) && !empty($psize) ) 
 		{
@@ -1460,9 +1468,31 @@ class MerchModel extends PluginModel
 				$list["refundprice"] = 0;
 			}
 			$list["realpricerate"] = ((100 - floatval($list["payrate"])) * $list["realprice"]) / 100;
+
 			// 超级赠品
             if ($list['is_gift_plus']) {
                 $list['realprice'] = $list['gift_plus_cost'];
+            }
+
+            // 查看订单是否使用了赠品
+            if ($list['parentid']) {
+                $other_orders = pdo_fetchall('SELECT id,costprice,is_gift_plus,gift_plus_price,gift_plus_cost,gift_plus_market FROM ' . tablename('ewei_shop_order') . ' WHERE id <> :id AND parentid = :parentid AND is_gift_plus = 1', [
+                    ':id' => $list['order_id'],
+                    ':parentid' => $list['parentid']
+                ]);
+
+                if ($other_orders) {
+                    foreach ($other_orders as $key => $val) {
+                        $list['gift_plus_should_pay'] += $val['gift_plus_price'];
+                    }
+                    $list['realprice'] -= $list['gift_plus_should_pay'];
+                }
+            }
+
+            // 成本价
+            if ($list['costprice'] > 0) {
+                $list['realprice'] = $list['costprice'] * 1;
+                $list["realpricerate"] = $list['costprice'] * 1;
             }
 		}
 		unset($list);
