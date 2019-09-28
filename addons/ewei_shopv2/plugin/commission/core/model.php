@@ -87,14 +87,14 @@ if (!class_exists('CommissionModel')) {
                 $param[':uniacid'] = $_W['uniacid'];
                 $condition  .= " AND og.orderid in(".$parent_sql.")";
                 $goods_sql="select og.id,og.realprice,og.total,g.hasoption,og.goodsid,og.optionid,g.hascommission,g.nocommission, g.commission1_rate,g.commission1_pay,g.commission2_rate,g.commission2_pay,
-          g.commission3_rate,g.commission3_pay,g.commission,og.commissions,og.seckill,og.seckill_taskid,og.seckill_timeid from " . tablename('ewei_shop_order_goods') . '  og '
+          g.commission3_rate,g.commission3_pay,g.commission,og.commissions,og.seckill,og.seckill_taskid,og.seckill_timeid,g.costprice from " . tablename('ewei_shop_order_goods') . '  og '
                     . ' left join ' . tablename('ewei_shop_goods') . ' g on g.id = og.goodsid ' .$condition;
                 $goods =pdo_fetchall($goods_sql,$param);
 
             }else{
                 $goods = pdo_fetchall(
                     "select og.id,og.realprice,og.total,g.hasoption,og.goodsid,og.optionid,g.hascommission,g.nocommission, g.commission1_rate,g.commission1_pay,g.commission2_rate,g.commission2_pay,
-                  g.commission3_rate,g.commission3_pay,g.commission,og.commissions,og.seckill,og.seckill_taskid,og.seckill_timeid from " . tablename('ewei_shop_order_goods') . '  og '
+                  g.commission3_rate,g.commission3_pay,g.commission,og.commissions,og.seckill,og.seckill_taskid,og.seckill_timeid,g.costprice from " . tablename('ewei_shop_order_goods') . '  og '
                     . ' left join ' . tablename('ewei_shop_goods') . ' g on g.id = og.goodsid'
                     . ' where og.orderid=:orderid and og.uniacid=:uniacid', array(':orderid' => $orderid, ':uniacid' => $_W['uniacid']));
             }
@@ -103,7 +103,11 @@ if (!class_exists('CommissionModel')) {
             if ($set['level'] > 0) {
                 foreach ($goods as &$cinfo) {
                     $price = $cinfo['realprice'] * $rate;
-
+                    if (!empty($set['cost'])){
+                        if (!empty($cinfo['costprice'])){
+                            $price = $cinfo['realprice']-$cinfo['costprice'];
+                        }
+                    }
                     $seckill_goods = false;
                     if ($cinfo['seckill']) {
                         //是秒杀商品
@@ -1720,9 +1724,9 @@ if (!class_exists('CommissionModel')) {
             if (empty($set['level'])) {
                 return;
             }
-            // 超级赠品 && 不参与分佣
-            $order = pdo_fetch('select id,openid,ordersn,goodsprice,agentid,paytime,officcode,is_gift_plus from ' . tablename('ewei_shop_order') . ' where id=:id and status>=0 and uniacid=:uniacid limit 1', array(':id' => $orderid, ':uniacid' => $_W['uniacid']));
-            if (empty($order) || $order['is_gift_plus']) {
+            $order = pdo_fetch('select id,openid,ordersn,goodsprice,agentid,paytime,officcode from ' . tablename('ewei_shop_order') . ' where id=:id and status>=0 and uniacid=:uniacid limit 1', array(':id' => $orderid, ':uniacid' => $_W['uniacid']));
+
+            if (empty($order)) {
                 return;
             }
             $openid = $order['openid'];
