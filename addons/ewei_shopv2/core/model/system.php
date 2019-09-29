@@ -676,6 +676,8 @@ class System_EweiShopV2Model
                 "route" => "gift_plus",
                 "keywords" => "营销"
             ];
+            // 移除原有赠品功能
+            unset($shopmenu['sale']['items'][0]['items'][6]);
         }
 
 		if( !p("app") )
