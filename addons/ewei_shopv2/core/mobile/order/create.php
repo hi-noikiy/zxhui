@@ -4029,7 +4029,14 @@ EOF;
         }
 
         // TODO 超级赠品 && 是否要分单
-
+        if ($ismerch && !empty($merch_array)) {
+            foreach ($merch_array as $key => $val) {
+                if (count($val['goods']) > 1) {
+                    // $multiple_order = 3;
+                    break;
+                }
+            }
+        }
 
         //生成订单号
         if ($ismerch > 0) {
@@ -4656,6 +4663,156 @@ EOF;
                 pdo_insert('ewei_shop_order_goods', $order_goods);
             }
 
+        } elseif ($multiple_order === 3) {
+            // 订单中存在一个商户多商品的情况需要分单
+
+            // 子订单数据
+            $child_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid);
+
+            // echo '<pre>';
+            // print_r($child_order_data);
+            // echo '</pre>';
+            // pdo_delete('ewei_shop_order', array('id' => $orderid));
+            // die;
+
+            foreach ($merch_array as $key => $value) {
+                // 商户ID
+                $merchid = $key;
+                $is_exchange = (p('exchange') && $_SESSION['exchange']);
+                if ($is_exchange) {
+                    $order_head = 'DH';
+                } else {
+                    if (!empty($merchid)) {
+                        $order_head = 'ME';
+                    } else {
+                        $order_head = 'SH';
+                    }
+                }
+
+                // 生成子订单号
+                $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
+                $order['merchid'] = $merchid;
+                $order['parentid'] = $orderid;
+                $order['isparent'] = 0;
+                $order['merchshow'] = 1;
+                $order['dispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
+                $order['olddispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
+
+                if (empty($packageid)) {
+                    $order['merchisdiscountprice'] = $discountprice_array[$merchid]['merchisdiscountprice'];
+                    $order['isdiscountprice'] = $discountprice_array[$merchid]['isdiscountprice'];
+                    $order['discountprice'] = $discountprice_array[$merchid]['discountprice'];
+                }
+
+                $order['price'] = $child_order_data[$merchid]['price'];
+                $order['grprice'] = $child_order_data[$merchid]['grprice'];
+                $order['goodsprice'] = $child_order_data[$merchid]['goodsprice'];
+                $order['deductprice'] = $child_order_data[$merchid]['deductprice'];
+                $order['deductcredit'] = $child_order_data[$merchid]['deductcredit'];
+                $order['deductcredit2'] = $child_order_data[$merchid]['deductcredit2'];
+                $order['merchdeductenough'] = $child_order_data[$merchid]['merchdeductenough'];
+                $order['deductenough'] = $child_order_data[$merchid]['deductenough'];
+
+                // 多商户参与优惠券计算的商品价格(参与活动之后的价格)
+                $order['coupongoodprice'] = $discountprice_array[$merchid]['coupongoodprice'];
+                $order['couponprice'] = $discountprice_array[$merchid]['deduct'];
+
+                if (empty($order['couponprice'])) {
+                    $order['couponid'] = 0;
+                    $order['couponmerchid'] = 0;
+                } else if ($couponmerchid > 0) {
+                    if ($merchid == $couponmerchid) {
+                        $order['couponid'] = $couponid;
+                        $order['couponmerchid'] = $couponmerchid;
+                    } else {
+                        $order['couponid'] = 0;
+                        $order['couponmerchid'] = 0;
+                    }
+                }
+
+                // 超级赠品
+                $order['is_gift_plus'] = intval($child_order_data[$merchid]['is_gift_plus']);
+                $order['gift_plus_price'] = $child_order_data[$merchid]['gift_plus_price'];
+                $order['gift_plus_cost'] = $child_order_data[$merchid]['gift_plus_cost'];
+                $order['gift_plus_market'] = $child_order_data[$merchid]['gift_plus_market'];
+                $order['costprice'] = $child_order_data[$merchid]['costprice'];
+
+                pdo_insert('ewei_shop_order', $order);
+
+                // 子订单id
+                $ch_orderid = pdo_insertid();
+
+                $merch_array[$merchid]['orderid'] = $ch_orderid;
+
+                if ($couponmerchid > 0) {
+                    if ($merchid == $couponmerchid) {
+                        $couponorderid = $ch_orderid;
+                    }
+                }
+                foreach ($value['goods'] as $k => $v) {
+                    //$v 商品id
+                    $og_array[$v] = $ch_orderid;
+                }
+
+            }
+
+            // 子订单保存订单商品
+            foreach ($allgoods as $goods) {
+
+                $goodsid = $goods['goodsid'];
+
+                $order_goods = array();
+                $order_goods['parentorderid'] = $orderid;
+                $order_goods['merchid'] = $goods['merchid'];
+                $order_goods['merchsale'] = $goods['merchsale'];
+                $order_goods['orderid'] = $og_array[$goodsid];
+
+                $order_goods['uniacid'] = $uniacid;
+                $order_goods['goodsid'] = $goodsid;
+                $order_goods['price'] = $goods['marketprice'] * $goods['total'];
+                $order_goods['total'] = $goods['total'];
+                $order_goods['optionid'] = $goods['optionid'];
+                $order_goods['createtime'] = time();
+                $order_goods['optionname'] = $goods['optiontitle'];
+                $order_goods['goodssn'] = $goods['goodssn'];
+                $order_goods['productsn'] = $goods['productsn'];
+                $order_goods['realprice'] = $goods['ggprice'];
+                $order_goods['oldprice'] = $goods['ggprice'];
+                $order_goods['isdiscountprice'] = $goods['isdiscountprice'];
+                $order_goods['openid'] = $openid;
+                $order_goods['consume']=iserializer(array('consume_deduct'=>$goods['consume_deduct'],'consume_deduct2'=>$goods['consume_deduct2']));//序列化商品抵扣所使用的积分和余额
+
+                if ($diyform_plugin) {
+                    if ($goods['diyformtype'] == 2) {
+                        //商品使用了独立自定义的表单
+                        $order_goods['diyformid'] = 0;
+                    } else {
+                        //商品使用了表单模板
+                        $order_goods['diyformid'] = $goods['diyformid'];
+                    }
+                    $order_goods['diyformdata'] = $goods['diyformdata'];
+                    $order_goods['diyformfields'] = $goods['diyformfields'];
+                }
+                if (floatval($goods['buyagain']) > 0) {
+                    //数据库是否有购买过的商品没用掉的
+                    if (!m('goods')->canBuyAgain($goods)) {
+                        $order_goods['canbuyagain'] = 1;
+                    }
+                }
+
+                // 超级赠品
+                if ($goods['is_gift_plus']) {
+                    $order_goods['is_gift_plus'] = 1;
+                    $order_goods['gift_price'] = $goods['gift_price'];
+                    $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
+                    $order_goods['gift_price_market'] = $goods['gift_price_market'];
+                    $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
+                } else {
+                    $order_goods['is_gift_plus'] = 0;
+                }
+
+                pdo_insert('ewei_shop_order_goods', $order_goods);
+            }
         } else {
             // 开始创建多个子订单
 

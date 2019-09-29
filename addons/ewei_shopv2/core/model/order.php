@@ -1250,7 +1250,191 @@ class Order_EweiShopV2Model
 		}
 		return $ch_order;
 	}
-	public function getMerchEnough($merch_array) 
+
+	// TODO 超级赠品 同一个商户按照商品个数分单
+    public function getChildOrderPriceByGoodsId(&$order, &$goods, &$dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid = 0)
+    {
+        global $_GPC;
+
+        $tmp_goods = $goods;
+        $is_exchange = p("exchange") && $_SESSION["exchange"];
+        if ($is_exchange) {
+            foreach ($dispatch_array["dispatch_merch"] as &$dispatch_merch) {
+                $dispatch_merch = 0;
+            }
+            unset($dispatch_merch);
+            $postage = $_SESSION["exchange_postage_info"];
+            $exchangepriceset = (array)$_SESSION["exchangepriceset"];
+            foreach ($goods as $gk => $one_goods) {
+                $goods[$gk]["ggprice"] = 0;
+                $tmp_goods[$gk]["marketprice"] = 0;
+            }
+            foreach ($exchangepriceset as $pset) {
+                foreach ($goods as $gk => &$one_goods) {
+                    if ($one_goods["ggprice"] == 0 && ($one_goods["optionid"] == $pset[0] || $one_goods["goodsid"] == $pset[0])) {
+                        $one_goods["ggprice"] += $pset[2];
+                        $tmp_goods[$gk]["marketprice"] += $pset[2];
+                        break;
+                    }
+                }
+                unset($one_goods);
+            }
+        }
+        $totalprice = $order["price"];
+        $goodsprice = $order["goodsprice"];
+        $grprice = $order["grprice"];
+        $deductprice = $order["deductprice"];
+        $deductcredit = $order["deductcredit"];
+        $deductcredit2 = $order["deductcredit2"];
+        $deductenough = $order["deductenough"];
+        $is_deduct = 0;
+        $is_deduct2 = 0;
+        $deduct_total = 0;
+        $deduct2_total = 0;
+        $ch_order = array();
+        if ($sale_plugin) {
+            if (!empty($_GPC["deduct"])) {
+                $is_deduct = 1;
+            }
+            if (!empty($_GPC["deduct2"])) {
+                $is_deduct2 = 1;
+            }
+        }
+        foreach ($goods as $gk => &$g) {
+            $merchid = $g["merchid"];
+
+            // 超级赠品
+            if ($g['is_gift_plus']) {
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_price'] = $g['gift_price'] * $g['total'];
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_cost'] = $g['gift_price_cost'] * $g['total'];
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_market'] = $g['gift_price_market'] * $g['total'];
+                $ch_order[$merchid]['info'][$g['goodsid']]['is_gift_plus'] = 1;
+
+            } else {
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_price'] = 0;
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_cost'] = 0;
+                $ch_order[$merchid]['info'][$g['goodsid']]['gift_plus_market'] = 0;
+            }
+
+            // 成本价
+            if ($merchid) {
+                $merchant_info = pdo_fetch("select * from " . tablename("ewei_shop_merch_user") . " where id=:id limit 1", array(
+                    ":id" => $merchid
+                ));
+
+                // 使用成本价结算
+                $flag = intval($merchant_info['coststatus']) === 1;
+                if ($flag) {
+                    // 开启时直接取成本价
+                    $ch_order[$merchid]['info'][$g['goodsid']]['costprice'] = $g['costprice'] * $g['total'];
+                } else {
+                    // 禁用时成本价为商城销售价格减去抽成部分
+                    $ch_order[$merchid]['info'][$g['goodsid']]['costprice'] = ($g['marketprice'] - $g['marketprice'] * $merchant_info['payrate']) * $g['total'];
+                }
+            }
+            // $ch_order[$merchid][]
+
+            $ch_order[$merchid]['info'][$g['goodsid']]["goods"][] = $g["goodsid"];
+            $ch_order[$merchid]['info'][$g['goodsid']]["grprice"] += $g["ggprice"];
+            $ch_order[$merchid]['info'][$g['goodsid']]["goodsprice"] += $tmp_goods[$gk]["marketprice"] * $g["total"];
+            $ch_order[$merchid]['info'][$g['goodsid']]["couponprice"] = $discountprice_array[$merchid]["deduct"];
+            if ($is_deduct == 1) {
+                if ($g["manydeduct"]) {
+                    $deduct = $g["deduct"] * $g["total"];
+                } else {
+                    $deduct = $g["deduct"];
+                }
+                if ($g["seckillinfo"] && $g["seckillinfo"]["status"] == 0) {
+                    // code
+                } else {
+                    $deduct_total += $deduct;
+                    $ch_order[$merchid]['info'][$g['goodsid']]["deducttotal"] += $deduct;
+                }
+            }
+            if ($is_deduct2 == 1) {
+                if ($g["deduct2"] == 0) {
+                    $deduct2 = $g["ggprice"];
+                } else {
+                    if (0 < $g["deduct2"]) {
+                        if ($g["ggprice"] < $g["deduct2"]) {
+                            $deduct2 = $g["ggprice"];
+                        } else {
+                            $deduct2 = $g["deduct2"];
+                        }
+                    }
+                }
+                if ($g["seckillinfo"] && $g["seckillinfo"]["status"] == 0) {
+                    // code
+                } else {
+                    $ch_order[$merchid]['info'][$g['goodsid']]["deduct2total"] += $deduct2;
+                    $deduct2_total += $deduct2;
+                }
+            }
+        }
+
+        foreach ($ch_order as $k => $vvv) {
+            foreach ($vvv as $v) {
+                if ($is_deduct == 1 && 0 < $deduct_total) {
+                    $n = $v["deducttotal"] / $deduct_total;
+                    $deduct_credit = ceil(round($deductcredit * $n, 2));
+                    $deduct_money = round($deductprice * $n, 2);
+                    $ch_order[$k]["deductcredit"] = $deduct_credit;
+                    $ch_order[$k]["deductprice"] = $deduct_money;
+                }
+                if ($is_deduct2 == 1 && 0 < $deduct2_total) {
+                    $n = $v["deduct2total"] / $deduct2_total;
+                    $deduct_credit2 = round($deductcredit2 * $n, 2);
+                    $ch_order[$k]["deductcredit2"] = $deduct_credit2;
+                }
+                $op = ($grprice == 0 ? 0 : round($v["grprice"] / $grprice, 2));
+                $ch_order[$k]["op"] = $op;
+                if (0 < $deductenough) {
+                    $deduct_enough = round($deductenough * $op, 2);
+                    $ch_order[$k]["deductenough"] = $deduct_enough;
+                }
+            }
+        }
+
+        if ($is_exchange) {
+            if (is_array($postage)) {
+                foreach ($ch_order as $mid => $ch) {
+                    $flip = array_flip(array_flip($ch["goods"]));
+                    foreach ($flip as $gid) {
+                        $dispatch_array["dispatch_merch"][$mid] += $postage[$gid];
+                    }
+                }
+            } else {
+                $old_dispatch_price = $order["dispatchprice"];
+                $_SESSION["exchangepostage"] = $postage * count($dispatch_array["dispatch_merch"]);
+                $order["dispatchprice"] = $_SESSION["exchangepostage"];
+                pdo_update("ewei_shop_order", array(
+                    "dispatchprice" => $order["dispatchprice"],
+                    "price" => ($order["price"] + $order["dispatchprice"]) - $old_dispatch_price
+                ), array("id" => $orderid));
+                foreach ($dispatch_array["dispatch_merch"] as &$dispatch_merch) {
+                    $dispatch_merch = $postage;
+                }
+                unset($dispatch_merch);
+            }
+        }
+
+        foreach ($ch_order as $k => $v) {
+            $merchid = $k;
+            $price = $v["grprice"] - $v["deductprice"] - $v["deductcredit2"] - $v["deductenough"] - $v["couponprice"] + $dispatch_array["dispatch_merch"][$merchid];
+            if (0 < $merchid) {
+                $merchdeductenough = $merch_array[$merchid]["enoughdeduct"];
+                if (0 < $merchdeductenough) {
+                    $price -= $merchdeductenough;
+                    $ch_order[$merchid]["merchdeductenough"] = $merchdeductenough;
+                }
+            }
+            $ch_order[$merchid]["price"] = $price;
+        }
+
+        return $ch_order;
+    }
+
+    public function getMerchEnough($merch_array)
 	{
 		$merch_enough_total = 0;
 		$merch_saleset = array( );
