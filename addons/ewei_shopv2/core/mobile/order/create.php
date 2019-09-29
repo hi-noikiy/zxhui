@@ -4028,6 +4028,9 @@ EOF;
             $multiple_order = 1;
         }
 
+        // TODO 超级赠品 && 是否要分单
+
+
         //生成订单号
         if ($ismerch > 0) {
             $ordersn = m('common')->createNO('order', 'ordersn', 'ME');

@@ -99,6 +99,12 @@ class Index_EweiShopV2Page extends MerchWebPage
                 'share_desc' => trim($_GPC['share_desc']),
                 'merchant_id' => $merchant_id
             );
+
+            // 价格风控
+            if (m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'])) {
+                show_json(0, '赠品价格高于商品售价！添加失败！');
+            }
+
             if ($activity == 1 && empty($data['orderprice'])) {
                 show_json(0, '订单金额不能为空！');
             }
