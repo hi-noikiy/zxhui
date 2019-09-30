@@ -97,6 +97,12 @@ class Index_EweiShopV2Page extends WebPage
                 'share_icon' => trim($_GPC['share_icon']),
                 'share_desc' => trim($_GPC['share_desc'])
             );
+
+            // 价格风控
+            if (!m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'])) {
+                show_json(0, '赠品价格高于商品售价！添加失败！');
+            }
+
             if ($activity == 1 && empty($data['orderprice'])) {
                 show_json(0, '订单金额不能为空！');
             }
