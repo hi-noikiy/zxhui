@@ -105,7 +105,7 @@ if (!class_exists('CommissionModel')) {
                     $price = $cinfo['realprice'] * $rate;
                     if (!empty($set['cost'])){
                         if (!empty($cinfo['costprice'])){
-                            $price = $cinfo['realprice']-$cinfo['costprice'];
+                            $price = $cinfo['realprice'] - $cinfo['costprice'] * $cinfo['total'];
                         }
                     }
                     $seckill_goods = false;

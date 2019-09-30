@@ -101,7 +101,7 @@ class Index_EweiShopV2Page extends MerchWebPage
             );
 
             // 价格风控
-            if (m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'])) {
+            if (!m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'])) {
                 show_json(0, '赠品价格高于商品售价！添加失败！');
             }
 

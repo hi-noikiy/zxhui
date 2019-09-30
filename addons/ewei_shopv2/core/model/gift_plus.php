@@ -42,14 +42,10 @@ class Gift_plus_EweiShopV2Model
         } else {
             foreach ($gift_goods_id as $key => $val) {
                 $gift_goods = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_goods') . ' WHERE id = :id', ['id' => $val]);
-                echo '<pre>';
-                print_r($gift_goods);
-                echo '</pre>';
-                die;
                 $gift_price += $gift_goods['gift_price'];
             }
         }
 
-        return $product_price < $gift_price;
+        return $product_price > $gift_price;
     }
 }

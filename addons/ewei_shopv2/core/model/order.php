@@ -2178,8 +2178,18 @@ class Order_EweiShopV2Model
 				}
 			}
 		}
-		$order_goods = pdo_fetchall("select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields from " . tablename("ewei_shop_order_goods") . " og " . " left join " . tablename("ewei_shop_goods") . " g on g.id=og.goodsid " . " where og.uniacid=:uniacid and og.orderid=:orderid ", array( ":uniacid" => $_W["uniacid"], ":orderid" => $orderid ));
-		foreach( $order_goods as &$og ) 
+		$order_goods = pdo_fetchall("select g.id,g.title,g.thumb,g.goodssn,og.goodssn as option_goodssn, g.productsn,og.productsn as option_productsn, og.total,og.price,og.optionname as optiontitle, og.realprice,og.changeprice,og.oldprice,og.commission1,og.commission2,og.commission3,og.commissions,og.diyformdata,og.diyformfields,og.is_gift_plus,og.gift_price,og.gift_price_cost,og.gift_price_market,og.gift_plus_merchid,og.orderid from " . tablename("ewei_shop_order_goods") . " og " . " left join " . tablename("ewei_shop_goods") . " g on g.id=og.goodsid " . " where og.uniacid=:uniacid and og.orderid=:orderid ", array( ":uniacid" => $_W["uniacid"], ":orderid" => $orderid ));
+
+        // 开启利润分配模式
+        if ($pc && $pset['cost'] === '1') {
+            // 开启了
+            $cost_open = 1;
+        } else {
+            // 未开启
+            $cost_open = 0;
+        }
+
+		foreach( $order_goods as &$og )
 		{
 			if( !empty($level) && !empty($agentid) ) 
 			{
