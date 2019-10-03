@@ -118,7 +118,7 @@ class Index_EweiShopV2Page extends MerchWebPage
 
         if ($_W['ispost']) {
             // 赠品规则
-            $gift_rule = m('gift_plus')->parseGiftRule($_GPC['gift_rule']);
+            $gift_rule = m('gift_plus')->parseGiftRule($_GPC['gift_rule'], $_GPC['goodsid']);
 
             if (empty($id)) {
                 $activity = intval($_GPC['activity']);

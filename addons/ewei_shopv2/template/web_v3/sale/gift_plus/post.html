@@ -183,7 +183,7 @@
                         <label class="col-lg control-label">选择赠品</label>
                         <div class="col-sm-9 col-xs-12">
                             {ife 'goods' $item}
-                            <?php echo tpl_selector('giftgoodsid', array('multi'=>1, 'type'=>'image', 'placeholder'=>'自定义赠品名称', 'buttontext'=>'选择赠品', 'items'=>$gift, 'nokeywords'=>1, 'autosearch'=>1, 'url'=>webUrl('sale/gift_plus/querygift')))?>
+                            <?php echo tpl_selector('giftgoodsid', array('multi'=>1, 'type'=>'image', 'placeholder'=>'自定义赠品名称', 'buttontext'=>'选择赠品', 'items'=>$gift, 'nokeywords'=>1, 'autosearch'=>1, 'url'=>webUrl('sale/gift_plus/querygift'), 'callback'=>'syncGiftGoods'))?>
                             <span class="help-block image-block" style="display: block;">选择指定的商品参加赠品活动。</span>
                             {else}
                             {loop $gift $item}
@@ -191,6 +191,33 @@
                                 <img src="{php echo tomedia($item['thumb'])}" style='height:100px;border:1px solid #ccc;padding:1px;float:left;margin-right:5px;' />
                             </a>
                             {/loop}
+                            {/if}
+                        </div>
+                    </div>
+
+                    <div class="form-group form-gift-rule">
+                        <label class="col-lg control-label">赠送规则</label>
+                        <div class="col-sm-9 col-xs-12">
+                            {ife 'goods' $item}
+                            <div class="gift-rule-empty">
+                                {if $gift_rule}
+                                {loop $gift_rule $gift_item}
+                                <div class="input-group gift-rule-item m-b-5">
+                                    <span class="input-group-addon">满</span>
+                                    <input type="text" name="gift_rule[buy][{$gift_item['gift_goods_id']}][]" value="{$gift_item['goods_amount']}" class="form-control" readonly>
+                                    <span class="input-group-addon x-no-border">赠</span>
+                                    <input type="text" name="gift_rule[free][{$gift_item['gift_goods_id']}][]" value="{$gift_item['gift_goods_amount']}" class="form-control">
+                                    <span class="input-group-addon l-no-border">{$gift_item['title']}</span>
+                                </div>
+                                {/loop}
+                                {/if}
+                            </div>
+                            {else}
+                            {/if}
+                            {if false}
+                            <div class="m-t-5">
+                                <button type='button' class="btn btn-default" onclick='addGiftRuleItem()'><i class='fa fa-fw fa-plus'></i>增加规则</button>
+                            </div>
                             {/if}
                         </div>
                     </div>
@@ -284,5 +311,78 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    var gift_rule_init = eval('{$gift_rule_init}');
+    var gift_goods = eval('{$gift_goods}');
+
+    if (typeof gift_goods === 'undefined') {
+        gift_goods = [];
+    }
+
+    if (gift_goods.length === 0) {
+        $('.form-gift-rule').hide();
+    }
+
+    if (gift_rule_init === 1 && gift_goods.length > 0) {
+        syncHtml();
+    }
+
+    function syncGiftGoods(data, obj) {
+        var type = typeof data;
+
+        if (type !== 'undefined') {
+            if (type === 'object') {
+                gift_goods.push({
+                    id: data.id,
+                    title: data.title,
+                    buy: 1,
+                    free: 1
+                });
+            }
+
+            if (type === 'number') {
+                if (gift_goods.length > 0) {
+                    for (i = 0; i < gift_goods.length; i++) {
+                        if (data === parseInt(gift_goods[i].id)) {
+                            gift_goods.splice(i, 1);
+                        }
+                    }
+                }
+            }
+
+            syncHtml();
+        }
+    }
+
+    function syncHtml() {
+        if (gift_goods.length > 0) {
+            $('.form-gift-rule').show();
+
+            var _ele = $('.gift-rule-empty'),
+                _html = '';
+
+            for (i = 0; i < gift_goods.length; i++) {
+                var item = gift_goods[i];
+
+                _html += '<div class="input-group gift-rule-item m-b-5"><span class="input-group-addon">满</span><input type="text" name="gift_rule[buy][' + item.id + '][]" value="1" class="form-control" readonly><span class="input-group-addon x-no-border">赠</span><input type="text" name="gift_rule[free][' + item.id + '][]" value="1" class="form-control"><span class="input-group-addon l-no-border">' + item.title + '</span></div>';
+            }
+
+            _ele.empty().append(_html);
+        }
+    }
+
+    function addGiftRuleItem(){
+        var html= '<div class="input-group recharge-item"  style="margin-top:5px">';
+        html+='<span class="input-group-addon">支付满</span>';
+        html+='<input type="text" class="form-control" name="enough[]"  />';
+        html+='<span class="input-group-addon">元 立减</span>';
+        html+='<input type="text" class="form-control"  name="give[]"  />';
+        html+='<span class="input-group-addon">元</span>';
+        html+='<div class="input-group-btn"><button type="button" class="btn btn-danger" onclick="$(this).parents(\'.recharge-item\').remove()"><i class="fa fa-remove"></i></button></div>';
+        html+='</div>';
+        $('.recharge-items').append(html);
+    }
+</script>
 
 {template '_footer'}

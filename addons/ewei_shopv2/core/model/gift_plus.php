@@ -105,18 +105,21 @@ class Gift_plus_EweiShopV2Model
     /**
      * 赠品规则
      * @param $data
+     * @param $goods_ids
      * @return array
      */
-    public function parseGiftRule($data)
+    public function parseGiftRule($data, $goods_ids)
     {
 
-        if (!empty($data)) {
+        if (!empty($data) && !empty($goods_ids)) {
             $return = [];
-            foreach ($data['buy'] as $id => $rule) {
-                foreach ($rule as $k => $v) {
-                    $return[$id]['goods_id'] = $v;
-                    $return[$id]['buy'] = $v;
-                    $return[$id]['free'] = $data['free'][$id][$k];
+            foreach ($goods_ids as $key => $goods_id) {
+                foreach ($data['buy'] as $id => $rule) {
+                    foreach ($rule as $k => $v) {
+                        $return[$goods_id][$id]['goods_id'] = $goods_id;
+                        $return[$goods_id][$id]['buy'] = $v;
+                        $return[$goods_id][$id]['free'] = $data['free'][$id][$k];
+                    }
                 }
             }
 
@@ -136,23 +139,52 @@ class Gift_plus_EweiShopV2Model
      */
     public function updateGiftRule($gift_plus_id, $rule, $merchant_id, $uniacid)
     {
+        $sql = 'SELECT id FROM ' . tablename('ewei_shop_gift_plus_rule') . ' WHERE 1';
         $condition = [];
+        $map = [];
         if ($gift_plus_id) {
             $condition['gift_plus_id'] = $gift_plus_id;
+            $sql .= ' AND gift_plus_id = :gift_plus_id';
+            $map[':gift_plus_id'] = $gift_plus_id;
         }
         if ($merchant_id) {
             $condition['merchant_id'] = $merchant_id;
+            $sql .= ' AND merchant_id = :merchant_id';
+            $map[':merchant_id'] = $merchant_id;
         }
         if ($uniacid) {
             $condition['uniacid'] = $uniacid;
+            $sql .= ' AND uniacid = :uniacid';
+            $map[':uniacid'] = $uniacid;
         }
 
-        foreach ($rule as $k => $v) {
-            $condition['gift_goods_id'] = $k;
+        foreach ($rule as $goods_id => $item) {
+            $condition['goods_id'] = $goods_id;
+            $sql = $sql . ' AND goods_id = :goods_id';
+            $map[':goods_id'] = $goods_id;
 
-            pdo_update('ewei_shop_gift_plus_rule', [
-                'gift_goods_amount' => $k['free']
-            ], $condition);
+            foreach ($item as $gift_goods_id => $v) {
+                $condition['gift_goods_id'] = $gift_goods_id;
+                $new_sql = $sql . ' AND gift_goods_id = :gift_goods_id';
+                $map[':gift_goods_id'] = $gift_goods_id;
+
+                $check = pdo_fetch($new_sql, $map);
+                if ($check) {
+                    pdo_update('ewei_shop_gift_plus_rule', [
+                        'gift_goods_amount' => $v['free']
+                    ], $condition);
+                } else {
+                    pdo_insert('ewei_shop_gift_plus_rule', [
+                        'uniacid' => $uniacid,
+                        'gift_plus_id' => $gift_plus_id,
+                        'goods_id' => $goods_id,
+                        'goods_amount' => $v['buy'],
+                        'gift_goods_id' => $gift_goods_id,
+                        'gift_goods_amount' => $v['free'],
+                        'merchant_id' => $merchant_id
+                    ]);
+                }
+            }
         }
     }
 

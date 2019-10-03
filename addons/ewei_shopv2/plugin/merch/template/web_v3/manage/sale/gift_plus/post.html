@@ -199,19 +199,19 @@
                         <label class="col-lg control-label">赠送规则</label>
                         <div class="col-sm-9 col-xs-12">
                             {ife 'goods' $item}
+                            <div class="gift-rule-empty">
                                 {if $gift_rule}
-                                    {loop $gift_rule $item}
-                                    <div class="input-group gift-rule-item m-b-5">
-                                        <span class="input-group-addon">满</span>
-                                        <input type="text" name="gift_rule[buy][{$item['gift_goods_id']}][]" value="{$item['goods_amount']}" class="form-control" readonly>
-                                        <span class="input-group-addon x-no-border">赠</span>
-                                        <input type="text" name="gift_rule[free][{$item['gift_goods_id']}][]" value="{$item['gift_goods_amount']}" class="form-control">
-                                        <span class="input-group-addon l-no-border">{$item['title']}</span>
-                                    </div>
-                                    {/loop}
-                                {else}
-                                    <div class="gift-rule-empty"></div>
+                                {loop $gift_rule $gift_item}
+                                <div class="input-group gift-rule-item m-b-5">
+                                    <span class="input-group-addon">满</span>
+                                    <input type="text" name="gift_rule[buy][{$gift_item['gift_goods_id']}][]" value="{$gift_item['goods_amount']}" class="form-control" readonly>
+                                    <span class="input-group-addon x-no-border">赠</span>
+                                    <input type="text" name="gift_rule[free][{$gift_item['gift_goods_id']}][]" value="{$gift_item['gift_goods_amount']}" class="form-control">
+                                    <span class="input-group-addon l-no-border">{$gift_item['title']}</span>
+                                </div>
+                                {/loop}
                                 {/if}
+                            </div>
                             {else}
                             {/if}
                             {if false}
@@ -315,6 +315,10 @@
 <script type="text/javascript">
     var gift_rule_init = eval('{$gift_rule_init}');
     var gift_goods = eval('{$gift_goods}');
+
+    if (typeof gift_goods === 'undefined') {
+        gift_goods = [];
+    }
 
     if (gift_goods.length === 0) {
         $('.form-gift-rule').hide();
