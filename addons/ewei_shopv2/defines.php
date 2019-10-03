@@ -21,6 +21,7 @@ define('EWEI_SHOPV2_DEBUG', false);
 !(defined('EWEI_SHOPV2_STATIC')) && define('EWEI_SHOPV2_STATIC', EWEI_SHOPV2_URL . 'static/');
 !(defined('EWEI_SHOPV2_PREFIX')) && define('EWEI_SHOPV2_PREFIX', 'ewei_shop_');
 define("EWEI_SHOPV2_AUTH_WXAPP","http://www.k8ym.com");
+define("EWEI_SHOPV2_AUTH_URL","http://localhost");
 define('EWEI_SHOPV2_PLACEHOLDER', '../addons/ewei_shopv2/static/images/placeholder.png');
 
 ?>
