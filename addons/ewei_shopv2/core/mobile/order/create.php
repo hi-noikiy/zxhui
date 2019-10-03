@@ -4029,10 +4029,10 @@ EOF;
         }
 
         // TODO 超级赠品 && 是否要分单
-        if ($ismerch && !empty($merch_array)) {
+        if ($ismerch && !empty($merch_array) && false) {
             foreach ($merch_array as $key => $val) {
                 if (count($val['goods']) > 1) {
-                    // $multiple_order = 3;
+                    $multiple_order = 3;
                     break;
                 }
             }
@@ -4429,7 +4429,7 @@ EOF;
                 }
             }
 
-        } else if($multiple_order === 2)  {
+        } else if($multiple_order === 2) {
             // 套餐开始创建多个子订单
 
             // 记录订单商品中的订单id
@@ -4669,12 +4669,6 @@ EOF;
             // 子订单数据
             $child_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid);
 
-            // echo '<pre>';
-            // print_r($child_order_data);
-            // echo '</pre>';
-            // pdo_delete('ewei_shop_order', array('id' => $orderid));
-            // die;
-
             foreach ($merch_array as $key => $value) {
                 // 商户ID
                 $merchid = $key;
@@ -4822,9 +4816,9 @@ EOF;
             foreach ($merch_array as $key => $value) {
                 $merchid = $key;
                 $is_exchange = (p('exchange') && $_SESSION['exchange']);
-                if ($is_exchange){
+                if ($is_exchange) {
                     $order_head = 'DH';
-                }else{
+                } else {
                     if (!empty($merchid)) {
                         $order_head = 'ME';
                     } else {
@@ -4860,7 +4854,7 @@ EOF;
                 $order['deductenough'] = $ch_order_data[$merchid]['deductenough'];
 
 
-                //多商户参与优惠券计算的商品价格(参与活动之后的价格)
+                // 多商户参与优惠券计算的商品价格(参与活动之后的价格)
                 $order['coupongoodprice'] = $discountprice_array[$merchid]['coupongoodprice'];
 
                 $order['couponprice'] = $discountprice_array[$merchid]['deduct'];
@@ -4927,7 +4921,10 @@ EOF;
                 $order_goods['oldprice'] = $goods['ggprice'];
                 $order_goods['isdiscountprice'] = $goods['isdiscountprice'];
                 $order_goods['openid'] = $openid;
-                $order_goods['consume']=iserializer(array('consume_deduct'=>$goods['consume_deduct'],'consume_deduct2'=>$goods['consume_deduct2']));//序列化商品抵扣所使用的积分和余额
+                $order_goods['consume'] = iserializer(array(
+                    'consume_deduct' => $goods['consume_deduct'],
+                    'consume_deduct2' => $goods['consume_deduct2']
+                ));//序列化商品抵扣所使用的积分和余额
 
                 if ($diyform_plugin) {
                     if ($goods['diyformtype'] == 2) {

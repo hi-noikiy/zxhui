@@ -19,7 +19,7 @@ CREATE TABLE `ims_ewei_shop_gift_plus` (
   `share_title` varchar(255) NOT NULL,
   `share_icon` varchar(255) NOT NULL,
   `share_desc` text NOT NULL,
-  `merchant_id` int(11) NOT NULL DEFAULT 0 COMMENT '商户ID'
+  `merchant_id` int(11) NOT NULL DEFAULT 0 COMMENT '商户ID',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='超级赠品表' ROW_FORMAT=COMPACT;
 
@@ -41,3 +41,16 @@ ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_market` DECIMAL(10,2) NULL DEFA
 
 -- 2019-09-26 15:11:35
 ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_plus_merchid` int(11) NOT NULL DEFAULT 0 COMMENT '赠品使用商户' AFTER `gift_price_market`;
+
+-- 2019-09-30 15:09:23
+CREATE TABLE `ims_ewei_shop_gift_plus_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT 0,
+  `gift_plus_id` int(11) NOT NULL DEFAULT 0 COMMENT '超级赠品ID',
+  `goods_id` int(11) NOT NULL DEFAULT 0 COMMENT '商品ID',
+  `goods_amount` int(11) NOT NULL DEFAULT 0 COMMENT '商品数量',
+  `gift_goods_id` int(11) NOT NULL DEFAULT 0 COMMENT '赠品商品ID',
+  `gift_goods_amount` int(11) NOT NULL DEFAULT 0 COMMENT '赠品商品数量',
+  `merchant_id` int(11) NOT NULL DEFAULT 0 COMMENT '商户ID',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='超级赠品规则表' ROW_FORMAT=COMPACT;

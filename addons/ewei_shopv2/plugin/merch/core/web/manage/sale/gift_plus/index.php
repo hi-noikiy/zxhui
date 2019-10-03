@@ -75,7 +75,51 @@ class Index_EweiShopV2Page extends MerchWebPage
         $type = trim($_GPC['type']);
         $id = intval($_GPC['id']);
 
+        $item = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_gift_plus') . ' WHERE uniacid = ' . $uniacid . ' and id = ' . $id . ' AND merchant_id = ' . $merchant_id);
+
+        if (!empty($item['thumb'])) {
+            $item = set_medias($item, array('thumb'));
+        }
+
+        $goods = array();
+        if (!empty($item['goodsid'])) {
+            $goods_id = explode(',', $item['goodsid']);
+
+            if ($goods_id) {
+                foreach ($goods_id as $key => $value) {
+                    $goods[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and status = 1 and id = ' . $value . ' and deleted = 0 ');
+                }
+            }
+        }
+
+        $gift = array();
+        if (!empty($item['giftgoodsid'])) {
+            $gift_id = explode(',', $item['giftgoodsid']);
+
+            if ($gift_id) {
+                foreach ($gift_id as $key => $value) {
+                    $gift[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and id = ' . $value . ' and deleted = 0 and total > 0 ');
+                }
+            }
+
+            $gift = array_filter($gift);
+        }
+
+        $gift_rule = false;
+        if ($item) {
+            $gift_rule = m('gift_plus')->getGiftRule($id, $uniacid);
+            $gift_goods = json_encode($gift);
+        }
+
+        $gift_rule_init = false;
+        if (!$gift_rule) {
+            $gift_rule_init = true;
+        }
+
         if ($_W['ispost']) {
+            // 赠品规则
+            $gift_rule = m('gift_plus')->parseGiftRule($_GPC['gift_rule']);
+
             if (empty($id)) {
                 $activity = intval($_GPC['activity']);
             } else {
@@ -101,7 +145,7 @@ class Index_EweiShopV2Page extends MerchWebPage
             );
 
             // 价格风控
-            if (!m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'])) {
+            if (m('gift_plus')->checkPriceRisk($data['goodsid'], $data['giftgoodsid'], $gift_rule)) {
                 show_json(0, '赠品价格高于商品售价！添加失败！');
             }
 
@@ -152,44 +196,26 @@ class Index_EweiShopV2Page extends MerchWebPage
 
             if (!empty($id)) {
                 pdo_update('ewei_shop_gift_plus', $data, array('id' => $id));
+
+                // 更新赠品规则
+                if ($gift_rule_init) {
+                    m('gift_plus')->addGiftRule($id, $gift_rule, $merchant_id, $uniacid, $data['goodsid']);
+                } else {
+                    m('gift_plus')->updateGiftRule($id, $gift_rule, $merchant_id, $uniacid);
+                }
+
                 plog('sale.gift_plus.edit', '编辑超级赠品 ID: ' . $id . ' <br/>赠品名称: ' . $data['title']);
             } else {
                 pdo_insert('ewei_shop_gift_plus', $data);
                 $id = pdo_insertid();
+
+                // 插入赠品规则
+                m('gift_plus')->addGiftRule($id, $gift_rule, $merchant_id, $uniacid, $data['goodsid']);
+
                 plog('sale.gift_plus.add', '添加超级赠品 ID: ' . $id . '  <br/>赠品名称: ' . $data['title']);
             }
 
             show_json(1, array('url' => webUrl('sale/gift_plus/edit', array('type' => $type, 'id' => $id))));
-        }
-
-        $item = pdo_fetch('SELECT * FROM ' . tablename('ewei_shop_gift_plus') . ' WHERE uniacid = ' . $uniacid . ' and id = ' . $id . ' AND merchant_id = ' . $merchant_id);
-
-        if (!empty($item['thumb'])) {
-            $item = set_medias($item, array('thumb'));
-        }
-
-        if (!empty($item['goodsid'])) {
-            $goodsid = explode(',', $item['goodsid']);
-            $goods = array();
-
-            if ($goodsid) {
-                foreach ($goodsid as $key => $value) {
-                    $goods[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and status = 1 and id = ' . $value . ' and deleted = 0 ');
-                }
-            }
-        }
-
-        if (!empty($item['giftgoodsid'])) {
-            $giftid = explode(',', $item['giftgoodsid']);
-            $gift = array();
-
-            if ($giftid) {
-                foreach ($giftid as $key => $value) {
-                    $gift[$key] = pdo_fetch('select id,title,thumb from ' . tablename('ewei_shop_goods') . ' where uniacid = ' . $uniacid . ' and id = ' . $value . ' and deleted = 0 and total > 0 ');
-                }
-            }
-
-            $gift = array_filter($gift);
         }
 
         include $this->template();
