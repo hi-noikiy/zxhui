@@ -222,11 +222,12 @@ class Gift_plus_EweiShopV2Model
     /**
      * 获取赠品规则
      * @param $gift_plus_id
-     * @param $uniacid
-     * @param $merchant_id
+     * @param bool $uniacid
+     * @param bool $merchant_id
+     * @param string $group
      * @return mixed
      */
-    public function getGiftRule($gift_plus_id, $uniacid = false, $merchant_id = false)
+    public function getGiftRule($gift_plus_id, $uniacid = false, $merchant_id = false, $group = 'gift')
     {
         $sql = 'SELECT r.*,g.title,g.marketprice,g.costprice,g.gift_price FROM ' . tablename('ewei_shop_gift_plus_rule') . ' AS r LEFT JOIN ' . tablename('ewei_shop_goods') . ' g ON g.id = r.gift_goods_id WHERE r.gift_plus_id = :gift_plus_id';
 
@@ -239,6 +240,17 @@ class Gift_plus_EweiShopV2Model
         }
 
         $gift_plus_rule = pdo_fetchall($sql, [':gift_plus_id' => $gift_plus_id]);
+
+        if ($group === 'gift') {
+            $new_rule = [];
+            foreach ($gift_plus_rule as $key => $value) {
+                $new_rule[$value['goods_id']][$value['gift_goods_id']] = $value;
+            }
+
+            sort($new_rule);
+
+            return $new_rule[0];
+        }
 
         return $gift_plus_rule;
     }

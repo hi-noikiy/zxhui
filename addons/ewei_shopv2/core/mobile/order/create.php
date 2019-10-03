@@ -155,6 +155,7 @@ class Create_EweiShopV2Page extends MobileLoginPage
         $sysset = m('common')->getSysset('trade');
 
         // 超级赠品
+        $gift_plus_rule = [];
         $gift_plus_id = intval($_GPC['gift_plus_id']);
         $gift_group_id = intval($_GPC['gift_group_id']);
         $gift_group_type = trim($_GPC['gift_group_type']);
@@ -656,18 +657,25 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             $this->message('赠品与商品不匹配或者商品没有赠品!', '', 'error');
                         }
 
+                        // 赠品规则
+                        $gift_plus_rule = m('gift_plus')->getGiftRule($gift_plus_id, false, false, 'gift');
+
                         $giftGood = array();
                         if (!empty($gift_plus['giftgoodsid'])) {
                             $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                             if ($gift_goods_id) {
                                 foreach ($gift_goods_id as $key => $value) {
-                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item['amount'] = intval($gift_plus_rule[$value]['gift_goods_amount']);
+                                    if ($item['amount'] === 0) {
+                                        $item['amount'] = 1;
+                                    }
+                                    $giftGood[$key] = $item;
                                 }
                                 $giftGood = array_filter($giftGood);
                             }
                         }
                     }
-
                 }
                 if (!empty($bargain_act)) {
                     $data['marketprice'] = $bargain_act['now_price'];//??
@@ -1385,7 +1393,8 @@ class Create_EweiShopV2Page extends MobileLoginPage
                                 $gift_info = pdo_fetch("SELECT id AS goodsid,title,thumb FROM " . tablename('ewei_shop_goods') . " WHERE uniacid = " . $uniacid . " AND total > 0 AND id = " . $value . " AND deleted = 0");
                                 if ($gift_info) {
                                     $gift_plus[$key] = $gift_info;
-                                    $gift_plus[$key]['total'] = 1;
+                                    // 赠品数量
+                                    $gift_plus[$key]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
                                 }
                             }
                             if ($gift_plus) {
@@ -2932,6 +2941,8 @@ EOF;
         // 超级赠品
         $gift_plus_id = intval($_GPC['gift_plus_id']);
         if ($gift_plus_id) {
+            // 赠品规则
+            $gift_plus_rule = m('gift_plus')->getGiftRule($gift_plus_id, false, false, 'gift');
             $new_goods = [];
             foreach ($goods as $key => $value) {
                 $new_goods[$value['goodsid']] = $value;
@@ -2948,7 +2959,8 @@ EOF;
                         continue;
                     }
                     $gift_plus_goods[$value] = $gift_info;
-                    $gift_plus_goods[$value]['total'] = 1;
+                    // 赠品数量
+                    $gift_plus_goods[$value]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
                     $gift_plus_goods[$value]['is_gift_plus'] = 1;
                     $gift_plus_goods[$value]['gift_plus_merchid'] = $gift_plus_merchid;
 

@@ -52,10 +52,21 @@ class Index_EweiShopV2Page extends MobilePage {
 
         $gift_plus = pdo_fetch("select * from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $id . " and starttime <= " . time() . " and endtime >= " . time() . " and status = 1");
         $gift_goods_id = explode(",", $gift_plus['giftgoodsid']);
+        $goods_id = explode(',', $gift_plus['goodsid']);
         $gift_goods = array();
+
+        // 赠品规则
+        $gift_rule = m('gift_plus')->getGiftRule($id, false, false, 'gift');
+
         if (!empty($gift_goods_id)) {
             foreach ($gift_goods_id as $key => $value) {
-                $gift_goods[$key] = pdo_fetch("select id,status,title,thumb,marketprice,total from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and deleted = 0  and id = " . $value);
+                $item = pdo_fetch("select id,status,title,thumb,marketprice,total from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and deleted = 0  and id = " . $value);
+                $item['amount'] = intval($gift_rule[$value]['gift_goods_amount']);
+                if ($item['amount'] === 0) {
+                    $item['amount'] = 1;
+                }
+                // $item['marketprice'] = number_format($item['marketprice'] * $item['amount'], 2);
+                $gift_goods[$key] = $item;
             }
             $giftgoods = array_filter($gift_goods);
         }
