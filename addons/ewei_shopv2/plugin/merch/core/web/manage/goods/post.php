@@ -223,6 +223,12 @@ if( $_W["ispost"] )
 	{
 		$data["checked"] = 0;
 	}
+
+	// 超级赠品结算价
+    if (!$data['gift_price']) {
+        $data['gift_price'] = $data['costprice'];
+    }
+
 	if( empty($id) ) 
 	{
 		if( empty($_W["merch_user"]["goodschecked"]) ) 
