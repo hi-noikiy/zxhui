@@ -72,18 +72,21 @@ class Gift_plus_EweiShopV2Model
 
         if ($gift_rule) {
             // 购买数量目前统一设置
-            $buy = 1;
+            // $buy = 1;
 
             // 分开计算价格
             foreach ($gift_rule as $k => $v) {
                 $gift_price = 0;
+                $buy = [];
                 foreach ($v as $kk => $vv) {
                     $gift_price += $gift_goods_id_price[$kk] * $vv['free'];
-                    // $buy = $vv['buy'];
+                    $buy[] = $vv['buy'];
                 }
 
+                sort($buy);
+
                 // 价格要乘以数量
-                $product_price = $goods_id_price[$k] * $buy;
+                $product_price = $goods_id_price[$k] * end($buy);
                 if ($product_price < $gift_price) {
                     return true;
                 }
@@ -187,6 +190,7 @@ class Gift_plus_EweiShopV2Model
                 $check = pdo_fetch($new_sql, $map);
                 if ($check) {
                     pdo_update('ewei_shop_gift_plus_rule', [
+                        'goods_amount' => $v['buy'],
                         'gift_goods_amount' => $v['free']
                     ], $condition);
                 } else {

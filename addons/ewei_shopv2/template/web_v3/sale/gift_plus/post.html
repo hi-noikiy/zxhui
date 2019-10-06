@@ -204,10 +204,10 @@
                                 {loop $gift_rule $gift_item}
                                 <div class="input-group gift-rule-item m-b-5">
                                     <span class="input-group-addon">满</span>
-                                    <input type="text" name="gift_rule[buy][{$gift_item['gift_goods_id']}][]" value="{$gift_item['goods_amount']}" class="form-control" readonly>
+                                    <input type="text" name="gift_rule[buy][{$gift_item['gift_goods_id']}][]" value="{$gift_item['goods_amount']}" class="form-control text-center">
                                     <span class="input-group-addon x-no-border">赠</span>
-                                    <input type="text" name="gift_rule[free][{$gift_item['gift_goods_id']}][]" value="{$gift_item['gift_goods_amount']}" class="form-control">
-                                    <span class="input-group-addon l-no-border">{$gift_item['title']}</span>
+                                    <input type="text" name="gift_rule[free][{$gift_item['gift_goods_id']}][]" value="{$gift_item['gift_goods_amount']}" class="form-control text-center">
+                                    <span class="input-group-addon l-no-border w-80-per text-left">{$gift_item['title']}</span>
                                 </div>
                                 {/loop}
                                 {/if}

@@ -632,7 +632,9 @@ class Create_EweiShopV2Page extends MobileLoginPage
                                     if ($item['amount'] === 0) {
                                         $item['amount'] = 1;
                                     }
-                                    $giftGood[$key] = $item;
+                                    if ($total >= $gift_plus_rule[$value]['goods_amount']) {
+                                        $giftGood[$key] = $item;
+                                    }
                                 }
                                 $giftGood = array_filter($giftGood);
                             }
@@ -678,7 +680,9 @@ class Create_EweiShopV2Page extends MobileLoginPage
                                     if ($item['amount'] === 0) {
                                         $item['amount'] = 1;
                                     }
-                                    $giftGood[$key] = $item;
+                                    if ($total >= $gift_plus_rule[$value]['goods_amount']) {
+                                        $giftGood[$key] = $item;
+                                    }
                                 }
                                 $giftGood = array_filter($giftGood);
                             }
@@ -2972,8 +2976,10 @@ EOF;
                     $gift_plus_goods[$value]['is_gift_plus'] = 1;
                     $gift_plus_goods[$value]['gift_plus_merchid'] = $gift_plus_merchid;
 
-                    // 赋值到商品列表
-                    $goods[$value] = $gift_plus_goods[$value];
+                    // 赋值到商品列表 && 判断赠品规则
+                    if ($goods[$gift_plus_rule[$value]['goods_id']]['total'] >= $gift_plus_rule[$value]['goods_amount']) {
+                        $goods[$value] = $gift_plus_goods[$value];
+                    }
                 }
             }
         }

@@ -2370,3 +2370,11 @@ select.we7-select {
 .r-no-border {
     border-right-color: transparent !important;
 }
+
+.w-80-per {
+    width: 80%;
+}
+
+.input-group-addon.text-left {
+    text-align: left;
+}
