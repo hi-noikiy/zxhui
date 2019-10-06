@@ -366,7 +366,7 @@
             for (i = 0; i < gift_goods.length; i++) {
                 var item = gift_goods[i];
 
-                _html += '<div class="input-group gift-rule-item m-b-5"><span class="input-group-addon">满</span><input type="text" name="gift_rule[buy][' + item.id + '][]" value="1" class="form-control" readonly><span class="input-group-addon x-no-border">赠</span><input type="text" name="gift_rule[free][' + item.id + '][]" value="1" class="form-control"><span class="input-group-addon l-no-border">' + item.title + '</span></div>';
+                _html += '<div class="input-group gift-rule-item m-b-5"><span class="input-group-addon">满</span><input type="text" name="gift_rule[buy][' + item.id + '][]" value="1" class="form-control"><span class="input-group-addon x-no-border">赠</span><input type="text" name="gift_rule[free][' + item.id + '][]" value="1" class="form-control"><span class="input-group-addon l-no-border">' + item.title + '</span></div>';
             }
         } else {
             _wrapper.hide();
