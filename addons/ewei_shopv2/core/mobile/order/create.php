@@ -619,12 +619,20 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             $this->message('赠品与商品不匹配或者商品没有赠品!', '', 'error');
                         }
 
+                        // 赠品规则
+                        $gift_plus_rule = m('gift_plus')->getGiftRule($gift_plus_id, false, false, 'gift');
+
                         $giftGood = array();
                         if (!empty($gift_plus['giftgoodsid'])) {
                             $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                             if ($gift_goods_id) {
                                 foreach ($gift_goods_id as $key => $value) {
-                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item['amount'] = intval($gift_plus_rule[$value]['gift_goods_amount']);
+                                    if ($item['amount'] === 0) {
+                                        $item['amount'] = 1;
+                                    }
+                                    $giftGood[$key] = $item;
                                 }
                                 $giftGood = array_filter($giftGood);
                             }

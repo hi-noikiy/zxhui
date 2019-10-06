@@ -70,16 +70,15 @@ class Gift_plus_EweiShopV2Model
 
             // 分开计算价格
             foreach ($gift_rule as $k => $v) {
-                $gift_price += $gift_goods_id_price[$k] * $v['free'];
-                $buy = $v['buy'];
-            }
+                $gift_price = 0;
+                foreach ($v as $kk => $vv) {
+                    $gift_price += $gift_goods_id_price[$kk] * $vv['free'];
+                    // $buy = $vv['buy'];
+                }
 
-            foreach ($goods_id_price as $k => $v) {
                 // 价格要乘以数量
-                $product_price = $v * $buy;
-
+                $product_price = $goods_id_price[$k] * $buy;
                 if ($product_price < $gift_price) {
-
                     return true;
                 }
             }
@@ -162,8 +161,9 @@ class Gift_plus_EweiShopV2Model
         $gift_plus_info = pdo_fetch('SELECT * FROM '. tablename('ewei_shop_gift_plus') . ' WHERE id = ' . $gift_plus_id);
         $gift_plus_rule_list = pdo_fetchall('SELECT r.* FROM ' . tablename('ewei_shop_gift_plus_rule') . ' AS r WHERE r.gift_plus_id = :gift_plus_id', [':gift_plus_id' => $gift_plus_id]);
         $gift_goods_id = explode(',', $gift_plus_info['giftgoodsid']);
+        $goods_id = explode(',', $gift_plus_info['goodsid']);
         foreach ($gift_plus_rule_list as $key => $val) {
-            if (!in_array($val['gift_goods_id'], $gift_goods_id)) {
+            if (!in_array($val['gift_goods_id'], $gift_goods_id) || !in_array($val['goods_id'], $goods_id)) {
                 pdo_delete('ewei_shop_gift_plus_rule', ['id' => $val['id']]);
             }
         }
