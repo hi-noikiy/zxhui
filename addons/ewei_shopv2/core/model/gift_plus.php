@@ -158,6 +158,16 @@ class Gift_plus_EweiShopV2Model
             $map[':uniacid'] = $uniacid;
         }
 
+        // 删除已经失效的规则
+        $gift_plus_info = pdo_fetch('SELECT * FROM '. tablename('ewei_shop_gift_plus') . ' WHERE id = ' . $gift_plus_id);
+        $gift_plus_rule_list = pdo_fetchall('SELECT r.* FROM ' . tablename('ewei_shop_gift_plus_rule') . ' AS r WHERE r.gift_plus_id = :gift_plus_id', [':gift_plus_id' => $gift_plus_id]);
+        $gift_goods_id = explode(',', $gift_plus_info['giftgoodsid']);
+        foreach ($gift_plus_rule_list as $key => $val) {
+            if (!in_array($val['gift_goods_id'], $gift_goods_id)) {
+                pdo_delete('ewei_shop_gift_plus_rule', ['id' => $val['id']]);
+            }
+        }
+
         foreach ($rule as $goods_id => $item) {
             $condition['goods_id'] = $goods_id;
             $sql = $sql . ' AND goods_id = :goods_id';
@@ -205,15 +215,19 @@ class Gift_plus_EweiShopV2Model
 
             foreach ($goods_ids as $goods_id) {
                 foreach ($rule as $k => $v) {
-                    pdo_insert('ewei_shop_gift_plus_rule', [
-                        'uniacid' => $uniacid,
-                        'gift_plus_id' => $gift_plus_id,
-                        'goods_id' => $goods_id,
-                        'goods_amount' => $v['buy'],
-                        'gift_goods_id' => $k,
-                        'gift_goods_amount' => $v['free'],
-                        'merchant_id' => $merchant_id
-                    ]);
+                    if ($k === intval($goods_id)) {
+                        foreach ($v as $kk => $vv) {
+                            pdo_insert('ewei_shop_gift_plus_rule', [
+                                'uniacid' => $uniacid,
+                                'gift_plus_id' => $gift_plus_id,
+                                'goods_id' => $goods_id,
+                                'goods_amount' => $vv['buy'],
+                                'gift_goods_id' => $kk,
+                                'gift_goods_amount' => $vv['free'],
+                                'merchant_id' => $merchant_id
+                            ]);
+                        }
+                    }
                 }
             }
         }
@@ -239,12 +253,19 @@ class Gift_plus_EweiShopV2Model
             $sql .= ' AND r.merchant_id = ' . $merchant_id;
         }
 
+        $gift_plus = pdo_fetch('SELECT * FROM '. tablename('ewei_shop_gift_plus') . ' WHERE id = ' . $gift_plus_id);
+        $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
         $gift_plus_rule = pdo_fetchall($sql, [':gift_plus_id' => $gift_plus_id]);
 
         if ($group === 'gift') {
             $new_rule = [];
             foreach ($gift_plus_rule as $key => $value) {
-                $new_rule[$value['goods_id']][$value['gift_goods_id']] = $value;
+                if (intval($value['gift_goods_amount']) === 0) {
+                    continue;
+                }
+                if (in_array($value['gift_goods_id'], $gift_goods_id)) {
+                    $new_rule[$value['goods_id']][$value['gift_goods_id']] = $value;
+                }
             }
 
             sort($new_rule);
