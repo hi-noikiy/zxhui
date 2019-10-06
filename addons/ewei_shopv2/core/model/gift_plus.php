@@ -18,9 +18,10 @@ class Gift_plus_EweiShopV2Model
      * @param $goods_id mixed 商品ID 可批量
      * @param $gift_goods_id mixed 赠品商品ID
      * @param array $gift_rule 赠品规则
+     * @param bool $is_merchant 是否为多商户
      * @return bool
      */
-    public function checkPriceRisk($goods_id, $gift_goods_id, $gift_rule = [])
+    public function checkPriceRisk($goods_id, $gift_goods_id, $gift_rule = [], $is_merchant = false)
     {
         // 商品价格
         $goods_id_price = [];
@@ -44,12 +45,17 @@ class Gift_plus_EweiShopV2Model
 
         $all_ids = array_merge($goods_ids, $gift_goods_ids);
         sort($all_ids);
-        $price_list = pdo_fetchall('SELECT id,marketprice,gift_price FROM ' . tablename('ewei_shop_goods') . ' WHERE id IN(' . implode(',', $all_ids) . ')');
+        $price_list = pdo_fetchall('SELECT id,marketprice,gift_price,costprice FROM ' . tablename('ewei_shop_goods') . ' WHERE id IN(' . implode(',', $all_ids) . ')');
 
         foreach ($price_list as $key => $value) {
             foreach ($goods_ids as $k => $v) {
                 if ($v === $value['id']) {
-                    $goods_id_price[$v] = $value['marketprice'];
+                    // 成本价
+                    if ($is_merchant) {
+                        $goods_id_price[$v] = $value['costprice'];
+                    } else {
+                        $goods_id_price[$v] = $value['marketprice'];
+                    }
                 }
             }
             foreach ($gift_goods_ids as $kk => $vv) {
