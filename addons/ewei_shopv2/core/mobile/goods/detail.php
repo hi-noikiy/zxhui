@@ -1580,6 +1580,12 @@ EOF;
             if($goods['marketprice']<=$goods['maxprice']){
                 $goods['marketprice'] = $goods['maxprice'];
             }
+
+            // 开启成本价分佣模式
+            if ($set['cost'] === '1') {
+                $goods['marketprice'] -= $goods['costprice'];
+            }
+
             if ($level!='false' && !empty($level)) {
                 $commission = $set['level'] >= 1 ? round($level['commission1'] * $goods['marketprice'] / 100, 2) : 0;
             } else {
