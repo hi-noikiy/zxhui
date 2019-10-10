@@ -1125,13 +1125,21 @@ class Order_EweiShopV2Model
                 } else {
                     // 禁用时成本价为商城销售价格减去抽成部分
                     if ($g['is_gift_plus']) {
+                        // 超级赠品活动是否来自平台
+                        $ch_order[$merchid]['gift_plus_from_platform'] = $g['gift_plus_from_platform'];
+
                         // 商户自己的赠品
                         if ($merchid === $g['gift_plus_merchid']) {
                             // $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
                             // 结果是0
                             $ch_order[$merchid]['costprice'] += $g['marketprice'] * $g['total'];
                         } else {
-                            $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
+                            // 超级赠品由平台指派给多商户的话 多商户成本不变 否则成本价要扣除赠品的结算价
+                            if (!$g['gift_plus_from_platform']) {
+                                $ch_order[$merchid]['costprice'] -= $g['costprice'] * $g['total'];
+                            } else {
+                                $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
+                            }
                         }
                     } else {
                         $ch_order[$merchid]['costprice'] += ($g['marketprice'] - $g['marketprice'] * $merchant_info['payrate'] / 100) * $g['total'];

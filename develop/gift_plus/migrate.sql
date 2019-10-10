@@ -54,3 +54,10 @@ CREATE TABLE `ims_ewei_shop_gift_plus_rule` (
   `merchant_id` int(11) NOT NULL DEFAULT 0 COMMENT '商户ID',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='超级赠品规则表' ROW_FORMAT=COMPACT;
+
+-- 2019-10-10 18:26:11
+ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_plus_id` int(11) NOT NULL DEFAULT 0 COMMENT '超级赠品活动ID' AFTER `gift_plus_merchid`;
+ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_plus_from_platform` tinyint(3) NOT NULL DEFAULT 0 COMMENT '超级赠品活动是否来自平台' AFTER `gift_plus_id`;
+
+-- 2019-10-11 01:35:01
+ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_from_platform` tinyint(3) NOT NULL DEFAULT 0 COMMENT '超级赠品活动是否来自平台' AFTER `gift_plus_market`;

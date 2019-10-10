@@ -1508,7 +1508,7 @@ class MerchModel extends PluginModel
 
             // 查看订单是否使用了赠品
             if ($list['parentid']) {
-                $other_orders = pdo_fetchall('SELECT id,price,goodsprice,costprice,is_gift_plus,gift_plus_price,gift_plus_cost,gift_plus_market,merchid FROM ' . tablename('ewei_shop_order') . ' WHERE id <> :id AND parentid = :parentid AND is_gift_plus = 1', [
+                $other_orders = pdo_fetchall('SELECT id,price,goodsprice,costprice,is_gift_plus,gift_plus_price,gift_plus_cost,gift_plus_market,merchid,gift_plus_from_platform FROM ' . tablename('ewei_shop_order') . ' WHERE id <> :id AND parentid = :parentid AND is_gift_plus = 1', [
                     ':id' => $list['id'],
                     ':parentid' => $list['parentid']
                 ]);
@@ -1516,7 +1516,7 @@ class MerchModel extends PluginModel
                     $gift_plus_should_pay = 0;
                     foreach ($other_orders as $key => $val) {
                         if ($merchid !== $val['merchid']) {
-                            if ($list['goodsprice'] > 0) {
+                            if ($list['goodsprice'] > 0 && !$val['gift_plus_from_platform']) {
                                 $gift_plus_should_pay += $val['gift_plus_cost'];
                             }
                         }

@@ -2962,7 +2962,7 @@ EOF;
             $goods = $new_goods;
 
             $gift_plus_goods = [];
-            $gift_plus = pdo_fetch("select giftgoodsid from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $gift_plus_id . " and status = 1 and starttime <= " . time() . " and endtime >= " . time());
+            $gift_plus = pdo_fetch("select giftgoodsid,merchant_id from " . tablename('ewei_shop_gift_plus') . " where uniacid = " . $uniacid . " and id = " . $gift_plus_id . " and status = 1 and starttime <= " . time() . " and endtime >= " . time());
             if ($gift_plus['giftgoodsid']) {
                 $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                 foreach ($gift_goods_id as $key => $value) {
@@ -2975,6 +2975,10 @@ EOF;
                     $gift_plus_goods[$value]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
                     $gift_plus_goods[$value]['is_gift_plus'] = 1;
                     $gift_plus_goods[$value]['gift_plus_merchid'] = $gift_plus_merchid;
+
+                    // 赠品活动来自平台
+                    $gift_plus_goods[$value]['gift_plus_id'] = $gift_plus_id;
+                    $gift_plus_goods[$value]['gift_plus_from_platform'] = $gift_plus['merchant_id'] === '0';
 
                     // 赋值到商品列表 && 判断赠品规则
                     if ($goods[$gift_plus_rule[$value]['goods_id']]['total'] >= $gift_plus_rule[$value]['goods_amount']) {
@@ -3048,6 +3052,8 @@ EOF;
                 $data['gift_price_cost'] = $data['costprice'] * $goodstotal;
                 $data['gift_price_market'] = $data['marketprice'] * $goodstotal;
                 $data['gift_plus_merchid'] = $g['gift_plus_merchid'];
+                $data['gift_plus_id'] = $g['gift_plus_id'];
+                $data['gift_plus_from_platform'] = $g['gift_plus_from_platform'];
                 $data['marketprice'] = 0;
                 // unset($data['costprice']);
             }
@@ -3067,7 +3073,10 @@ EOF;
                             // 这里marketprice已经是0了
                             $cost_price_total += $data['marketprice'] * $goodstotal;
                         } else {
-                            $cost_price_total += $data['costprice'] * $goodstotal;
+                            // 超级赠品由平台指派给多商户的话 多商户成本不变 否则成本价要扣除赠品的结算价
+                            if (!$data['gift_plus_from_platform']) {
+                                $cost_price_total -= $data['costprice'] * $goodstotal;
+                            }
                         }
                     } else {
                         $cost_price_total += ($data['marketprice'] - $data['marketprice'] * $merchant_info['payrate'] / 100) * $goodstotal;
@@ -4927,6 +4936,9 @@ EOF;
                 $order['gift_plus_cost'] = $ch_order_data[$merchid]['gift_plus_cost'];
                 $order['gift_plus_market'] = $ch_order_data[$merchid]['gift_plus_market'];
                 $order['costprice'] = $ch_order_data[$merchid]['costprice'];
+                if ($order['is_gift_plus']) {
+                    $order['gift_plus_from_platform'] = $ch_order_data[$merchid]['gift_plus_from_platform'];
+                }
 
                 pdo_insert('ewei_shop_order', $order);
 
@@ -5000,6 +5012,8 @@ EOF;
                     $order_goods['gift_price_cost'] = $goods['gift_price_cost'];
                     $order_goods['gift_price_market'] = $goods['gift_price_market'];
                     $order_goods['gift_plus_merchid'] = $goods['gift_plus_merchid'];
+                    $order_goods['gift_plus_id'] = $goods['gift_plus_id'];
+                    $order_goods['gift_plus_from_platform'] = $goods['gift_plus_from_platform'];
                 } else {
                     $order_goods['is_gift_plus'] = 0;
                 }
