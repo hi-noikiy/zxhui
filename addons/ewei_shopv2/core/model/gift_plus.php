@@ -54,13 +54,18 @@ class Gift_plus_EweiShopV2Model
                     if ($is_merchant) {
                         $goods_id_price[$v] = $value['costprice'];
                     } else {
-                        $goods_id_price[$v] = $value['marketprice'];
+                        // 主商城价格为销售价减去成本价
+                        $goods_id_price[$v] = $value['marketprice'] - $value['costprice'];
                     }
                 }
             }
             foreach ($gift_goods_ids as $kk => $vv) {
                 if ($vv === $value['id']) {
-                    $gift_goods_id_price[$vv] = $value['gift_price'];
+                    if ($is_merchant) {
+                        $gift_goods_id_price[$vv] = $value['gift_price'];
+                    } else {
+                        $gift_goods_id_price[$vv] = $value['costprice'];
+                    }
                 }
             }
         }
