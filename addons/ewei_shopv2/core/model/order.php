@@ -1124,7 +1124,18 @@ class Order_EweiShopV2Model
                     $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
                 } else {
                     // 禁用时成本价为商城销售价格减去抽成部分
-                    $ch_order[$merchid]['costprice'] += ($g['marketprice'] - $g['marketprice'] * $merchant_info['payrate']) * $g['total'];
+                    if ($g['is_gift_plus']) {
+                        // 商户自己的赠品
+                        if ($merchid === $g['gift_plus_merchid']) {
+                            // $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
+                            // 结果是0
+                            $ch_order[$merchid]['costprice'] += $g['marketprice'] * $g['total'];
+                        } else {
+                            $ch_order[$merchid]['costprice'] += $g['costprice'] * $g['total'];
+                        }
+                    } else {
+                        $ch_order[$merchid]['costprice'] += ($g['marketprice'] - $g['marketprice'] * $merchant_info['payrate'] / 100) * $g['total'];
+                    }
                 }
             }
             // $ch_order[$merchid][]

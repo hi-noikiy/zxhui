@@ -3052,7 +3052,30 @@ EOF;
                 // unset($data['costprice']);
             }
 
-            $cost_price_total += $data['costprice'] * $goodstotal;
+            // 成本价
+            if ($data['merchid']) {
+                $merchant_info = pdo_fetch("select * from " . tablename("ewei_shop_merch_user") . " where id=:id limit 1", array(
+                    ":id" => $data['merchid']
+                ));
+                // 使用成本价结算
+                $flag = intval($merchant_info['coststatus']) === 1;
+                if ($flag) {
+                    $cost_price_total += $data['costprice'] * $goodstotal;
+                } else {
+                    if ($data['is_gift_plus']) {
+                        if ($data['merchid'] === $data['gift_plus_merchid']) {
+                            // 这里marketprice已经是0了
+                            $cost_price_total += $data['marketprice'] * $goodstotal;
+                        } else {
+                            $cost_price_total += $data['costprice'] * $goodstotal;
+                        }
+                    } else {
+                        $cost_price_total += ($data['marketprice'] - $data['marketprice'] * $merchant_info['payrate'] / 100) * $goodstotal;
+                    }
+                }
+            } else {
+                $cost_price_total += $data['costprice'] * $goodstotal;
+            }
 
             $data['seckillinfo'] = plugin_run('seckill::getSeckill', $goodsid, $optionid, true, $_W['openid']);
             if($data['ispresell']>0 && ($data['preselltimeend'] == 0 || $data['preselltimeend'] > time())){
