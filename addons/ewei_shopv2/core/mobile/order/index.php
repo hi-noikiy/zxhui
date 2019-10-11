@@ -93,9 +93,10 @@ class Index_EweiShopV2Page extends MobileLoginPage {
 
         $s_string = '';
 
+        // 超级赠品
         $list = pdo_fetchall("select id,addressid,ordersn,price,dispatchprice,status,iscomment,isverify,verifyendtime,
 verified,verifycode,verifytype,iscomment,refundid,expresscom,express,expresssn,finishtime,`virtual`,sendtype,
-paytype,expresssn,refundstate,dispatchtype,verifyinfo,merchid,isparent,iscycelbuy,cycelbuy_periodic,userdeleted{$s_string}
+paytype,expresssn,refundstate,dispatchtype,verifyinfo,merchid,isparent,iscycelbuy,cycelbuy_periodic,userdeleted{$s_string},is_gift_plus
  from " . tablename('ewei_shop_order') . " where 1 {$condition} order by createtime desc LIMIT " . ($pindex - 1) * $psize . ',' . $psize, $params);
         $total = pdo_fetchcolumn('select count(*) from ' . tablename('ewei_shop_order') . " where 1 {$condition}", $params);
 
@@ -116,9 +117,9 @@ paytype,expresssn,refundstate,dispatchtype,verifyinfo,merchid,isparent,iscycelbu
                 $param[':orderid'] = $row['id'];
             }
 
-            //所有商品
+            // 所有商品 && 超级赠品
             $sql = "SELECT og.id,og.goodsid,og.total,g.title,g.thumb,g.type,g.status,og.price,og.title as gtitle,og.optionname as optiontitle,og.optionid,op.specs,g.merchid,og.seckill,og.seckill_taskid,
-                og.sendtype,og.expresscom,og.expresssn,og.express,og.sendtime,og.finishtime,og.remarksend,og.single_refundid,og.single_refundstate
+                og.sendtype,og.expresscom,og.expresssn,og.express,og.sendtime,og.finishtime,og.remarksend,og.single_refundid,og.single_refundstate,og.is_gift_plus
                 FROM " . tablename('ewei_shop_order_goods') . " og "
                 . " left join " . tablename('ewei_shop_goods') . " g on og.goodsid = g.id "
                 . " left join " . tablename('ewei_shop_goods_option') . " op on og.optionid = op.id "

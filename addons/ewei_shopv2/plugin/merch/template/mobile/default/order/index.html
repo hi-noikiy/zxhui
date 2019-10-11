@@ -1,5 +1,11 @@
 {template '_header'}
 
+<style>
+    .marketprice.original {
+        text-decoration: line-through;
+    }
+</style>
+
 <div class='fui-page order-list-page order2'>
     <div class="fui-header">
         <div class="fui-header-left">
@@ -74,8 +80,9 @@
                                 <%if g.optionid!='0'%><div class='subtitle' style="color:#999;"><%g.optiontitle%></div><%/if%>
 
                             </div>
+                            <!--超级赠品-->
                             <div class='fui-list-angle'>
-                                ￥<span class='marketprice'><%(g.price/g.total).toFixed(2)%><br/>   <span style="color: #999">x<%g.total%></span><br/>
+                                ￥<span><span class='marketprice <%if g.is_gift_plus == 1%>original<%/if%>'><%(g.price/g.total).toFixed(2)%></span><br/><span style="color: #999">x<%g.total%></span><br/>
                                  <%if g.single_refundid>0%>
                                     <span class="text-warning">
                                         <%if g.single_refundstate==9%>
