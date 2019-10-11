@@ -159,7 +159,7 @@ define(['jquery'], function ($) {
 				html += '<img class="img-responsive img-thumbnail" src="' + data[thumb] + '" onerror="this.src=\'../addons/ewei_shopv2/static/images/nopic.png\'" style="width:100px;height:100px;">';
 				html += '<div class="img-nickname">' + data[text] + '</div>';
 				html += '<input type="hidden" value="' + data[key] + '" name="' + id +'">';
-				html += '<em onclick="biz.selector.remove(this,\'' + name +'\',' + data[key] + ')" class="close">×</em>';
+				html += '<em onclick="biz.selector.remove(this,\'' + name + '\',\'' + data[key] + '\')" class="close">×</em>';
 				html += '</div>';
 			} else if(type=='coupon'){
 				html += "<tr class='multi-product-item' data-"+ key+"='"+ data[key] + "'>";
