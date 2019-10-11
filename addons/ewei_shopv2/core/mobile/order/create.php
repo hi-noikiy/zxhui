@@ -2355,8 +2355,15 @@ EOF;
                     $merch_array[$merchid]['ggprice'] += $data['ggprice'];
                 }
 
+                // 超级赠品
+                $data['is_gift_plus'] = !isset($g['marketprice']);
+
+
                 if ($data['isverify'] == 2) {
-                    $isverify = true;
+                    // 超级赠品
+                    if (!$data['is_gift_plus']) {
+                        $isverify = true;
+                    }
                 }
 
                 if (!empty($data['virtual']) || $data['type'] == 2 || $data['type'] == 3 || $data['type'] == 20) {
@@ -2503,13 +2510,12 @@ EOF;
                 $nowsendfree = true;
             }
 
-            if (!empty($allgoods) && !$nowsendfree&&!$isonlyverifygoods) {
-                //计算运费
+            if (!empty($allgoods) && !$nowsendfree && !$isonlyverifygoods) {
+                // 计算运费
                 $dispatch_array = m('order')->getOrderDispatchPrice($allgoods, $member, $address, $saleset, $merch_array, 1);
-
-                $dispatch_price = $dispatch_array['dispatch_price'] -$dispatch_array['seckill_dispatch_price'];
+                $dispatch_price = $dispatch_array['dispatch_price'] - $dispatch_array['seckill_dispatch_price'];
                 $nodispatch_array = $dispatch_array['nodispatch_array'];
-                $seckill_dispatchprice =$dispatch_array['seckill_dispatch_price'];
+                $seckill_dispatchprice = $dispatch_array['seckill_dispatch_price'];
 
             }
 
