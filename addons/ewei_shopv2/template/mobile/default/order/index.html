@@ -75,7 +75,7 @@
                     </div>
                     <div class="fui-list-inner">
                         <div class="text goodstitle towline"><%if g.seckill_task%><span class="fui-label fui-label-danger"><%g.seckill_task.tag%></span><%/if%><%g.title%></div>
-                        <%if g.status==2%><span class="fui-label fui-label-danger">赠品</span><%/if%>
+                        <%if g.status==2 || g.is_gift_plus==1%><span class="fui-label fui-label-danger"><%if g.is_gift_plus%>超级<%/if%>赠品</span><%/if%>
                         <%if g.optionid!='0'%><div class='subtitle'  style="color:#999;"><%g.optiontitle%></div><%/if%>
 
                     </div>
