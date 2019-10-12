@@ -1808,7 +1808,9 @@ class Order_EweiShopV2Model
 						if( !empty($dispatch_data) ) 
 						{
 							$isnoarea = 0;
-							$dkey = $dispatch_data["id"];
+							// $dkey = $dispatch_data["id"];
+                            // 按照商品计算运费
+                            $dkey = $g['goodsid'];
 							$isdispatcharea = intval($dispatch_data["isdispatcharea"]);
 							if( !empty($user_city) ) 
 							{
@@ -1929,6 +1931,14 @@ class Order_EweiShopV2Model
 		{
 			$dispatch_price = $city_express_data["price"];
 		}
+
+        // 核销商品不计算运费
+        foreach ($goods as $g) {
+            if ($g['isverify'] === '2') {
+                unset($dispatch_array[$g['goodsid']]);
+            }
+        }
+
 		if( !empty($dispatch_array) ) 
 		{
 			$dispatch_info = array( );
