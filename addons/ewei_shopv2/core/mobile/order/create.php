@@ -230,6 +230,10 @@ class Create_EweiShopV2Page extends MobileLoginPage
             //是否为核销单
             $isverify = false;
 
+            // 超级赠品 && 是否需要地址
+            $gift_plus_need_address = false;
+            $gift_plus_need_verify = false;
+
             //是否强制核销选择门店
             $isforceverifystore = false;
 
@@ -627,11 +631,12 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                             if ($gift_goods_id) {
                                 foreach ($gift_goods_id as $key => $value) {
-                                    $item = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item = pdo_fetch("select id,title,thumb,marketprice,isverify,type from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
                                     $item['amount'] = intval($gift_plus_rule[$value]['gift_goods_amount']);
                                     if ($item['amount'] === 0) {
                                         $item['amount'] = 1;
                                     }
+                                    $item['is_gift_plus'] = 1;
                                     if ($total >= $gift_plus_rule[$value]['goods_amount']) {
                                         $giftGood[$key] = $item;
                                     }
@@ -653,7 +658,7 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             $giftGoodsid = explode(',', $gift['giftgoodsid']);
                             if ($giftGoodsid) {
                                 foreach ($giftGoodsid as $key => $value) {
-                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and status = 2 and id = " . $value . " and deleted = 0 ");
+                                    $giftGood[$key] = pdo_fetch("select id,title,thumb,marketprice,isverify, from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and status = 2 and id = " . $value . " and deleted = 0 ");
                                 }
                                 $giftGood = array_filter($giftGood);
                             }
@@ -675,11 +680,12 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                             if ($gift_goods_id) {
                                 foreach ($gift_goods_id as $key => $value) {
-                                    $item = pdo_fetch("select id,title,thumb,marketprice from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
+                                    $item = pdo_fetch("select id,title,thumb,marketprice,isverify,type from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total > 0 and id = " . $value . " and deleted = 0 ");
                                     $item['amount'] = intval($gift_plus_rule[$value]['gift_goods_amount']);
                                     if ($item['amount'] === 0) {
                                         $item['amount'] = 1;
                                     }
+                                    $item['is_gift_plus'] = 1;
                                     if ($total >= $gift_plus_rule[$value]['goods_amount']) {
                                         $giftGood[$key] = $item;
                                     }
@@ -844,7 +850,6 @@ class Create_EweiShopV2Page extends MobileLoginPage
                         $g['task_goods'] = $task_goods_data['task_goods'];
                     }
                 }
-
 
                 //备注多商户商品有BUG缺少$g['merchid']>0判断
                 if ($is_openmerch == 1&&$g['merchid']>0) {
@@ -1213,7 +1218,42 @@ class Create_EweiShopV2Page extends MobileLoginPage
             }
             unset($g);
 
-            if ($isverify) {
+            // 超级赠品 && 标记地址收货人
+            if ($giftGood) {
+                foreach ($giftGood as $key => $val) {
+                    if ($val['isverify'] === '2') {
+                        $gift_plus_need_verify = true;
+                    }
+                    if ($val['isverify'] === '1') {
+                        $gift_plus_need_address = true;
+                    }
+                }
+
+                $carrier_list = pdo_fetchall('select * from ' . tablename('ewei_shop_store') . ' where  uniacid=:uniacid and status=1 and type in(1,3) order by displayorder desc,id desc', array(':uniacid' => $_W['uniacid']));
+
+                if ($gift_plus_need_verify) {
+                    if ($merch_id > 0) {
+                        $carrier_list = pdo_fetchall('select * from ' . tablename('ewei_shop_merch_store') . ' where  uniacid=:uniacid and merchid=:merchid and status=1 and type in(1,3) order by displayorder desc,id desc', array(
+                            ':uniacid' => $_W['uniacid'],
+                            ':merchid' => $merch_id
+                        ));
+                    }
+                }
+
+                if ($gift_plus_need_address) {
+                    // 默认地址
+                    $address = pdo_fetch('select * from ' . tablename('ewei_shop_member_address') . ' where openid=:openid and deleted=0 and isdefault=1  and uniacid=:uniacid limit 1', array(
+                        ':uniacid' => $uniacid,
+                        ':openid' => $openid
+                    ));
+
+                    if (!empty($carrier_list)) {
+                        $carrier = $carrier_list[0];
+                    }
+                }
+            }
+
+            if ($isverify || $gift_plus_need_verify) {
                 //核销单 所有核销门店
                 $storeids = array();
                 $merchid = 0;
@@ -1392,7 +1432,27 @@ class Create_EweiShopV2Page extends MobileLoginPage
                     //秒杀不管赠品
 
                 } else if( $g['isverify'] == 2 ){
-
+                    // 指定商品赠品 & 超级赠品
+                    if ($gift_plus_id) {
+                        $gift_plus = [];
+                        $gift_plus_data = pdo_fetch("SELECT giftgoodsid FROM " . tablename('ewei_shop_gift_plus') . " WHERE uniacid = " . $uniacid . " AND id = " . $gift_plus_id . " AND status = 1 AND starttime <= " . time() . " AND endtime >= " . time());
+                        if ($gift_plus_data['giftgoodsid']) {
+                            $gift_goods_id = explode(',', $gift_plus_data['giftgoodsid']);
+                            foreach ($gift_goods_id as $key => $value) {
+                                $gift_info = pdo_fetch("SELECT id AS goodsid,title,thumb FROM " . tablename('ewei_shop_goods') . " WHERE uniacid = " . $uniacid . " AND total > 0 AND id = " . $value . " AND deleted = 0");
+                                if ($gift_info) {
+                                    $gift_info['is_gift_plus'] = 1;
+                                    $gift_plus[$key] = $gift_info;
+                                    // 赠品数量
+                                    $gift_plus[$key]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
+                                }
+                            }
+                            if ($gift_plus) {
+                                $gift_plus = array_filter($gift_plus);
+                                $goodsdata = array_merge($goodsdata, $gift_plus);
+                            }
+                        }
+                    }
                     // @author 青椒 @date 2018/2/3 核销不管赠品
                 }else{
                     // 指定商品赠品 & 超级赠品
@@ -1404,6 +1464,7 @@ class Create_EweiShopV2Page extends MobileLoginPage
                             foreach ($gift_goods_id as $key => $value) {
                                 $gift_info = pdo_fetch("SELECT id AS goodsid,title,thumb FROM " . tablename('ewei_shop_goods') . " WHERE uniacid = " . $uniacid . " AND total > 0 AND id = " . $value . " AND deleted = 0");
                                 if ($gift_info) {
+                                    $gift_info['is_gift_plus'] = 1;
                                     $gift_plus[$key] = $gift_info;
                                     // 赠品数量
                                     $gift_plus[$key]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
@@ -1768,6 +1829,14 @@ EOF;
 
         if($show_card && p('membercard')){
             $default_cardid=$this->getdefaultMembercardId();
+        }
+
+        // 超级赠品 && 地址
+        if (!empty($address) && $gift_plus_need_address && $createInfo['addressid'] === 0) {
+            $createInfo['addressid'] = $address['id'];
+        }
+        if (!$isverify && $gift_plus_need_verify) {
+            $isverify = true;
         }
 
         $createInfo['card_id']=$default_cardid;
@@ -2356,8 +2425,10 @@ EOF;
                 }
 
                 // 超级赠品
-                $data['is_gift_plus'] = !isset($g['marketprice']);
-
+                if (!isset($g['marketprice']) || $g['is_gift_plus']) {
+                    $data['is_gift_plus'] = !isset($g['marketprice']);
+                    $data['marketprice'] = 0;
+                }
 
                 if ($data['isverify'] == 2) {
                     // 超级赠品
@@ -2503,6 +2574,11 @@ EOF;
                             }
                         }
                     }
+                }
+
+                // 超级赠品
+                if ($g['is_gift_plus'] && $g['isverify'] === '1') {
+                    $isverify = false;
                 }
             }
 
@@ -2972,7 +3048,7 @@ EOF;
             if ($gift_plus['giftgoodsid']) {
                 $gift_goods_id = explode(',', $gift_plus['giftgoodsid']);
                 foreach ($gift_goods_id as $key => $value) {
-                    $gift_info = pdo_fetch("select id as goodsid,title,thumb from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total>0 and id = " . $value . " and deleted = 0 ");
+                    $gift_info = pdo_fetch("select id as goodsid,title,thumb,merchid from " . tablename('ewei_shop_goods') . " where uniacid = " . $uniacid . " and total>0 and id = " . $value . " and deleted = 0 ");
                     if (empty($gift_info)) {
                         continue;
                     }
@@ -3528,9 +3604,9 @@ EOF;
                 //成交价格
                 $prices = m('order')->getGoodsDiscountPrice($data, $level);
 
-                if(empty($packageid)){
+                if (empty($packageid)) {
                     $data['ggprice'] = $prices['price'];
-                }else{
+                } else {
                     $data['ggprice'] = $data['marketprice'];
                 }
                 //游戏活动使用会员卡价格是原价
@@ -3932,7 +4008,7 @@ EOF;
         //$isvirtual 实体物品计算运费
         //$isverify  非核销计算运费
         //$dispatchtype 选择了快递(非自提)计算运费
-        if (!$isvirtual && !$isverify && !$isonlyverifygoods&&$dispatchtype == 0&&!$isonlyverifygoods) {
+        if (!$isvirtual && !$isverify && !$isonlyverifygoods && $dispatchtype == 0 && !$isonlyverifygoods) {
             if (empty($addressid)) {
                 show_json(0, '请选择地址');
             }
@@ -3946,6 +4022,14 @@ EOF;
             if (!empty($nodispatch_array['isnodispatch'])) {
                 show_json(0, $nodispatch_array['nodispatch']);
             }
+        }
+
+        // 超级赠品
+        $gift_plus_dispatch = [];
+        if ($gift_plus_id) {
+            $gift_plus_dispatch = m('order')->getOrderDispatchPriceGroupByGoodsId($allgoods, $member, $address, $saleset, $merch_array, 2);
+
+            $dispatch_price = $gift_plus_dispatch['dispatch_price'];
         }
 
         if ($isonlyverifygoods) {
@@ -3969,9 +4053,9 @@ EOF;
         }
 
         if (empty($goods[0]['bargain_id'])) {
-            //积分抵扣
-            $deductcredit = 0; //抵扣需要扣除的积分
-            $deductmoney = 0; //抵扣的钱
+            // 积分抵扣
+            $deductcredit = 0; // 抵扣需要扣除的积分
+            $deductmoney = 0; // 抵扣的钱
             $deductcredit2 = 0; //可抵扣的余额
 
             if ($sale_plugin) {
@@ -4082,14 +4166,27 @@ EOF;
             $totalprice = 0;
         }
 
+        // 多商品分单
+        $new_split_order = 0;
+
         if($packageid && count($packgoods) >1){
             $multiple_order = 2;
         } else if ($ismerch == 0 || ($ismerch == 1 && count($merch_array) == 1)) {
-            //需要创建一个订单
+            // 需要创建一个订单
             $multiple_order = 0;
+
+            // 若存在多个商品也需要分单
+            foreach ($merch_array as $val) {
+                if (count($val['goods']) > 1) {
+                    $multiple_order = 1;
+                    $new_split_order = 1;
+                    break;
+                }
+            }
         } else {
-            //需要创建多个订单
+            // 需要创建多个订单
             $multiple_order = 1;
+            $new_split_order = 1;
         }
 
         // TODO 超级赠品 && 是否要分单
@@ -4102,7 +4199,7 @@ EOF;
             }
         }
 
-        //生成订单号
+        // 生成订单号
         if ($ismerch > 0) {
             $ordersn = m('common')->createNO('order', 'ordersn', 'ME');
         } else {
@@ -4124,7 +4221,8 @@ EOF;
 
             $ordersn = substr_replace($ordersn, 'KJ', 0, 2);//砍价订单号
         }
-        //套餐订单价格
+
+        // 套餐订单价格
         $is_package = 0;
         if (!empty($packageid)) {
             $goodsprice = $packageprice;
@@ -4135,7 +4233,7 @@ EOF;
                 $dispatch_price = $package['freight'];
             }
             $totalprice = $packageprice + $dispatch_price;
-            //套餐产品使用了会员卡重新计算价格
+            // 套餐产品使用了会员卡重新计算价格
             if($cardid>0 && p('membercard')){
                 $card_data=  p('membercard')->getMemberCard($cardid);
                 if(empty($card_data)!=true)
@@ -4159,7 +4257,7 @@ EOF;
             $discountprice = 0;
         }
 
-        if($taskgoodsprice){
+        if ($taskgoodsprice) {
             $totalprice = $taskgoodsprice;
             $goodsprice = $taskgoodsprice;
 
@@ -4173,7 +4271,7 @@ EOF;
         }
 
 
-        //订单数据
+        // 订单数据
         $order = array();
         $order['ismerch'] = $ismerch;
         $order['parentid'] = 0;
@@ -4189,7 +4287,7 @@ EOF;
         }
         $order['lotterydiscountprice'] = $lotterydiscountprice;
         $order['discountprice'] = $discountprice;
-        //砍价没有会员折扣
+        // 砍价没有会员折扣
         if (!empty($goods[0]['bargain_id']) && p('bargain')) {
             $order['discountprice'] = 0;
         }
@@ -4307,7 +4405,7 @@ EOF;
         }
 
         if ($multiple_order === 0) {
-            //创建一个订单的字段
+            // 创建一个订单的字段
             $order_merchid = current(array_keys($merch_array));
             $order['merchid'] = intval($order_merchid);
             $order['isparent'] = 0;
@@ -4326,11 +4424,12 @@ EOF;
             $order['coupongoodprice'] = $coupongoodprice;
             $order['city_express_state']=empty($dispatch_array['city_express_state'])==true?0:$dispatch_array['city_express_state'];
         } else {
-            //创建多个订单的字段
+            // 创建多个订单的字段
             $order['isparent'] = 1;
             $order['merchid'] = 0;
         }
-//自定义表单
+
+        // 自定义表单
         if(!empty($diyinfo) && $diyinfo['bargain']>0){
             if($diyinfo['diyformtype'] ==1){
                 $order_formInfo = $diyform_plugin->getDiyformInfo($diyinfo['diyformid']);
@@ -4380,11 +4479,11 @@ EOF;
         pdo_insert('ewei_shop_order', $order);
         $orderid = pdo_insertid();
 
-        //将订单数据存到redis里面
-        if(function_exists('redis_setarr')) {
-            $redis_order=$order;
-            $redis_order['id']=$orderid;
-            redis_setarr($_W['uniacid'].'_order_'.$orderid, $redis_order);
+        // 将订单数据存到redis里面
+        if (function_exists('redis_setarr')) {
+            $redis_order = $order;
+            $redis_order['id'] = $orderid;
+            redis_setarr($_W['uniacid'] . '_order_' . $orderid, $redis_order);
 
         }
 
@@ -4400,6 +4499,7 @@ EOF;
         if (!empty($goods[0]['bargain_id']) && p('bargain')) {
             pdo_update('ewei_shop_bargain_actor', array('order' => $orderid), array('id' => $goods[0]['bargain_id'], 'openid' => $_W['openid']));
         }
+
         if ($multiple_order === 0) {
             // 开始创建一个订单
             $exchangepriceset = $_SESSION['exchangepriceset'];
@@ -4610,7 +4710,7 @@ EOF;
                 if (!empty($ccard)) {
                     $order['ccard'] = 1;
                 }
-                //生成子订单号
+                // 生成子订单号
                 $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
 
                 // 超级赠品
@@ -4802,11 +4902,13 @@ EOF;
 
                 $merch_array[$merchid]['orderid'] = $ch_orderid;
 
+                // 这里功能逻辑不清晰
                 if ($couponmerchid > 0) {
                     if ($merchid == $couponmerchid) {
                         $couponorderid = $ch_orderid;
                     }
                 }
+
                 foreach ($value['goods'] as $k => $v) {
                     //$v 商品id
                     $og_array[$v] = $ch_orderid;
@@ -4876,94 +4978,178 @@ EOF;
 
             // 记录订单商品中的订单id
             $og_array = array();
-            $ch_order_data = m('order')->getChildOrderPrice($order, $allgoods, $dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid);
-            foreach ($merch_array as $key => $value) {
-                $merchid = $key;
-                $is_exchange = (p('exchange') && $_SESSION['exchange']);
-                if ($is_exchange) {
-                    $order_head = 'DH';
-                } else {
-                    if (!empty($merchid)) {
-                        $order_head = 'ME';
+
+            $ch_order_data = m('order')->getChildOrderPriceGroupByGoodsId($order, $allgoods, $gift_plus_dispatch, $merch_array, $sale_plugin, $discountprice_array, $orderid);
+
+            if ($new_split_order === 1) {
+                foreach ($merch_array as $key => $value) {
+                    $merchid = $key;
+                    $is_exchange = (p('exchange') && $_SESSION['exchange']);
+                    if ($is_exchange) {
+                        $order_head = 'DH';
                     } else {
-                        $order_head = 'SH';
+                        if (!empty($merchid)) {
+                            $order_head = 'ME';
+                        } else {
+                            $order_head = 'SH';
+                        }
+                    }
+                    foreach ($value['goods'] as $k => $v) {
+                        // 生成子订单号
+                        $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
+                        $order['merchid'] = $merchid;
+                        $order['parentid'] = $orderid;
+                        $order['isparent'] = 0;
+                        $order['merchshow'] = 1;
+
+                        // 分单后的商品运费
+                        $order['dispatchprice'] = $gift_plus_dispatch['dispatch_goods'][$merchid][$v];
+                        $order['olddispatchprice'] = $gift_plus_dispatch['dispatch_goods'][$merchid][$v];
+
+                        if (empty($packageid)) {
+                            $order['merchisdiscountprice'] = $discountprice_array[$merchid]['merchisdiscountprice'];
+                            $order['isdiscountprice'] = $discountprice_array[$merchid]['isdiscountprice'];
+                            $order['discountprice'] = $discountprice_array[$merchid]['discountprice'];
+                        }
+
+                        $order['price'] = $ch_order_data[$v]['price'];
+                        $order['grprice'] = $ch_order_data[$v]['grprice'];
+                        $order['goodsprice'] = $ch_order_data[$v]['goodsprice'];
+
+                        $order['deductprice'] = $ch_order_data[$v]['deductprice'];
+                        $order['deductcredit'] = $ch_order_data[$v]['deductcredit'];
+                        $order['deductcredit2'] = $ch_order_data[$v]['deductcredit2'];
+
+                        $order['merchdeductenough'] = $ch_order_data[$v]['merchdeductenough'];
+                        $order['deductenough'] = $ch_order_data[$v]['deductenough'];
+
+
+                        // 多商户参与优惠券计算的商品价格(参与活动之后的价格)
+                        $order['coupongoodprice'] = $discountprice_array[$merchid]['coupongoodprice'];
+
+                        $order['couponprice'] = $discountprice_array[$merchid]['deduct'];
+
+                        if (empty($order['couponprice'])) {
+                            $order['couponid'] = 0;
+                            $order['couponmerchid'] = 0;
+                        } else if ($couponmerchid > 0) {
+                            if ($merchid == $couponmerchid) {
+                                $order['couponid'] = $couponid;
+                                $order['couponmerchid'] = $couponmerchid;
+                            } else {
+                                $order['couponid'] = 0;
+                                $order['couponmerchid'] = 0;
+                            }
+                        }
+
+                        // 超级赠品
+                        $order['is_gift_plus'] = intval($ch_order_data[$v]['is_gift_plus']);
+                        $order['gift_plus_price'] = $ch_order_data[$v]['gift_plus_price'];
+                        $order['gift_plus_cost'] = $ch_order_data[$v]['gift_plus_cost'];
+                        $order['gift_plus_market'] = $ch_order_data[$v]['gift_plus_market'];
+                        $order['costprice'] = $ch_order_data[$v]['costprice'];
+                        if ($order['is_gift_plus']) {
+                            $order['gift_plus_from_platform'] = $ch_order_data[$v]['gift_plus_from_platform'];
+                        }
+
+                        $order = m('order')->parseVerifyOrder($order, $v, $uniacid, $dispatchtype);
+
+                        pdo_insert('ewei_shop_order', $order);
+
+                        // 子订单id
+                        $ch_orderid = pdo_insertid();
+                        //$v 商品id
+                        $og_array[$v] = $ch_orderid;
                     }
                 }
-
-                // 生成子订单号
-                $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
-                $order['merchid'] = $merchid;
-                $order['parentid'] = $orderid;
-                $order['isparent'] = 0;
-                $order['merchshow'] = 1;
-
-                $order['dispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
-                $order['olddispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
-
-                if (empty($packageid)) {
-                    $order['merchisdiscountprice'] = $discountprice_array[$merchid]['merchisdiscountprice'];
-                    $order['isdiscountprice'] = $discountprice_array[$merchid]['isdiscountprice'];
-                    $order['discountprice'] = $discountprice_array[$merchid]['discountprice'];
-                }
-
-                $order['price'] = $ch_order_data[$merchid]['price'];
-                $order['grprice'] = $ch_order_data[$merchid]['grprice'];
-                $order['goodsprice'] = $ch_order_data[$merchid]['goodsprice'];
-
-                $order['deductprice'] = $ch_order_data[$merchid]['deductprice'];
-                $order['deductcredit'] = $ch_order_data[$merchid]['deductcredit'];
-                $order['deductcredit2'] = $ch_order_data[$merchid]['deductcredit2'];
-
-                $order['merchdeductenough'] = $ch_order_data[$merchid]['merchdeductenough'];
-                $order['deductenough'] = $ch_order_data[$merchid]['deductenough'];
-
-
-                // 多商户参与优惠券计算的商品价格(参与活动之后的价格)
-                $order['coupongoodprice'] = $discountprice_array[$merchid]['coupongoodprice'];
-
-                $order['couponprice'] = $discountprice_array[$merchid]['deduct'];
-
-                if (empty($order['couponprice'])) {
-                    $order['couponid'] = 0;
-                    $order['couponmerchid'] = 0;
-                } else if ($couponmerchid > 0) {
-                    if ($merchid == $couponmerchid) {
-                        $order['couponid'] = $couponid;
-                        $order['couponmerchid'] = $couponmerchid;
+            } else {
+                foreach ($merch_array as $key => $value) {
+                    $merchid = $key;
+                    $is_exchange = (p('exchange') && $_SESSION['exchange']);
+                    if ($is_exchange) {
+                        $order_head = 'DH';
                     } else {
+                        if (!empty($merchid)) {
+                            $order_head = 'ME';
+                        } else {
+                            $order_head = 'SH';
+                        }
+                    }
+
+                    // 生成子订单号
+                    $order['ordersn'] = m('common')->createNO('order', 'ordersn', $order_head);
+                    $order['merchid'] = $merchid;
+                    $order['parentid'] = $orderid;
+                    $order['isparent'] = 0;
+                    $order['merchshow'] = 1;
+
+                    $order['dispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
+                    $order['olddispatchprice'] = $dispatch_array['dispatch_merch'][$merchid];
+
+                    if (empty($packageid)) {
+                        $order['merchisdiscountprice'] = $discountprice_array[$merchid]['merchisdiscountprice'];
+                        $order['isdiscountprice'] = $discountprice_array[$merchid]['isdiscountprice'];
+                        $order['discountprice'] = $discountprice_array[$merchid]['discountprice'];
+                    }
+
+                    $order['price'] = $ch_order_data[$merchid]['price'];
+                    $order['grprice'] = $ch_order_data[$merchid]['grprice'];
+                    $order['goodsprice'] = $ch_order_data[$merchid]['goodsprice'];
+
+                    $order['deductprice'] = $ch_order_data[$merchid]['deductprice'];
+                    $order['deductcredit'] = $ch_order_data[$merchid]['deductcredit'];
+                    $order['deductcredit2'] = $ch_order_data[$merchid]['deductcredit2'];
+
+                    $order['merchdeductenough'] = $ch_order_data[$merchid]['merchdeductenough'];
+                    $order['deductenough'] = $ch_order_data[$merchid]['deductenough'];
+
+
+                    // 多商户参与优惠券计算的商品价格(参与活动之后的价格)
+                    $order['coupongoodprice'] = $discountprice_array[$merchid]['coupongoodprice'];
+
+                    $order['couponprice'] = $discountprice_array[$merchid]['deduct'];
+
+                    if (empty($order['couponprice'])) {
                         $order['couponid'] = 0;
                         $order['couponmerchid'] = 0;
+                    } else if ($couponmerchid > 0) {
+                        if ($merchid == $couponmerchid) {
+                            $order['couponid'] = $couponid;
+                            $order['couponmerchid'] = $couponmerchid;
+                        } else {
+                            $order['couponid'] = 0;
+                            $order['couponmerchid'] = 0;
+                        }
                     }
-                }
 
-                // 超级赠品
-                $order['is_gift_plus'] = intval($ch_order_data[$merchid]['is_gift_plus']);
-                $order['gift_plus_price'] = $ch_order_data[$merchid]['gift_plus_price'];
-                $order['gift_plus_cost'] = $ch_order_data[$merchid]['gift_plus_cost'];
-                $order['gift_plus_market'] = $ch_order_data[$merchid]['gift_plus_market'];
-                $order['costprice'] = $ch_order_data[$merchid]['costprice'];
-                if ($order['is_gift_plus']) {
-                    $order['gift_plus_from_platform'] = $ch_order_data[$merchid]['gift_plus_from_platform'];
-                }
-
-                pdo_insert('ewei_shop_order', $order);
-
-                //子订单id
-                $ch_orderid = pdo_insertid();
-
-                $merch_array[$merchid]['orderid'] = $ch_orderid;
-
-                if ($couponmerchid > 0) {
-                    if ($merchid == $couponmerchid) {
-                        $couponorderid = $ch_orderid;
+                    // 超级赠品
+                    $order['is_gift_plus'] = intval($ch_order_data[$merchid]['is_gift_plus']);
+                    $order['gift_plus_price'] = $ch_order_data[$merchid]['gift_plus_price'];
+                    $order['gift_plus_cost'] = $ch_order_data[$merchid]['gift_plus_cost'];
+                    $order['gift_plus_market'] = $ch_order_data[$merchid]['gift_plus_market'];
+                    $order['costprice'] = $ch_order_data[$merchid]['costprice'];
+                    if ($order['is_gift_plus']) {
+                        $order['gift_plus_from_platform'] = $ch_order_data[$merchid]['gift_plus_from_platform'];
                     }
-                }
-                foreach ($value['goods'] as $k => $v) {
-                    //$v 商品id
-                    $og_array[$v] = $ch_orderid;
+
+                    pdo_insert('ewei_shop_order', $order);
+
+                    // 子订单id
+                    $ch_orderid = pdo_insertid();
+
+                    $merch_array[$merchid]['orderid'] = $ch_orderid;
+
+                    if ($couponmerchid > 0) {
+                        if ($merchid == $couponmerchid) {
+                            $couponorderid = $ch_orderid;
+                        }
+                    }
+                    foreach ($value['goods'] as $k => $v) {
+                        //$v 商品id
+                        $og_array[$v] = $ch_orderid;
+                    }
                 }
             }
-
             // 子订单保存订单商品
             foreach ($allgoods as $goods) {
 

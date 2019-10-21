@@ -254,7 +254,7 @@
     </div>
     <div class='fui-content  navbar'>
 
-        {if count($carrier_list)>0 && !$isverify && !$isvirtual&&!$isonlyverifygoods}
+        {if (count($carrier_list) > 0 && !$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address}
         <div id="carrierTab" class="fui-tab fui-tab-danger" style="margin-bottom: 0">
             <a data-tab="tab1" class="active">快递配送</a>
             <a data-tab="tab2">{php echo isset($trade['pickuptext']) ? $trade['pickuptext'] : "上门自提" }</a>
@@ -271,13 +271,13 @@
         {/if}
 
 
-        {if  !$isverify && !$isvirtual&&!$isonlyverifygoods}
+        {if (!$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address}
         <!--地址选择-->
         <div class="fui-list-group" id='addressInfo' data-addressid="{php echo intval($address['id'])}" style="    margin: 0 0 .5rem;">
             {if !empty($address)}
-            <a  class="fui-list "   href="{php echo mobileUrl('member/address/selector')}"   data-nocache="true">
+            <a class="fui-list" href="{php echo mobileUrl('member/address/selector')}" data-nocache="true">
                 <div class="fui-list-media">
-                    <i class="icon icon-dingwei" ></i>
+                    <i class="icon icon-dingwei"></i>
                 </div>
                 <div class="fui-list-inner" >
                     <div class="title has-address">
@@ -294,7 +294,7 @@
                 </div>
             </a>
             {else}
-            <a  id='address-show' class="fui-list"    data-nocache="true">
+            <a  id='address-show' class="fui-list" data-nocache="true">
                 <div class="fui-list-inner" >
                     <div class="text no-address" ><i class="icon icon-icon02"></i> 添加收货地址</div>
                 </div>
@@ -325,13 +325,12 @@
                     <div class="angle"></div>
                 </div>
             </a>
-
         </div>
         {/if}
 
         <!--联系填写-->
         {if $sysset['set_realname']==0 || $sysset['set_mobile']==0}
-        <div class="fui-cell-group sm" id="memberInfo" {if !$isverify && !$isvirtual}style="display:none"{/if}>
+        <div class="fui-cell-group sm" id="memberInfo" {if (!$isverify && !$isvirtual) || (!$isverify && !$gift_plus_need_verify)}style="display:none"{/if}>
         {if $sysset['set_realname']==0}
         <div class="fui-cell">
             <div class="fui-cell-label sm">联系人</div>
