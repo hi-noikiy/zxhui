@@ -65,11 +65,13 @@ class Register_EweiShopV2Page extends PluginMobileLoginPage
 			$uname = trim($_GPC['uname']);
 			$upass = $_GPC['upass'];
 
-			if (empty($uname)) {
+			// 不检测账号
+			if (empty($uname) && false) {
 				show_json(0, '请填写帐号!');
 			}
 
-			if (empty($upass)) {
+			// 不检测密码
+			if (empty($upass) && false) {
 				show_json(0, '请填写密码!');
 			}
 
