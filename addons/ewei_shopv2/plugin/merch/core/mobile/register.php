@@ -91,7 +91,9 @@ class Register_EweiShopV2Page extends PluginMobileLoginPage
 			$params2 = array(':username' => $uname);
 			$params2['uniacid'] = $_W['uniacid'];
 			$usercount2 = pdo_fetchcolumn('select count(1) from ' . tablename('ewei_shop_merch_account') . (' where ' . $where2 . ' limit 1'), $params2);
-			if (0 < $usercount1 || 0 < $usercount2) {
+
+			// 不检测账号
+			if ((0 < $usercount1 || 0 < $usercount2) && !empty($uname)) {
 				show_json(0, '帐号 ' . $uname . ' 已经存在,请更改!');
 			}
 
