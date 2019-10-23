@@ -1351,7 +1351,7 @@ class MerchModel extends PluginModel
                         continue;
                     }
 
-					if( !empty($v["order_id"]) ) 
+                    if (!empty($v["order_id"]) && $v['is_gift_plus'] === '0')
 					{
 						$commission += $v["commission_price"];
 					}
