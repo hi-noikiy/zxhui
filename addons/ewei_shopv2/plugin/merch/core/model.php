@@ -1321,7 +1321,7 @@ class MerchModel extends PluginModel
 
                     // 查看订单是否使用了赠品
                     if ($v['parentid']) {
-                        $other_orders = pdo_fetchall('SELECT id,costprice,is_gift_plus,gift_plus_price,gift_plus_cost,gift_plus_market FROM ' . tablename('ewei_shop_order') . ' WHERE id <> :id AND parentid = :parentid AND is_gift_plus = 1', [
+                        $other_orders = pdo_fetchall('SELECT id,costprice,is_gift_plus,gift_plus_price,gift_plus_cost,gift_plus_market,dispatchprice FROM ' . tablename('ewei_shop_order') . ' WHERE id <> :id AND parentid = :parentid AND is_gift_plus = 1', [
                             ':id' => $v['id'],
                             ':parentid' => $v['parentid']
                         ]);
@@ -1331,6 +1331,11 @@ class MerchModel extends PluginModel
                             foreach ($other_orders as $key => $val) {
                                 if ($v['goodsprice'] > 0) {
                                     $gift_plus_should_pay += $val['gift_plus_price'];
+
+                                    // 算运费
+                                    if ($val['is_gift_plus']) {
+                                        $gift_plus_should_pay += $val['dispatchprice'];
+                                    }
                                 }
                             }
                             $list['gift_plus_should_pay'] += $gift_plus_should_pay;
@@ -1504,6 +1509,9 @@ class MerchModel extends PluginModel
 			// 超级赠品
             if ($list['is_gift_plus']) {
                 $list['realprice'] = $list['gift_plus_cost'];
+                if ($list['dispatchprice'] > 0) {
+                    $list['realprice'] += $list['dispatchprice'];
+                }
             }
 
             // 查看订单是否使用了赠品
@@ -1529,6 +1537,11 @@ class MerchModel extends PluginModel
             if ($list['costprice'] > 0) {
                 $list['realprice'] = $list['costprice'] * 1;
                 $list["realpricerate"] = $list['costprice'] * 1;
+            }
+
+            // 超级赠品
+            if ($list['dispatchprice'] > 0 && $list['is_gift_plus']) {
+                $list['realprice'] += $list['dispatchprice'];
             }
 
             // 可提现金额
