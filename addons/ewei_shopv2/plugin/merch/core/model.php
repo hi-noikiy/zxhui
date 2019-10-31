@@ -1541,7 +1541,10 @@ class MerchModel extends PluginModel
 
             // 超级赠品
             if ($list['dispatchprice'] > 0 && $list['is_gift_plus']) {
+                // 可提现金额
                 $list['realprice'] += $list['dispatchprice'];
+                // 抽成后获得金额
+                $list['realpricerate'] += $list['dispatchprice'];
             }
 
             // 可提现金额

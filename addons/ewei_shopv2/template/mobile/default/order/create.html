@@ -300,7 +300,7 @@
                 </div>
                 <div class="fui-list-angle">
                     <div class="angle"></div>
-                </div>
+                </div>1
             </a>
             {/if}
         </div>
@@ -324,7 +324,7 @@
                 <div class="fui-list-angle">
                     <div class="angle"></div>
                 </div>
-            </a>
+            </a>lianxiren
         </div>
         {/if}
 
@@ -730,20 +730,13 @@
     </div>
 
     <div class="fui-cell" id="deductenough" {if !$saleset['showenough']}style='display:none'{/if}>
-    <div class="fui-cell-label" style='width:auto' >商城优惠
-        <span style="font-size: .6rem">：单笔满 ￥
-            <span id="deductenough_enough">{php echo number_format($saleset['enoughmoney'],2)}</span> 元立减￥
-            {if $saleset['showenough']}
-            <span id="deductenough_enoughdeduct">{php echo number_format($saleset['enoughdeduct'],2)}</span>
-            {/if}
-        </span>
-    </div>
+    <div class="fui-cell-label" style='width:auto' ><span class="text-danger">[商城]</span> 单品订单满 <span id="deductenough_enough" class="text-danger">{php echo number_format($saleset['enoughmoney'],2)}</span> 元立减 {if $saleset['showenough']}<span id="deductenough_enoughdeduct">{php echo number_format($saleset['enoughdeduct'],2)}</span>{/if}</div>
     <div class="fui-cell-info"></div>
     <div class="fui-cell-remark noremark">-&yen; <span id='deductenough_money'>{if $saleset['showenough']}{php echo number_format($saleset['enoughdeduct'],2)}{/if}</span></div>
 </div>
 
 <div class="fui-cell" id="merch_deductenough" {if !$merch_saleset['merch_showenough']}style='display:none'{/if}>
-<div class="fui-cell-label" style='width:auto' >商户单笔满 <span id="merch_deductenough_enough" class='text-danger'>{php echo number_format($merch_saleset['merch_enoughmoney'],2)}</span> 元立减</div>
+<div class="fui-cell-label" style='width:auto' ><span class="text-danger">[商户]</span> 单品订单满 <span id="merch_deductenough_enough" class='text-danger'>{php echo number_format($merch_saleset['merch_enoughmoney'],2)}</span> 元立减 <span id="merch_deductenough_money_clone">{php echo number_format($merch_saleset['merch_enoughdeduct'],2)}</span></div>
 <div class="fui-cell-info"></div>
 <div class="fui-cell-remark noremark">-&yen; <span id='merch_deductenough_money'>{if $merch_saleset['merch_showenough']}{php echo number_format($merch_saleset['merch_enoughdeduct'],2)}{/if}</span></div>
 </div>

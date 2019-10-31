@@ -428,7 +428,7 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
                 if (getjson.result.merch_deductenough_money > 0) {
                     $('#merch_deductenough').show();
                     $('#merch_deductenough_money').html(core.number_format(getjson.result.merch_deductenough_money, 2));
-                    $('#merch_deductenough_enough').html(core.number_format(getjson.result.merch_deductenough_enough, 2))
+                    $('#merch_deductenough_enough').html(core.number_format(getjson.result.merch_deductenough_enough * getjson.result.merch_deductenough_count, 2))
                 } else {
                     $('#merch_deductenough').hide();
                     $('#merch_deductenough_money').html('0.00');

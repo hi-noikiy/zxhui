@@ -1036,14 +1036,17 @@ class Order_EweiShopV2Model
 			}
 		}
 		$price = $price - $buyagainprice;
+
 		// 超级赠品
-		// if ($g['is_gift_plus']) {
-		//     if ($g['isverify'] === '2') {
-		//         $price = 0;
-        //     } else {
-		//         $price = $g['dispatchprice'];
-        //     }
-        // }
+		if ($g['is_gift_plus']) {
+		    if ($g['isverify'] === '2' || $g['type'] === '2') {
+		        $price = 0;
+            }
+
+		    // 赠品不享受折扣
+		    $discountprice = 0;
+        }
+
 		return array( "unitprice" => $unitprice, "price" => $price, "taskdiscountprice" => $taskdiscountprice, "lotterydiscountprice" => $lotterydiscountprice, "discounttype" => $discounttype, "isdiscountprice" => $isdiscountprice, "discountprice" => $discountprice, "isdiscountunitprice" => $isdiscountunitprice, "discountunitprice" => $discountunitprice, "price0" => $gprice, "price1" => $price1, "price2" => $price2, "buyagainprice" => $buyagainprice );
 	}
 	public function getChildOrderPrice(&$order, &$goods, &$dispatch_array, $merch_array, $sale_plugin, $discountprice_array, $orderid = 0) 
@@ -1505,14 +1508,22 @@ class Order_EweiShopV2Model
 
         foreach ($ch_order['goods'] as $k => $v) {
             $merchid = $v['merchant_id'];
-            $price = $v["grprice"] - $v["deductprice"] - $v["deductcredit2"] - $v["deductenough"] - $v["couponprice"] + $dispatch_array["dispatch_goods"][$merchid][$k];
-            if ($merchid > 0) {
-                $merchdeductenough = $merch_array[$merchid]["enoughdeduct"];
-                if ($merchdeductenough > 0) {
-                    $price -= $merchdeductenough;
-                    $ch_order['goods'][$k]["merchdeductenough"] = $merchdeductenough;
+
+            // 超级赠品 && 只计算运费，不参与满减
+            if ($v['is_gift_plus']) {
+                $price = $v['grprice'] + $dispatch_array["dispatch_goods"][$merchid][$k];
+                $ch_order['goods'][$k]["merchdeductenough"] = 0;
+            } else {
+                $price = $v["grprice"] - $v["deductprice"] - $v["deductcredit2"] - $v["deductenough"] - $v["couponprice"] + $dispatch_array["dispatch_goods"][$merchid][$k];
+                if ($merchid > 0) {
+                    $merchdeductenough = $merch_array[$merchid]["enoughdeduct"];
+                    if ($merchdeductenough > 0 && $merch_array[$merchid]['enoughmoney'] <= $price) {
+                        $price -= $merchdeductenough;
+                        $ch_order['goods'][$k]["merchdeductenough"] = $merchdeductenough;
+                    }
                 }
             }
+
             $ch_order['goods'][$k]["price"] = $price;
         }
 
@@ -1534,17 +1545,34 @@ class Order_EweiShopV2Model
 					$ggprice = $value["ggprice"];
 					foreach( $enoughs as $e ) 
 					{
-						if( floatval($e["enough"]) <= $ggprice && 0 < floatval($e["money"]) ) 
-						{
-							$merch_array[$merchid]["showenough"] = 1;
-							$merch_array[$merchid]["enoughmoney"] = $e["enough"];
-							$merch_array[$merchid]["enoughdeduct"] = $e["money"];
-							$merch_saleset["merch_showenough"] = 1;
-							$merch_saleset["merch_enoughmoney"] += $e["enough"];
-							$merch_saleset["merch_enoughdeduct"] += $e["money"];
-							$merch_enough_total += floatval($e["money"]);
-							break;
-						}
+					    // 新的业务逻辑
+					    if (true) {
+                            // 这里循环单个商品
+                            foreach ($value['goods_price'] as $k => $v) {
+                                $goods_price = $v;
+                                if (floatval($e["enough"]) <= $goods_price && 0 < floatval($e["money"])) {
+                                    $merch_array[$merchid]["showenough"] = 1;
+                                    $merch_array[$merchid]["enoughmoney"] = $e["enough"];
+                                    $merch_array[$merchid]["enoughdeduct"] = $e["money"];
+                                    $merch_saleset["merch_showenough"] = 1;
+                                    $merch_saleset["merch_enoughmoney"] += $e["enough"];
+                                    $merch_saleset["merch_enoughdeduct"] += $e["money"];
+                                    $merch_enough_total += floatval($e["money"]);
+                                }
+                            }
+                        } else {
+					        // 旧逻辑
+                            if (floatval($e["enough"]) <= $ggprice && 0 < floatval($e["money"])) {
+                                $merch_array[$merchid]["showenough"] = 1;
+                                $merch_array[$merchid]["enoughmoney"] = $e["enough"];
+                                $merch_array[$merchid]["enoughdeduct"] = $e["money"];
+                                $merch_saleset["merch_showenough"] = 1;
+                                $merch_saleset["merch_enoughmoney"] += $e["enough"];
+                                $merch_saleset["merch_enoughdeduct"] += $e["money"];
+                                $merch_enough_total += floatval($e["money"]);
+                                break;
+                            }
+                        }
 					}
 				}
 			}
@@ -1614,7 +1642,11 @@ class Order_EweiShopV2Model
 	// 获取订单运费
 	public function getOrderDispatchPrice($goods, $member, $address, $saleset = false, $merch_array, $t, $loop = 0) 
 	{
-		global $_W;
+		global $_W, $_GPC;
+
+		// 自提
+		$has_carrier = intval($_GPC['dflag']) === 1;
+
 		$area_set = m("util")->get_area_config_set();
 		$new_area = intval($area_set["new_area"]);
 		$realprice = 0;
@@ -1684,7 +1716,9 @@ class Order_EweiShopV2Model
 			$isnodispatch = 0;
 			$sendfree = false;
 			$merchid = $g["merchid"];
-			if( $g["type"] == 5 ) 
+
+			// 记次/时商品 支持线下核销的商品 免运费
+			if( $g["type"] == 5 || $g['isverify'] === '2' || (!$g['is_gift_plus'] && $has_carrier) )
 			{
 				$sendfree = true;
 			}
@@ -2225,7 +2259,10 @@ class Order_EweiShopV2Model
 	// 按照商品获取订单运费
     public function getOrderDispatchPriceGroupByGoodsId($goods, $member, $address, $saleset = false, $merch_array, $t, $loop = 0)
     {
-        global $_W;
+        global $_W, $_GPC;
+
+        // 是否为自提
+        $carrierid = intval($_GPC['carrierid']);
 
         $area_set = m("util")->get_area_config_set();
         $new_area = intval($area_set["new_area"]);
@@ -2290,10 +2327,12 @@ class Order_EweiShopV2Model
             // 包邮标识
             $sendfree = false;
             $merchid = $g["merchid"];
-            // 记次/时商品
-            if ($g["type"] == 5) {
+
+            // 记次/时商品 虚拟商品
+            if ($g["type"] === '5' || $g['type'] === '2' || (!$g['is_gift_plus'] && $carrierid) || (!$g['is_gift_plus'] && $g['isverify'] === '2')) {
                 $sendfree = true;
             }
+
             // 包邮
             if (!empty($g["issendfree"])) {
                 $sendfree = true;

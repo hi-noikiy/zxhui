@@ -1446,7 +1446,14 @@ class Create_EweiShopV2Page extends MobileLoginPage
                                     // 赠品数量
                                     $gift_plus[$key]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
                                 }
+                                // 不满足满赠规则的就删除
+                                if ($gift_plus_rule[$value]['goods_amount'] > $g['total']) {
+                                    unset($gift_plus[$key]);
+                                }
                             }
+
+                            sort($gift_plus);
+
                             if ($gift_plus) {
                                 $gift_plus = array_filter($gift_plus);
                                 $goodsdata = array_merge($goodsdata, $gift_plus);
@@ -1468,6 +1475,10 @@ class Create_EweiShopV2Page extends MobileLoginPage
                                     $gift_plus[$key] = $gift_info;
                                     // 赠品数量
                                     $gift_plus[$key]['total'] = $gift_plus_rule[$value]['gift_goods_amount'];
+                                }
+                                // 不满足满赠规则的就删除
+                                if ($gift_plus_rule[$value]['goods_amount'] > $g['total']) {
+                                    unset($gift_plus[$key]);
                                 }
                             }
                             if ($gift_plus) {
@@ -1859,6 +1870,9 @@ EOF;
         $createInfo['gift_price'] = is_array($gift_price)&&empty($gift_price)!=true?min($gift_price):0;
         $createInfo['show_card'] = $show_card;
 
+        // 超级赠品
+        $createInfo['gift_plus_need_verify'] = $gift_plus_need_verify;
+        $createInfo['gift_plus_need_address'] = $gift_plus_need_address;
 
         include $this->template();
 
@@ -2157,6 +2171,7 @@ EOF;
     function caculate()
     {
         global $_W, $_GPC;
+
         $open_redis = function_exists('redis') && !is_error(redis());
 
         $openid = $_W['openid'];
@@ -2267,6 +2282,9 @@ EOF;
             $allgoods = array();
             //$goodsarr = m('goods')->wholesaleprice($goodsarr);
 
+            // 超级赠品
+            $has_gift_plus = false;
+
             foreach ($goodsarr as &$g) {
                 if (empty($g)) {
                     continue;
@@ -2297,6 +2315,11 @@ EOF;
                     $data['marketprice'] = $data['presellprice'];
                 }
 
+                // 超级赠品
+                $data['is_gift_plus'] = intval($g['is_gift_plus']);
+                if ($data['is_gift_plus']) {
+                    $has_gift_plus = true;
+                }
 
                 // 直播价格处理 Step.2
                 if(!empty($liveid)){
@@ -2419,15 +2442,19 @@ EOF;
                 }
 
                 if ($is_openmerch == 1) {
-                    $merchid = $data['merchid'];
-                    $merch_array[$merchid]['goods'][] = $data['goodsid'];
-                    $merch_array[$merchid]['ggprice'] += $data['ggprice'];
+                    // 超级赠品不参与
+                    if (!$data['is_gift_plus']) {
+                        $merchid = $data['merchid'];
+                        $merch_array[$merchid]['goods'][] = $data['goodsid'];
+                        $merch_array[$merchid]['ggprice'] += $data['ggprice'];
+                        $merch_array[$merchid]['goods_price'][$data['goodsid']] = $data['ggprice'];
+                    }
                 }
 
                 // 超级赠品
                 if (!isset($g['marketprice']) || $g['is_gift_plus']) {
-                    $data['is_gift_plus'] = !isset($g['marketprice']);
                     $data['marketprice'] = 0;
+                    $data['is_gift_plus'] = 1;
                 }
 
                 if ($data['isverify'] == 2) {
@@ -2523,15 +2550,14 @@ EOF;
             }
 
             foreach ($allgoods as $g) {
-
-
-                //判断是否为纯记次时商品订单
+                // 判断是否为纯记次时商品订单
                 if ($g['type'] != 5) {
                     $isonlyverifygoods=false;
                 }
 
-                if ($g['seckillinfo'] && $g['seckillinfo']['status'] == 0) {
-                    //秒杀不管二次
+                // 超级赠品
+                if (($g['seckillinfo'] && $g['seckillinfo']['status'] == 0) || $g['is_gift_plus']) {
+                    // 秒杀不管二次
                     $g['deduct'] = 0;
                 } else {
                     if (floatval($g['buyagain']) > 0 && empty($g['buyagain_sale'])) {
@@ -2541,9 +2567,9 @@ EOF;
                         }
                     }
                 }
-                if ($g['seckillinfo'] && $g['seckillinfo']['status'] == 0) {
-
-                    //秒杀不管抵扣
+                // 超级赠品
+                if (($g['seckillinfo'] && $g['seckillinfo']['status'] == 0) || $g['is_gift_plus']) {
+                    // 秒杀不管抵扣
                 } else {
 
                     if( $open_redis ) {
@@ -2633,7 +2659,6 @@ EOF;
             }
 
 
-
             if ($saleset) {
                 //满额减 (减掉秒杀金额)
                 foreach ($saleset['enoughs'] as $e) {
@@ -2647,8 +2672,6 @@ EOF;
             }
 
 
-
-
             //使用快递
             if ($dflag != '1') {
                 $include_dispath = 0;
@@ -2659,15 +2682,20 @@ EOF;
                         $include_dispath = 1;
                     }
                 }
+            } elseif ($dflag === '1' && $has_gift_plus) {
+                $include_dispath = 1;
             }
 
 
             $goodsdata_coupon = array();
 
+            // 超级赠品
+            $merch_saleset['merch_enoughmoney_count'] = 0;
+
             foreach ($allgoods as $g) {
 
                 if ($g['seckillinfo'] && $g['seckillinfo']['status'] == 0) {
-                    //秒杀不管优惠券
+                    // 秒杀不管优惠券
 
                 } else {
 
@@ -2684,6 +2712,11 @@ EOF;
                         , 'merchid' => $g['merchid'], 'cates' => $g['cates'], 'discounttype' => $g['discounttype'], 'isdiscountprice' => $g['isdiscountprice']
                         , 'discountprice' => $g['discountprice'], 'isdiscountunitprice' => $g['isdiscountunitprice'], 'discountunitprice' => $g['discountunitprice']
                         , 'type' => $g['type'] , 'wholesaleprice' => $g['wholesaleprice']);
+                    }
+
+                    // 商户满减 && 计算满足满减条件的商品数量
+                    if (!$g['is_gift_plus'] && $g['marketprice'] * $g['total'] >= $merch_saleset['merch_enoughmoney']) {
+                        $merch_saleset['merch_enoughmoney_count']++;
                     }
                 }
             }
@@ -2751,12 +2784,6 @@ EOF;
 
 
             }
-
-
-
-
-
-
         }
 
 
@@ -2781,8 +2808,9 @@ EOF;
         $return_array['isdiscountprice'] = $isdiscountprice;
 
         $return_array['merch_showenough'] = $merch_saleset['merch_showenough'];
-        $return_array['merch_deductenough_money'] = $merch_saleset['merch_enoughdeduct'];
+        $return_array['merch_deductenough_money'] = $merch_saleset['merch_enoughdeduct'] * $merch_saleset['merch_enoughmoney_count'];
         $return_array['merch_deductenough_enough'] = $merch_saleset['merch_enoughmoney'];
+        $return_array['merch_deductenough_count'] = $merch_saleset['merch_enoughmoney_count'];
         $return_array['merchs'] = $merchs;
         $return_array['buyagain'] = $buyagainprice;
 
@@ -3033,6 +3061,7 @@ EOF;
         }
 
         // 超级赠品
+        $has_gift_plus = false;
         $gift_plus_id = intval($_GPC['gift_plus_id']);
         if ($gift_plus_id) {
             // 赠品规则
@@ -3077,7 +3106,13 @@ EOF;
             $goodsid = intval($g['goodsid']);
             $goodstotal = intval($g['total']);
             $total_array[$goodsid]['total'] += $goodstotal;
+
+            // 超级赠品
+            if ($g['is_gift_plus']) {
+                $has_gift_plus = true;
+            }
         }
+
         if (p('threen')){
             $threenvip = p('threen')->getMember($_W['openid']);
             if (!empty($threenvip)){
@@ -3658,6 +3693,12 @@ EOF;
             }elseif($threenprice && !empty($threenprice['discount'])){
                 $data['ggprice'] -= (10-$threenprice['discount'])/10 * $data['price0'];
             }
+
+            // 超级赠品 && 商品加入到商户数据里进行满减计算
+            if (!$data['is_gift_plus']) {
+                $merch_array[$merchid]['goods_price'][$data['goodsid']] = $data['ggprice'];
+            }
+
             $merch_array[$merchid]['ggprice'] += $data['ggprice'];
             $totalprice += $data['ggprice'];
 
@@ -3829,7 +3870,7 @@ EOF;
                 }
             }
             if ($allow_sale && empty($_SESSION['taskcut'])) {
-                //多商户满额减
+                // 多商户满额减
                 $merch_enough = m('order')->getMerchEnough($merch_array);
                 $merch_array = $merch_enough['merch_array'];
                 $merch_enough_total = $merch_enough['merch_enough_total'];
@@ -4026,7 +4067,7 @@ EOF;
 
         // 超级赠品
         $gift_plus_dispatch = [];
-        if ($gift_plus_id) {
+        if ($gift_plus_id && $has_gift_plus) {
             $gift_plus_dispatch = m('order')->getOrderDispatchPriceGroupByGoodsId($allgoods, $member, $address, $saleset, $merch_array, 2);
 
             $dispatch_price = $gift_plus_dispatch['dispatch_price'];
@@ -4348,12 +4389,20 @@ EOF;
             $dispatch_price=0;
             $seckill_dispatchprice=0;
             $order['dispatchprice'] = 0;
-            $order['price'] = $totalprice-$dispatch_price- $seckill_dispatchprice;
+            $order['price'] = $totalprice - $dispatch_price - $seckill_dispatchprice;
         }
 
         if (!empty($_SESSION['exchange']) && p('exchange')){
-            $deductenough=0;//兑换产品没有满额减活动
+            $deductenough = 0;//兑换产品没有满额减活动
         }
+
+        // 核销、自提商品免运费
+        if ($isverify || $carrierid > 0) {
+            $dispatch_price = 0;
+            $order['dispatchprice'] = 0;
+            $order['price'] = $totalprice - $dispatch_price;
+        }
+
         $order['dispatchtype'] = $dispatchtype;
         $order['dispatchid'] = $dispatchid;
         $order['storeid'] = $carrierid;

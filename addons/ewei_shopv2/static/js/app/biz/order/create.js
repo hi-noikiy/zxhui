@@ -36,6 +36,8 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
 
             // 超级赠品
             gift_plus_id: 0,
+            gift_plus_need_verify: 0,
+            gift_plus_need_address: 0,
 
             show_card:false,
             city_express_state:false
@@ -123,12 +125,19 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
                     $('.exchange-withpostage').show();
                     modal.params.iscarry = 0;
                     $('#addressInfo').show(), $('#carrierInfo').hide(), $('#memberInfo').hide(), $('#showdispatchprice').show();
+                    if (modal.params.gift_plus_need_address || modal.params.gift_plus_need_verify) {
+                        $('#memberInfo').show()
+                    }
                     modal.caculate();
                 }, tab2: function () {
                     modal.params.iscarry = 1;
                     $('.exchange-withpostage').hide();
                     $('.exchange-withoutpostage').show();
                     $('#addressInfo').hide(), $('#carrierInfo').show(), $('#memberInfo').show(), $('#showdispatchprice').hide();
+                    if (modal.params.gift_plus_need_address || modal.params.gift_plus_need_verify) {
+                        $('#showdispatchprice').show();
+                        $('#memberInfo').show();
+                    }
                     modal.caculate();
                 }
             }
@@ -359,7 +368,11 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
         }, function (getjson) {
             if (getjson.status == 1) {
                 if (modal.params.iscarry) {
-                    $('.dispatchprice').html('0.00');
+                    if (modal.params.gift_plus_need_address) {
+                        $('.dispatchprice').html(core.number_format(getjson.result.price, 2));
+                    } else {
+                        $('.dispatchprice').html('0.00');
+                    }
                 } else {
                     $('.dispatchprice').html(core.number_format(getjson.result.price, 2));
                 }
@@ -411,6 +424,8 @@ define(['core', 'tpl', 'biz/plugin/diyform', 'biz/order/invoice'], function (cor
                 if (getjson.result.merch_deductenough_money > 0) {
                     $('#merch_deductenough').show();
                     $('#merch_deductenough_money').html(core.number_format(getjson.result.merch_deductenough_money, 2));
+                    // 超级赠品
+                    $('#merch_deductenough_money_clone').html($('#merch_deductenough_money').html());
                     $('#merch_deductenough_enough').html(core.number_format(getjson.result.merch_deductenough_enough, 2));
                 } else {
                     $('#merch_deductenough').hide();
