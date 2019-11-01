@@ -40,53 +40,17 @@
                 </div>
             </div>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="col-sm-2 control-label">满推链接</label>
-					<div class="col-sm-8" >
-						<div class='input-group'>
-							<span class="input-group-addon">支付</span>
-							<input type="text" name="data[coupon][tuimoney1]" value="{$item['coupon']['tuimoney1']}" class="form-control"/>
-							
-							<span class="input-group-addon">说明</span>
-							<input type="text" name="data[coupon][wenzi1]" value="{$item['coupon']['wenzi1']}" class="form-control"/>
-							
-							<span class='input-group-addon'>元 推送</span>
-							<input type="text" name="data[coupon][tuiurl1]" value="{$item['coupon']['tuiurl1']}" class="form-control"/>
-						   
-						   
-							
-						</div>
-						<div class='input-group' style="padding-top:20px;width:20%">
-						<span class='input-group-addon'>是否推送</span>
-							<input type="checkbox" style="float:right" name="data[coupon][send1]" value="1" {if $item['coupon']['send1'] == 1}checked="true"{/if} class="form-control"/>
-						</div>
-					</div>
-					
-					</div>
-					<div class="form-group">
-					<label class="col-sm-2 control-label"></label>
 					<div class="col-sm-8">
 						<div class='input-group'>
 							<span class="input-group-addon">支付满</span>
-							<input type="text" name="data[coupon][tuimoney2]" value="{$item['coupon']['tuimoney2']}" class="form-control"/>
-							
-							<span class="input-group-addon">文字说明</span>
-							<input type="text" name="data[coupon][wenzi2]" value="{$item['coupon']['wenzi2']}" class="form-control"/>
-							
+							<input type="text" name="data['coupon'][tuimoney1]" value="{$item['coupon']['tuimoney1']}" class="form-control"/>
 							<span class='input-group-addon'>元 推送</span>
-							<input type="text" name="data[coupon][tuiurl2]" value="{$item['coupon']['tuiurl2']}" class="form-control"/>
-							
-							
+							<input type="text" name="data['coupon'][tuiurl1]" value="{$item['coupon']['tuiurl1']}" class="form-control"/>
 						   
 							
-						</div> 
-						
-						<div class='input-group' style="padding-top:20px;width:20%">
-								<span class='input-group-addon'>是否推送</span>
-								<input type="checkbox" style="float:right" name="data[coupon][send2]" value="1" {if $item['coupon']['send2'] == 1}checked="true"{/if} class="form-control"/>
-							
 						</div>
-						
 					</div>
 					</div>
 					<div class="form-group">
@@ -94,28 +58,27 @@
 					<div class="col-sm-8">
 						<div class='input-group'>
 							<span class="input-group-addon">支付满</span>
-							<input type="text" name="data[coupon][tuimoney3]" value="{$item['coupon']['tuimoney3']}" class="form-control"/>
-							
-							<span class="input-group-addon">文字说明</span>
-							<input type="text" name="data[coupon][wenzi3]" value="{$item['coupon']['wenzi3']}" class="form-control"/>
-							
+							<input type="text" name="data['coupon'][tuimoney2]" value="{$item['coupon']['tuimoney2']}" class="form-control"/>
 							<span class='input-group-addon'>元 推送</span>
-							<input type="text" name="data[coupon][tuiurl3]" value="{$item['coupon']['tuiurl3']}" class="form-control"/>
-							
-						
+							<input type="text" name="data['coupon'][tuiurl2]" value="{$item['coupon']['tuiurl2']}" class="form-control"/>
 						   
 							
 						</div>
-						
-						<div class='input-group' style="padding-top:20px;width:30%">
-						<span class='input-group-addon'>是否推送</span>
-								<input type="checkbox" name="data[coupon][send3]" value="1" {if $item['coupon']['send3'] == 1}checked="true"{/if} class="form-control"/>
-								
-								<a id="resetdata" class='input-group-addon'>清空/重填</a>
-						</div>
-						
 					</div>
-				</div>
+					</div>
+					<div class="form-group">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-8">
+						<div class='input-group'>
+							<span class="input-group-addon">支付满</span>
+							<input type="text" name="data['coupon'][tuimoney3]" value="{$item['coupon']['tuimoney3']}" class="form-control"/>
+							<span class='input-group-addon'>元 推送</span>
+							<input type="text" name="data['coupon'][tuiurl3]" value="{$item['coupon']['tuiurl3']}" class="form-control"/>
+						   
+							
+						</div>
+					</div>
+				</div> -->
 				
             <div class="form-group">
                 <label class="col-sm-2 control-label">可用优惠卷</label>
@@ -134,5 +97,3 @@
                     ?>
                 </div>
             </div>
-			<script>
-			</script>

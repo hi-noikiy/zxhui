@@ -62,6 +62,11 @@
                         <i class='fa fa-edit'></i> 修改
                     </a>
                     <a data-toggle='ajaxRemove' href="{php echo cashierUrl('sysset/operator/delete', array('id' => $row['id']))}"class="btn btn-sm" data-confirm='确认要删除此操作员吗?'><i class="fa fa-trash"></i> 删除</a>
+					
+					<a target='_blank' href="{php echo cashierUrl('qr',array('url'=>mobileUrl('cashier/pay',array('cashierid'=>$_W['cashierid'],'operatorid'=>$id),true)))}" class="btn btn-sm" >
+                        <i class='fa fa-edit'></i> 下载
+                    </a>
+					
                 </td>
             </tr>
             {/loop}

@@ -35,6 +35,21 @@
             $(this).tab('show');
         })
     });
+	$('#resetdata').click(function(){
+		$("[name='data[coupon][tuimoney1]']").val('');
+		$("[name='data[coupon][tuimoney2]']").val('');
+		$("[name='data[coupon][tuimoney3]']").val('');
+		$("[name='data[coupon][wenzi1]']").val('');
+		$("[name='data[coupon][wenzi2]']").val('');
+		$("[name='data[coupon][wenzi3]']").val('');
+		$("[name='data[coupon][tuiurl1]']").val('');
+		$("[name='data[coupon][tuiurl2]']").val('');
+		$("[name='data[coupon][tuiurl3]']").val('');
+		
+		$("[name='data[coupon][send1]']").attr("checked",false);
+		$("[name='data[coupon][send2]']").attr("checked",false);
+		$("[name='data[coupon][send3]']").attr("checked",false);
+	});
     function myFunction() {
         var p = document.getElementById('aad');
         p.removeChild(document.getElementById('input-group'));

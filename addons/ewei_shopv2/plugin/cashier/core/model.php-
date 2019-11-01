@@ -857,23 +857,20 @@ class CashierModel extends PluginModel
 		$uset=$this->getUserSet('',$log['cashierid']);
 		$text='';
 	
-		if($money>=$uset['coupon']['tuimoney1']&&$uset['coupon']['send1']==1){
+		if($money>=$uset['coupon']['tuimoney1']){
 			$url=$uset['coupon']['tuiurl1'];
 			$text=$uset['coupon']['wenzi1'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
 		}
-		if($money>=$uset['coupon']['tuimoney2']&&$uset['coupon']['send2']==1){
+		if($money>=$uset['coupon']['tuimoney2']&&!empty($uset['coupon']['tuiurl2'])){
 			$url=$uset['coupon']['tuiurl2'];
 			$text=$uset['coupon']['wenzi2'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
 		}
-		if($money>=$uset['coupon']['tuimoney3']&&$uset['coupon']['send3']==1){
+		if($money>=$uset['coupon']['tuimoney3']&&!empty($uset['coupon']['tuiurl3'])){
 			$url=$uset['coupon']['tuiurl3'];
 			$text=$uset['coupon']['wenzi3'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
 		}
 		
-		
+		if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
 		/* 	m('message')->sendTexts($log['openid'],'11'); */
             //发优惠卷
             $coupon = $this->seedCoupon($log['money']+$log['deduction'],$log['openid']);
@@ -1076,10 +1073,9 @@ class CashierModel extends PluginModel
 		/* load()->func('logging');
 
 		logging_run($member, 'trace', 'mmmmember'); */
-		$store_member = m('member')->getMember($manageopenid);
         if ($member){
-            if (/* empty($member['isagent'])&& hans*/empty($member['agentid'])&&$member['id']!=$store_member['id']){
-                
+            if (/* empty($member['isagent'])&& hans*/empty($member['agentid'])){
+                $store_member = m('member')->getMember($manageopenid);
 								
                 pdo_query("UPDATE ".tablename('ewei_shop_member')." SET agentid={$store_member['id']} WHERE `id` = :id",array(':id'=>$member['id']));
             }
@@ -1697,20 +1693,17 @@ class CashierModel extends PluginModel
         $params[':merchid'] = intval($_W['cashieruser']['merchid']);
         $condition=" and uniacid=:uniacid and merchid=:merchid and (total=-1 OR total>0)";
         $condition1=" and uniacid=:uniacid and merchid=:merchid and status =1";
-		load()->func('logging');
-		logging_run($condition, 'trace', '1111');
-        /* 取消总后台限制 if (empty($_W['cashieruser']['couponid'])){
+
+        if (empty($_W['cashieruser']['couponid'])){
             $list =  pdo_fetchall('SELECT couponid  FROM ' . tablename('ewei_shop_cashier_user') . " WHERE 1 {$condition1}", $params);
             if(empty($list[0]['couponid'])){
                 return array();
             }else{
                 $condition .= " AND id IN ({$list[0]['couponid']})";
-				logging_run($condition, 'trace', 'paramsparams1111');
             }
         }else{
             $condition .= " AND id IN ({$_W['cashieruser']['couponid']})";
-			logging_run($condition, 'trace', 'paramsparams2222');
-        } */
+        }
 
 
         if (!empty($kwd)) {

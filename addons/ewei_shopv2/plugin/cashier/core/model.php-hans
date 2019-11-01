@@ -829,19 +829,7 @@ class CashierModel extends PluginModel
         if (!empty($log['openid'])){
             //是否成为上下级
             if ($user['isopen_commission']){
-				/* hans start */
-				if($log['operatorid']>0){
-					$manageopenid=pdo_fetchcolumn('select manageopenid from '.tablename('ewei_shop_cashier_operator').' where id=:id and cashierid=:cashierid ',array(':id'=>$log['operatorid'],':cashierid'=>$log['cashierid']));
-				}
-				$mymember=m('member')->getMember($manageopenid);
-				if($mymember['isagent']&&$mymember['status']){
-					$this->becomeDown($log['openid'],$mymember['openid']);
-				}else{
-					$this->becomeDown($log['openid'],$user['manageopenid']);
-				}
-				/* hans end */
-				
-				/* $this->becomeDown($log['openid'],$user['manageopenid']); */
+                $this->becomeDown($log['openid'],$user['manageopenid']);
             }
             $this->sendMessage(array(
                 'logno'=>$log['logno'],
@@ -850,31 +838,6 @@ class CashierModel extends PluginModel
                 'paytime'=>time(),
                 'cashier_title'=>$user['title']
             ),self::PAY_CASHIER_USER,$log['openid']);
-			
-		/**hans**/
-		$url='';
-		$money=$log['money']+$log['deduction'];
-		$uset=$this->getUserSet('',$log['cashierid']);
-		$text='';
-	
-		if($money>=$uset['coupon']['tuimoney1']&&$uset['coupon']['send1']==1){
-			$url=$uset['coupon']['tuiurl1'];
-			$text=$uset['coupon']['wenzi1'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
-		}
-		if($money>=$uset['coupon']['tuimoney2']&&$uset['coupon']['send2']==1){
-			$url=$uset['coupon']['tuiurl2'];
-			$text=$uset['coupon']['wenzi2'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
-		}
-		if($money>=$uset['coupon']['tuimoney3']&&$uset['coupon']['send3']==1){
-			$url=$uset['coupon']['tuiurl3'];
-			$text=$uset['coupon']['wenzi3'];
-			if(!empty($url)){m('message')->sendTexts($log['openid'],$text,$url);}
-		}
-		
-		
-		/* 	m('message')->sendTexts($log['openid'],'11'); */
             //发优惠卷
             $coupon = $this->seedCoupon($log['money']+$log['deduction'],$log['openid']);
         }
@@ -938,25 +901,6 @@ class CashierModel extends PluginModel
             'paytime'=>time(),
             'cashier_title'=>$user['title']
         ),self::PAY_CASHIER,$user['manageopenid']);
-		
-		/**hans**/
-		$strsopenids = explode(',', $user['noticeopenid']);
-		load()->func('logging');
-
-		
-		
-		foreach ($strsopenids as $mopenid ) 
-		{
-			logging_run($mopenid, 'trace', 'openid');
-			$this->sendMessage(array(
-            'logno'=>$log['logno'],
-            'money'=>$log['money'],
-            'deduction'=>$log['deduction'],
-            'paytime'=>time(),
-            'cashier_title'=>$user['title']
-			),self::PAY_CASHIER,$mopenid);
-		}
-		/**hans**/
 
         //用户设置
         $userset = json_decode($user['set'],true);
@@ -1073,14 +1017,9 @@ class CashierModel extends PluginModel
     public function becomeDown($openid,$manageopenid)
     {
         $member = m('member')->getMember($openid);
-		/* load()->func('logging');
-
-		logging_run($member, 'trace', 'mmmmember'); */
-		$store_member = m('member')->getMember($manageopenid);
         if ($member){
-            if (/* empty($member['isagent'])&& hans*/empty($member['agentid'])&&$member['id']!=$store_member['id']){
-                
-								
+            if (empty($member['isagent'])&&empty($member['agentid'])){
+                $store_member = m('member')->getMember($manageopenid);
                 pdo_query("UPDATE ".tablename('ewei_shop_member')." SET agentid={$store_member['id']} WHERE `id` = :id",array(':id'=>$member['id']));
             }
         }
@@ -1697,20 +1636,17 @@ class CashierModel extends PluginModel
         $params[':merchid'] = intval($_W['cashieruser']['merchid']);
         $condition=" and uniacid=:uniacid and merchid=:merchid and (total=-1 OR total>0)";
         $condition1=" and uniacid=:uniacid and merchid=:merchid and status =1";
-		load()->func('logging');
-		logging_run($condition, 'trace', '1111');
-        /* 取消总后台限制 if (empty($_W['cashieruser']['couponid'])){
+
+        if (empty($_W['cashieruser']['couponid'])){
             $list =  pdo_fetchall('SELECT couponid  FROM ' . tablename('ewei_shop_cashier_user') . " WHERE 1 {$condition1}", $params);
             if(empty($list[0]['couponid'])){
                 return array();
             }else{
                 $condition .= " AND id IN ({$list[0]['couponid']})";
-				logging_run($condition, 'trace', 'paramsparams1111');
             }
         }else{
             $condition .= " AND id IN ({$_W['cashieruser']['couponid']})";
-			logging_run($condition, 'trace', 'paramsparams2222');
-        } */
+        }
 
 
         if (!empty($kwd)) {

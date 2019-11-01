@@ -27,6 +27,22 @@
 </div>
 
 <div class="form-group">
+	<label class="col-lg control-label">收银台收银员扫码地址</label>
+	<div class="col-sm-9 col-xs-12">
+		<p class='form-control-static'>
+			<a href='javascript:;' class="js-clip" title='点击复制链接' data-url="{php echo mobileUrl('member/qrscan','',true)}" >
+				{php echo mobileUrl('member/qrscan','',true)}
+			</a>
+			<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true"
+				  data-content="<img src='{$qrscamcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+				<i class="glyphicon glyphicon-qrcode"></i>
+			</span>
+		</p>
+	</div>
+</div>
+
+
+<div class="form-group">
 	<label class="col-lg control-label">登录页面背景</label>
 	<div class="col-sm-9 col-xs-12">
 		{ifp 'cashier.set.edit'}
