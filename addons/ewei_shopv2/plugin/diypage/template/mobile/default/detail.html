@@ -617,8 +617,8 @@
 {template 'sale/gift-plus/util/picker'}
 
 <div id='gift-plus-picker-modal' style="margin:-100%;">
-    <div class='gift-picker'>
-        <div class='fui-cell-title text-center' style="background: white;">请选择赠品</div>
+    <div class='gift-picker gift-plus-picker'>
+        <div class='fui-cell-title text-center' style="background: white;">请选择赠品套餐</div>
         <div class="fui-cell-group fui-sale-group" style="margin-top:0; overflow-y: auto;">
             <div class="fui-cell">
                 <div class="fui-cell-text dispatching">
@@ -629,6 +629,7 @@
                                 <input type="radio" name="checkbox" class="fui-radio fui-radio-danger gift-item" value="{$item['id']}" style="display: list-item; list-style: none;">
                             </div>
                             <div class="fui-list-inner">
+                                <div class="fui-title">{$item['title']}</div>
                                 {loop $item['gift'] $gift}
                                 <div class="fui-list">
                                     <div class="fui-list-media image-media" style="position: initial;">
@@ -645,6 +646,11 @@
                                     </div>
                                     <div class='fui-list-angle'>
                                         <span class="price">&yen;<del class='marketprice'>{$gift['marketprice']}</del></span>
+                                        {loop $item['rule'] $key $rule}
+                                        {if $key == $gift['id']}
+                                        <span class="gift-rule-text text-danger">买{$rule['goods_amount']}赠{$rule['gift_goods_amount']} </span>
+                                        {/if}
+                                        {/loop}
                                     </div>
                                 </div>
                                 {/loop}

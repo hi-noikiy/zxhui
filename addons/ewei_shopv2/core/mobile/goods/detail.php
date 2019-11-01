@@ -115,6 +115,9 @@ class Detail_EweiShopV2Page extends MobilePage {
 
             if (empty($value['gift'])) {
                 unset($gift_plus[$key]);
+            } else {
+                // 赠品规则
+                $gift_plus[$key]['rule'] = m('gift_plus')->getGiftRule($value['id']);
             }
         }
         $gift_groups = [];
