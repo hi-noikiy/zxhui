@@ -254,7 +254,7 @@
     </div>
     <div class='fui-content  navbar'>
 
-        {if (count($carrier_list) > 0 && !$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address}
+        {if (count($carrier_list) > 0 && !$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address || $need_address}
         <div id="carrierTab" class="fui-tab fui-tab-danger" style="margin-bottom: 0">
             <a data-tab="tab1" class="active">快递配送</a>
             <a data-tab="tab2">{php echo isset($trade['pickuptext']) ? $trade['pickuptext'] : "上门自提" }</a>
@@ -271,7 +271,7 @@
         {/if}
 
 
-        {if (!$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address}
+        {if (!$isverify && !$isvirtual && !$isonlyverifygoods) || $gift_plus_need_address || $need_address}
         <!--地址选择-->
         <div class="fui-list-group" id='addressInfo' data-addressid="{php echo intval($address['id'])}" style="    margin: 0 0 .5rem;">
             {if !empty($address)}
@@ -300,7 +300,7 @@
                 </div>
                 <div class="fui-list-angle">
                     <div class="angle"></div>
-                </div>1
+                </div>
             </a>
             {/if}
         </div>

@@ -154,7 +154,11 @@ class Create_EweiShopV2Page extends MobileLoginPage
         $giftGood = array();
         $sysset = m('common')->getSysset('trade');
 
-        // 超级赠品
+        // 超级赠品 && 是否需要地址
+        $need_address = false;
+        $need_verify = false;
+        $gift_plus_need_address = false;
+        $gift_plus_need_verify = false;
         $gift_plus_rule = [];
         $gift_plus_id = intval($_GPC['gift_plus_id']);
         $gift_group_id = intval($_GPC['gift_group_id']);
@@ -229,10 +233,6 @@ class Create_EweiShopV2Page extends MobileLoginPage
 
             //是否为核销单
             $isverify = false;
-
-            // 超级赠品 && 是否需要地址
-            $gift_plus_need_address = false;
-            $gift_plus_need_verify = false;
 
             //是否强制核销选择门店
             $isforceverifystore = false;
@@ -575,6 +575,13 @@ class Create_EweiShopV2Page extends MobileLoginPage
                     $show_card=false;//预售商品不能会员卡
                 }
 
+                if ($data['isverify'] === '1') {
+                    $need_address = true;
+                }
+
+                if ($data['isverify'] === '2') {
+                    $need_verify = true;
+                }
 
 
                 // 直播价格处理 Step.2
@@ -1240,7 +1247,7 @@ class Create_EweiShopV2Page extends MobileLoginPage
                     }
                 }
 
-                if ($gift_plus_need_address) {
+                if ($gift_plus_need_address || $need_address) {
                     // 默认地址
                     $address = pdo_fetch('select * from ' . tablename('ewei_shop_member_address') . ' where openid=:openid and deleted=0 and isdefault=1  and uniacid=:uniacid limit 1', array(
                         ':uniacid' => $uniacid,
@@ -1873,6 +1880,8 @@ EOF;
         // 超级赠品
         $createInfo['gift_plus_need_verify'] = $gift_plus_need_verify;
         $createInfo['gift_plus_need_address'] = $gift_plus_need_address;
+        $createInfo['need_address'] = $gift_plus_need_address || $need_address;
+        $createInfo['need_verify'] = $gift_plus_need_verify || $need_verify;
 
         include $this->template();
 
