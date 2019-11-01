@@ -83,6 +83,138 @@
 </div>
 
 
+<div class="region-goods-details row">
+    <div class="region-goods-left col-sm-2">推送</div>
+    <div class="region-goods-right col-sm-10">
+        <div class="dynamic-area push-rule-items">
+            {ife 'goods' $item}
+            {php $push_rule = json_decode($item['push_rule'], true);}
+            {if empty($push_rule)}
+            <div class="form-group push-rule-item init-item">
+                <label class="col-sm-2 control-label">推送规则</label>
+                <div class="col-sm-9 col-xs-12">
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[text][amount][]" value="">
+                            <span class="btn btn-default">推送文字</span>
+                        </div>
+                        <input type="text" class="form-control" name="push[text][value][]">
+                    </div>
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[image][amount][]" value="">
+                            <span class="btn btn-default">推送图片</span>
+                        </div>
+                        {php echo tpl_form_field_image_inline('push[image][value][]', $item['share_icon'])}
+                    </div>
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[link][amount][]" value="">
+                            <span class="btn btn-default">推送链接</span>
+                        </div>
+                        <input type="text" class="form-control" name="push[link][value][]">
+                        <span class="input-group-addon">http或者https开头</span>
+                    </div>
+                </div>
+                <div class="input-group-btn"><span class="btn btn-danger" onclick="removePushRuleItem(this)"><i class="fa fa-remove"></i></span></div>
+            </div>
+            {else}
+            {loop $push_rule $key $group}
+            <div class="form-group push-rule-item{if $key === 0} init-item{/if}">
+                <label class="col-sm-2 control-label">推送规则</label>
+                <div class="col-sm-9 col-xs-12">
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[text][amount][]" value="{$group['text']['amount']}">
+                            <span class="btn btn-default">推送文字</span>
+                        </div>
+                        <input type="text" class="form-control" name="push[text][value][]" value="{$group['text']['value']}">
+                    </div>
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[image][amount][]" value="{$group['image']['amount']}">
+                            <span class="btn btn-default">推送图片</span>
+                        </div>
+                        {php echo tpl_form_field_image_inline('push[image][value][]', $group['image']['value'])}
+                    </div>
+                    <div class="input-group gift-rule-item m-b-5">
+                        <div class="input-group-btn not-btn-group">
+                            <span class="btn btn-default">金额满</span>
+                            <input type="text" class="btn btn-default w-80" name="push[link][amount][]" value="{$group['link']['amount']}">
+                            <span class="btn btn-default">推送链接</span>
+                        </div>
+                        <input type="text" class="form-control" name="push[link][value][]" value="{$group['link']['value']}">
+                        <span class="input-group-addon">http或者https开头</span>
+                    </div>
+                </div>
+                <div class="input-group-btn"><span class="btn btn-danger" onclick="removePushRuleItem(this)"><i class="fa fa-remove"></i></span></div>
+            </div>
+            {/loop}
+            {/if}
+            {/if}
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-9 col-xs-12">
+                <button type="button" class="btn btn-default right-center" onclick="addPushRuleItem()"><i class="fa fa-fw fa-plus"></i>增加推送项</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language='javascript'>
+
+    function addPushRuleItem() {
+        var html = '';
+        html += '<div class="form-group push-rule-item">';
+            html += '<label class="col-sm-2 control-label">推送规则</label>';
+            html += '<div class="col-sm-9 col-xs-12">';
+                html += '<div class="input-group gift-rule-item m-b-5">';
+                    html += '<div class="input-group-btn not-btn-group">';
+                        html += '<span class="btn btn-default">金额满</span>';
+                        html += '<input type="text" class="btn btn-default w-80" name="push[text][amount][]" value="">'
+                        html += '<span class="btn btn-default">推送文字</span>';
+                    html += '</div>';
+                    html += '<input type="text" class="form-control" name="push[text][value][]">';
+                html += '</div>';
+                html += '<div class="input-group gift-rule-item m-b-5">';
+                    html += '<div class="input-group-btn not-btn-group">';
+                        html += '<span class="btn btn-default">金额满</span>';
+                        html += '<input type="text" class="btn btn-default w-80" name="push[image][amount][]" value="">'
+                        html += '<span class="btn btn-default">推送图片</span>';
+                    html += '</div>';
+                    html += '<input type="text" class="form-control" name="push[image][value][]">';
+                    html += '<span class="input-group-btn"><button class="btn btn-primary" type="button" onclick="showImageDialog(this);">选择图片</button></span>';
+                html += '</div>';
+                html += '<div class="input-group gift-rule-item m-b-5">';
+                    html += '<div class="input-group-btn not-btn-group">';
+                        html += '<span class="btn btn-default">金额满</span>';
+                        html += '<input type="text" class="btn btn-default w-80" name="push[link][amount][]" value="">'
+                        html += '<span class="btn btn-default">推送链接</span>';
+                    html += '</div>';
+                    html += '<input type="text" class="form-control" name="push[link][value][]">';
+                    html += '<span class="input-group-addon">http或者https开头</span>';
+                html += '</div>';
+            html += '</div>';
+            html += '<div class="input-group-btn"><span class="btn btn-danger" onclick="removePushRuleItem(this)"><i class="fa fa-remove"></i></span></div>';
+        html += '</div>';
+
+        $('.push-rule-items').append(html);
+    }
+
+    function removePushRuleItem(obj) {
+        if ($('.push-rule-item').length <= 1) {
+            alert('必须保留一条规则');
+        } else {
+            $(obj).closest('.push-rule-item').remove();
+        }
+    }
+</script>
 
 
 

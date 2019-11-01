@@ -2228,6 +2228,82 @@ if (!function_exists("set_wxerrmsg")) {
     }
 }
 
+// inline image
+if (!function_exists("tpl_form_field_image_inline")) {
+    function tpl_form_field_image_inline($name, $value = '', $default = '', $options = array())
+    {
+        global $_W;
+
+        if (empty($default)) {
+            $default = '../addons/ewei_shopv2/static/images/nopic.png';
+        }
+        $val = $default;
+        if (!empty($value)) {
+            $val = tomedia($value);
+        } else {
+            $val = '../addons/ewei_shopv2/static/images/default-pic.jpg';
+        }
+        if (!empty($options['global'])) {
+            $options['global'] = true;
+        } else {
+            $options['global'] = false;
+        }
+        if (empty($options['class_extra'])) {
+            $options['class_extra'] = '';
+        }
+        if (isset($options['dest_dir']) && !empty($options['dest_dir'])) {
+            if (!preg_match('/^\w+([\/]\w+)?$/i', $options['dest_dir'])) {
+                exit('图片上传目录错误,只能指定最多两级目录,如: "we7_store","we7_store/d1"');
+            }
+        }
+        $options['direct'] = true;
+        $options['multiple'] = false;
+        if (isset($options['thumb'])) {
+            $options['thumb'] = !empty($options['thumb']);
+        }
+        $options['fileSizeLimit'] = intval($GLOBALS['_W']['setting']['upload']['image']['limit']) * 1024;
+        $s = '';
+        if (!defined('TPL_INIT_IMAGE')) {
+            $s = '
+            <script type="text/javascript">
+                function showImageDialog(elm, opts, options) {
+                    require(["util"], function(util){
+                        var btn = $(elm);
+                        var ipt = btn.parent().prev();
+                        var val = ipt.val();
+                        var img = ipt.parent().next().children();
+                        options = ' . str_replace('"', '\'', json_encode($options)) . ';
+                        util.image(val, function(url){
+                            if(url.url){
+                                if(img.length > 0){
+                                    img.get(0).src = url.url;
+                                    img.closest(".input-group").show();
+                                }
+                                ipt.val(url.attachment);
+                                ipt.attr("filename",url.filename);
+                                ipt.attr("url",url.url);
+                            }
+                            if(url.media_id){
+                                if(img.length > 0){
+                                    img.get(0).src = "";
+                                }
+                                ipt.val(url.media_id);
+                            }
+                        }, options);
+                    });
+                }
+            </script>';
+            define('TPL_INIT_IMAGE', true);
+        }
+
+        $s .= '
+        <input type="text" name="' . $name . '" value="' . $value . '"' . ($options['extras']['text'] ? $options['extras']['text'] : '') . ' class="form-control ' . $options['class_extra'] . '" autocomplete="off">
+        <span class="input-group-btn"><button class="btn btn-primary" type="button" onclick="showImageDialog(this);">选择图片</button></span>';
+
+        return $s;
+    }
+}
+
 if (!function_exists("tpl_form_field_image2")) {
     function tpl_form_field_image2($name, $value = '', $default = '', $options = array())
     {

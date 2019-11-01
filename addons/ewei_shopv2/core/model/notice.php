@@ -831,6 +831,11 @@ class Notice_EweiShopV2Model
 					{
 						if( $order["status"] == 1 && empty($order["sendtype"]) || $order["status"] == 3 && $order["isvirtualsend"] == 1 ) 
 						{
+						    // 已付款 && 推送消息
+                            if ($order['status'] == 1) {
+                                $this->sendGoodsPushMessage($order['id']);
+                            }
+
 							$is_send = 0;
 							if( empty($is_merch) ) 
 							{
@@ -2170,5 +2175,112 @@ class Notice_EweiShopV2Model
 			com_run("sms::callsms", array( "tag" => "o2o_bverify", "datas" => $datas, "mobile" => $saler["mobile"] ));
 		}
 	}
+
+    /**
+     * 为订单里的商品发送推送信息
+     * @param $order_id
+     * @return mixed
+     */
+    public function sendGoodsPushMessage($order_id)
+    {
+        global $_W;
+
+        if (empty($order_id)) {
+            return NULL;
+        }
+
+        $order = pdo_fetch("select * from " . tablename("ewei_shop_order") . " where id=:id limit 1", array(":id" => $order_id));
+        // 分单
+        if ($order['isparent'] === '1') {
+            $order_list = pdo_getall('ewei_shop_order', ['parentid' => $order['id']], ['id', 'uniacid', 'openid', 'ordersn', 'price', 'costprice', 'is_gift_plus', 'gift_plus_price']);
+            foreach ($order_list as $key => $value) {
+                if ($value['is_gift_plus']) {
+                    continue;
+                }
+                $openid = $value['openid'];
+                $order_goods = pdo_fetch('SELECT g.id,g.push_rule FROM ' . tablename('ewei_shop_order_goods') . ' og LEFT JOIN ' . tablename('ewei_shop_goods') . ' g ON g.id = og.goodsid WHERE og.orderid = :order_id', [':order_id' => $value['id']]);
+                if ($order_goods && !empty($order_goods['push_rule'])) {
+                    $push_rule = json_decode($order_goods['push_rule'], true);
+                    foreach ($push_rule as $item) {
+                        foreach ($item as $type => $group) {
+                            // 订单额度满足条件就进行推送
+                            if ($value['price'] >= $group['amount']) {
+                                switch ($type) {
+                                    case 'text':
+                                        m('message')->sendCustomNotice($openid, $group['value']);
+                                        break;
+                                    case 'image':
+                                        $media_id = $this->uploadImage(ATTACHMENT_ROOT . $group['value']);
+                                        m('message')->sendImage($openid, $media_id);
+                                        break;
+                                    case 'link':
+                                        m('message')->sendCustomNotice($openid, '', $group['value']);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    die;
+                } else {
+                    continue;
+                }
+            }
+        } else {
+            $openid = $order['openid'];
+            $order_goods = pdo_fetch('SELECT g.id,g.push_rule FROM ' . tablename('ewei_shop_order_goods') . ' og LEFT JOIN ' . tablename('ewei_shop_goods') . ' g ON g.id = og.goodsid WHERE og.orderid = :order_id', [':order_id' => $order['id']]);
+            if ($order_goods && !empty($order_goods['push_rule'])) {
+                $push_rule = json_decode($order_goods['push_rule'], true);
+                foreach ($push_rule as $item) {
+                    foreach ($item as $type => $group) {
+                        // 订单额度满足条件就进行推送
+                        if ($order['price'] >= $group['amount']) {
+                            switch ($type) {
+                                case 'text':
+                                    m('message')->sendCustomNotice($openid, $group['value']);
+                                    break;
+                                case 'image':
+                                    $media_id = $this->uploadImage(ATTACHMENT_ROOT . $group['value']);
+                                    m('message')->sendImage($openid, $media_id);
+                                    break;
+                                case 'link':
+                                    m('message')->sendCustomNotice($openid, '', $group['value']);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 上传图片获取mediaID
+     * @param $img
+     * @return mixed
+     */
+    private function uploadImage($img)
+    {
+        load()->func("communication");
+        $account = m("common")->getAccount();
+        $access_token = $account->fetch_token();
+        $url = "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=" . $access_token . "&type=image";
+        $ch1 = curl_init();
+        $data = array("media" => "@" . $img);
+        if (version_compare(PHP_VERSION, "5.5.0", ">")) {
+            $data = array("media" => curl_file_create($img));
+        }
+        curl_setopt($ch1, CURLOPT_URL, $url);
+        curl_setopt($ch1, CURLOPT_POST, 1);
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch1, CURLOPT_POSTFIELDS, $data);
+        $content = @json_decode(@curl_exec($ch1), true);
+        if (!is_array($content)) {
+            $content = array("media_id" => "");
+        }
+        curl_close($ch1);
+
+        return $content["media_id"];
+    }
 }
-?>

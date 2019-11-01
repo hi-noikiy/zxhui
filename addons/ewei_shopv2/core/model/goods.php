@@ -1199,5 +1199,24 @@ class Goods_EweiShopV2Model
 		$b = hexdec($b);
 		return array( "red" => $r, "green" => $g, "blue" => $b );
 	}
+
+    /**
+     * 格式化商品推送规则
+     * @param $data
+     * @return array
+     */
+	public function parseGoodsPushRule($data)
+    {
+        $rule = [];
+
+        foreach ($data as $type => $group) {
+            foreach ($group['amount'] as $key => $value) {
+                $rule[$key][$type]['amount'] = $value;
+                $rule[$key][$type]['value'] = $group['value'][$key];
+            }
+        }
+
+        return $rule;
+    }
 }
 ?>

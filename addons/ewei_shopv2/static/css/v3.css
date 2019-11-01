@@ -2375,6 +2375,25 @@ select.we7-select {
     width: 80%;
 }
 
+.w-80 {
+    width: 80px;
+}
+
 .input-group-addon.text-left {
     text-align: left;
+}
+
+.not-btn-group .btn {
+    cursor: none;
+}
+
+.not-btn-group input.btn {
+    cursor: text;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.not-btn-group input.btn-default,
+.not-btn-group .btn-default:hover {
+    background-color: #ffffff !important;
 }

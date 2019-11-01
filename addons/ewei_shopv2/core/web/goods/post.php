@@ -622,6 +622,12 @@ if( $_W["ispost"] )
 	{
 		$data["productsn"] = "";
 	}
+
+	// 商品信息推送
+    if (!empty($_GPC['push'])) {
+        $data['push_rule'] = json_encode(m('goods')->parseGoodsPushRule($_GPC['push']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
 	if( empty($id) ) 
 	{
 		$data["merchid"] = 0;
