@@ -2201,26 +2201,43 @@ class Notice_EweiShopV2Model
                 $order_goods = pdo_fetch('SELECT g.id,g.push_rule FROM ' . tablename('ewei_shop_order_goods') . ' og LEFT JOIN ' . tablename('ewei_shop_goods') . ' g ON g.id = og.goodsid WHERE og.orderid = :order_id', [':order_id' => $value['id']]);
                 if ($order_goods && !empty($order_goods['push_rule'])) {
                     $push_rule = json_decode($order_goods['push_rule'], true);
-                    foreach ($push_rule as $item) {
+                    $push_rule_sort = [];
+                    foreach ($push_rule as $kk => $item) {
+                        foreach ($item as $type => $group) {
+                            switch ($type) {
+                                case 'text':
+                                    $push_rule_sort[$kk][0] = $group;
+                                    break;
+                                case 'image':
+                                    $push_rule_sort[$kk][2] = $group;
+                                    break;
+                                case 'link':
+                                    $push_rule_sort[$kk][1] = $group;
+                                    break;
+                            }
+                        }
+                        ksort($push_rule_sort[$kk]);
+                    }
+
+                    foreach ($push_rule_sort as $kk => $item) {
                         foreach ($item as $type => $group) {
                             // 订单额度满足条件就进行推送
-                            if ($value['price'] >= $group['amount']) {
+                            if ($value['price'] >= $group['amount'] && !empty($group['value'])) {
                                 switch ($type) {
-                                    case 'text':
+                                    case 0:
                                         m('message')->sendCustomNotice($openid, $group['value']);
                                         break;
-                                    case 'image':
+                                    case 1:
+                                        m('message')->sendCustomNotice($openid, '', $group['value']);
+                                        break;
+                                    case 2:
                                         $media_id = $this->uploadImage(ATTACHMENT_ROOT . $group['value']);
                                         m('message')->sendImage($openid, $media_id);
-                                        break;
-                                    case 'link':
-                                        m('message')->sendCustomNotice($openid, '', $group['value']);
                                         break;
                                 }
                             }
                         }
                     }
-                    die;
                 } else {
                     continue;
                 }
@@ -2230,20 +2247,38 @@ class Notice_EweiShopV2Model
             $order_goods = pdo_fetch('SELECT g.id,g.push_rule FROM ' . tablename('ewei_shop_order_goods') . ' og LEFT JOIN ' . tablename('ewei_shop_goods') . ' g ON g.id = og.goodsid WHERE og.orderid = :order_id', [':order_id' => $order['id']]);
             if ($order_goods && !empty($order_goods['push_rule'])) {
                 $push_rule = json_decode($order_goods['push_rule'], true);
-                foreach ($push_rule as $item) {
+                $push_rule_sort = [];
+                foreach ($push_rule as $kk => $item) {
+                    foreach ($item as $type => $group) {
+                        switch ($type) {
+                            case 'text':
+                                $push_rule_sort[$kk][0] = $group;
+                                break;
+                            case 'image':
+                                $push_rule_sort[$kk][2] = $group;
+                                break;
+                            case 'link':
+                                $push_rule_sort[$kk][1] = $group;
+                                break;
+                        }
+                    }
+                    ksort($push_rule_sort[$kk]);
+                }
+
+                foreach ($push_rule_sort as $kk => $item) {
                     foreach ($item as $type => $group) {
                         // 订单额度满足条件就进行推送
-                        if ($order['price'] >= $group['amount']) {
+                        if ($order['price'] >= $group['amount'] && !empty($group['value'])) {
                             switch ($type) {
-                                case 'text':
+                                case 0:
                                     m('message')->sendCustomNotice($openid, $group['value']);
                                     break;
-                                case 'image':
+                                case 1:
+                                    m('message')->sendCustomNotice($openid, '', $group['value']);
+                                    break;
+                                case 2:
                                     $media_id = $this->uploadImage(ATTACHMENT_ROOT . $group['value']);
                                     m('message')->sendImage($openid, $media_id);
-                                    break;
-                                case 'link':
-                                    m('message')->sendCustomNotice($openid, '', $group['value']);
                                     break;
                             }
                         }
