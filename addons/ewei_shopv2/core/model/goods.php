@@ -39,7 +39,7 @@ class Goods_EweiShopV2Model
 		{
 			$is_openmerch = 0;
 		}
-		$condition = "`uniacid` = :uniacid AND `deleted` = 0 and status=1";
+        $condition = "`uniacid` = :uniacid AND `deleted` = 0 and status=1 and isshow = 0";
 		$params = array( ":uniacid" => $_W["uniacid"] );
 		if( !empty($args["from"]) && $args["from"] == "miniprogram" ) 
 		{

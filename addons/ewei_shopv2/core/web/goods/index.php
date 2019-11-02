@@ -208,6 +208,7 @@ class Index_EweiShopV2Page extends WebPage {
                 'subtitle' => trim($_GPC['subtitle']),//商品副标题
                 'shorttitle' => trim($_GPC['shorttitle']),//商品短标题
                 'content' => m('common')->html_images($_GPC['content']),//商品详情
+                'isshow' => intval($_GPC['isshow']),//该商品是否在商城中显示
 
 
                 'createtime' => TIMESTAMP,//创建时间
