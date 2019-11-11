@@ -50,7 +50,9 @@
             <div class="title">
             <div id="tab" class="fui-tab fui-tab-danger">
                 <a data-tab="tab1" class="tab active">{if !empty($diypage['tab']['params']['goodstext'])}{$diypage['tab']['params']['goodstext']}{else}商品{/if}</a>
+                {if !empty($goods['content'])}
                 <a data-tab="tab2" class="tab">{if !empty($diypage['tab']['params']['detailtext'])}{$diypage['tab']['params']['detailtext']}{else}详情{/if}</a>
+                {/if}
                 {if count($params)>0}
                 <a data-tab="tab3" class="tab">参数</a>
                 {/if}
@@ -114,7 +116,7 @@
 <!--商品详情已完成-->
 <div class="fui-content detail-block  {if !$goods['canbuy']}notbuy{/if}">
     <div class="text-danger look-basic"><i class='icon icon-unfold'></i> <span>上拉返回商品详情</span></div>
-    <div class='content-block content-images'></div>
+<!--    <div class='content-block content-images'></div>-->
     {loop $goods['bottomFixedImageUrls']  $img}
         <img src="{$img}" width="100%">
     {/loop}
@@ -140,7 +142,7 @@
     {if $diyitem['id']=='detail_comment'}
         <div id='comments-container'></div>
     {elseif $diyitem['id']=='detail_pullup'}
-        {if empty($diyitem['params']['hide']) && !$new_temp}
+        {if empty($diyitem['params']['hide']) && !$new_temp && !empty($goods['content'])}
         <div class="fui-cell-group" style="background: {$diyitem['style']['background']}; margin-top: {$diyitem['style']['margintop']}px;">
             <div class="fui-cell">
                 <div class="fui-cell-text text-center look-detail" style="color: {$diyitem['style']['textcolor']}"><i class='icon icon-fold'></i> <span>上拉查看图文详情</span></div>
