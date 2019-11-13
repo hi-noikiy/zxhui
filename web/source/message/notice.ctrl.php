@@ -57,6 +57,9 @@ if ($do == 'change_read_status') {
 }
 
 if ($do == 'event_notice') {
+    if (true) {
+        return;
+    }
 	if (!pdo_tableexists('message_notice_log')) {
 		iajax(-1);
 	}
