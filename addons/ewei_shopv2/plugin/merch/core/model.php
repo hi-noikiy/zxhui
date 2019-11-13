@@ -1458,11 +1458,11 @@ class MerchModel extends PluginModel
 		$sql = "select " . $con . " from " . tablename("ewei_shop_merch_user") . " u " . " left join " . tablename("ewei_shop_order") . " o on u.id=o.merchid" . " left join " . tablename("ewei_shop_order_refund") . " r on o.refundid=r.id" . " left join " . tablename("ewei_shop_merch_commission_orderprice") . " comprice on o.id=comprice.order_id";
 		if( !empty($pindex) && !empty($psize) ) 
 		{
-			$sql .= " where 1 " . $condition . " " . $conditionrefund . " LIMIT " . ($pindex - 1) * $psize . "," . $psize;
+			$sql .= " where 1 " . $condition . " " . $conditionrefund . " order by o.id desc" . " LIMIT " . ($pindex - 1) * $psize . "," . $psize;
 		}
 		else 
 		{
-			$sql .= " where 1 " . $condition . " " . $conditionrefund;
+			$sql .= " where 1 " . $condition . " " . $conditionrefund . " order by o.id desc";
 		}
 		$order = pdo_fetchall($sql, $params);
 		foreach( $order as &$list ) 

@@ -16,7 +16,7 @@
             <th>商品</th>
             <th>来源店铺</th>
             <th style="width:100px;text-align: center;">商品价格</th>
-            <th style="width:100px;text-align: center;">赠品结算价格</th>
+            <th style="width:100px;text-align: center;color:#eb6060 !important;">赠品结算价格</th>
             <th style="width:100px;text-align: center;">库存</th>
             <th style="width:100px;text-align: center;">操作</th>
         </tr>
@@ -66,7 +66,7 @@
         $("#goodsid_input").html('<div class="tip">正在进行搜索...</div>');
 
         $.ajax({
-            url:"{php echo webUrl('sale/gift/querygift')}",
+            url:"{php echo webUrl('sale/gift_plus/querygift')}",
             type:'get',
             data:{title:keyword,page:pindex,psize:10},
             async : false, //默认为true 异步

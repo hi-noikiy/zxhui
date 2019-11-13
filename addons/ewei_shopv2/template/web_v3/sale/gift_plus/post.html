@@ -339,19 +339,49 @@
                     buy: 1,
                     free: 1
                 });
-            }
+                syncHtml();
+            } else if (type === 'string' && data === 'sync') {
+                var _init = false;
+                var _timer;
 
-            if (type === 'number') {
+                if (_init) {
+                    clearInterval(_timer);
+                } else {
+                    _timer = setInterval(function () {
+                        var _ele = $("#giftgoodsid-selector-modal");
+
+                        if (_ele.length > 0) {
+                            $.each(_ele.find('.selectit'), function (i, v) {
+                                var obj = $(v);
+                                var _id = obj.data('id');
+                                if (gift_goods.length > 0) {
+                                    for (i = 0; i < gift_goods.length; i++) {
+                                        if (_id === parseInt(gift_goods[i].id)) {
+                                            obj.removeClass("selectit").removeClass("label-primary").addClass("cancelit").addClass("label-danger").text("取消");
+                                        }
+                                    }
+                                }
+                            });
+                            // clearInterval(_timer);
+                        }
+                    }, 1000);
+                }
+            } else if (type === 'number' || (type === 'string' && parseInt(data) > 0)) {
                 if (gift_goods.length > 0) {
                     for (i = 0; i < gift_goods.length; i++) {
-                        if (data === parseInt(gift_goods[i].id)) {
+                        if (parseInt(data) === parseInt(gift_goods[i].id)) {
                             gift_goods.splice(i, 1);
+
+                            $.each($("div[data-name=giftgoodsid].multi-item"), function (i, v) {
+                                if (parseInt($(v).data('id')) === parseInt(data)) {
+                                    $(v).find('.close').click();
+                                }
+                            });
                         }
                     }
                 }
+                syncHtml();
             }
-
-            syncHtml();
         }
     }
 

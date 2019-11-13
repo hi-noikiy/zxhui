@@ -1059,7 +1059,7 @@ if (!function_exists('tpl_selector')) {
                                       <img class='img-responsive img-thumbnail' src='" . tomedia($item[$options['thumb']]) . "' onerror='this.src=\"../addons/ewei_shopv2/static/images/nopic.png\"' style='width:100px;height:100px;'>
                                       <div class='img-nickname'>{$item[$options['text']]}</div>
                                      <input type='hidden' value='{$item[$options['key']]}' name='{$id}'>
-                                     <em onclick='biz.selector.remove(this,\"{$name}\", \"{$item[$options['key']]}\")'  class='close'>×</em>
+                                     <em onclick='biz.selector.remove(this,\"{$name}\", \"{$item[$options['key']]}\", \"{$options['callback']}\")'  class='close'>×</em>
                             <div style='clear:both;'></div>
                          </div>";
             } elseif ($options['type'] == 'coupon') {

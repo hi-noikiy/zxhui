@@ -1601,7 +1601,6 @@ input[type=radio].danger:checked:before
 }
 .multi-img-details .img-nickname {
     position: absolute;
-    bottom: 0px;
     line-height: 25px;
     height: 25px;
     color: #fff;
@@ -1610,6 +1609,7 @@ input[type=radio].danger:checked:before
     left: 5px;
     bottom: 5px;
     background: rgba(0,0,0,0.8);
+    overflow: hidden;
 }
 /**
 modal

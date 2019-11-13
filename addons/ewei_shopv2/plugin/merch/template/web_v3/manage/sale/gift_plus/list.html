@@ -12,7 +12,8 @@
         {/if}
     </td>
     <td>
-        <img src="{php echo tomedia($item['thumb'])}" style="width:40px;height:40px;padding:1px;border:1px solid #ccc;"  onerror="this.src='../addons/ewei_shopv2/static/images/nopic.png'"/>
+        {php $shop_logo = $_W['shopset']['shop']['logo'];}
+        <img src="{php echo tomedia($item['thumb'])}" style="width:40px;height:40px;padding:1px;border:1px solid #ccc;"  onerror="this.src='{php echo $shop_logo;}'"/>
     </td>
     <td class='full' style="overflow-x: hidden">
         {ifp 'sale.gift.edit'}

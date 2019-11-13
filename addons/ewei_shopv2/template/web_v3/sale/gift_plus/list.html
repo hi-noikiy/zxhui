@@ -39,8 +39,8 @@
             <span data-toggle="tooltip" data-placement="top" data-original-title="{ifp 'sale.gift.edit'}修改{else}查看{/if}"><i class="icow icow-bianji2"></i></span>
         </a>
         {/if}
-        {ifp 'sale.gift.delete1'}
-        <a  class='btn btn-op btn-operation' data-toggle='ajaxRemove' href="{php echo webUrl('sale/gift_plus/delete1', array('id' => $item['id']))}" data-confirm='如果此活动存在购买记录，会无法关联到商品, 确认要彻底删除吗?？'>
+        {ifp 'sale.gift.delete'}
+        <a  class='btn btn-op btn-operation' data-toggle='ajaxRemove' href="{php echo webUrl('sale/gift_plus/delete', array('id' => $item['id']))}" data-confirm='如果此活动存在购买记录，会无法关联到商品, 确认要彻底删除吗?？'>
             <span data-toggle="tooltip" data-placement="top" data-original-title="删除"><i class="icow icow-shanchu1"></i></span>
         </a>
         {/if}

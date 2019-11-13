@@ -131,7 +131,7 @@ class Index_EweiShopV2Page extends MerchWebPage
                 'displayorder' => intval($_GPC['displayorder']),
                 'title' => trim($_GPC['title']),
                 'activity' => $activity,
-                'thumb' => trim($_GPC['thumb']),
+                'thumb' => !empty($_GPC['thumb']) ? trim($_GPC['thumb']) : $_W['shopset']['shop']['logo'],
                 'orderprice' => floatval($_GPC['orderprice']),
                 'goodsid' => $_GPC['goodsid'],
                 'giftgoodsid' => $_GPC['giftgoodsid'],
@@ -377,17 +377,17 @@ class Index_EweiShopV2Page extends MerchWebPage
             $params[':keywords'] = '%' . $kwd . '%';
         }
 
-        $ds = pdo_fetchall("SELECT g.id,g.title,g.thumb,g.marketprice,g.gift_price,g.total,s.sets FROM " . tablename('ewei_shop_goods') . (" AS g LEFT JOIN " . tablename('ewei_shop_sysset') . " AS s ON s.uniacid = g.uniacid  WHERE 1 " . $condition . ' ORDER BY g.displayorder DESC,g.id DESC LIMIT ') . ($pindex - 1) * $psize . ',' . $psize, $params);
+        $ds = pdo_fetchall("SELECT g.id,g.title,g.thumb,g.marketprice,g.gift_price,g.total,m.username FROM " . tablename('ewei_shop_goods') . (" AS g LEFT JOIN " . tablename('ewei_shop_merch_account') . " AS m ON m.uniacid = g.uniacid AND m.id = g.merchid  WHERE 1 " . $condition . ' ORDER BY g.displayorder DESC,g.id DESC LIMIT ') . ($pindex - 1) * $psize . ',' . $psize, $params);
 
         foreach ($ds as $key => &$value) {
-            $value['shop'] = unserialize($value['sets'])['shop'];
-            $value['shop_logo'] = $value['shop']['logo'];
-            $value['shop_name'] = $value['shop']['name'];
-            unset($value['sets']);
-            unset($value['shop']);
+            if (empty($value['username'])) {
+                $value['shop_name'] = '主商城';
+            } else {
+                $value['shop_name'] = '[商户]' . $value['username'];
+            }
         }
 
-        $total = pdo_fetchcolumn('SELECT COUNT(1) FROM ' . tablename('ewei_shop_goods') . ' WHERE 1 ' . $condition . ' ', $params);
+        $total = pdo_fetchcolumn('SELECT COUNT(1) FROM ' . tablename('ewei_shop_goods') . ' g WHERE 1 ' . $condition . ' ', $params);
         $pager = pagination($total, $pindex, $psize, '', array(
             'before' => 5,
             'after' => 4,

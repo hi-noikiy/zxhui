@@ -43,13 +43,20 @@ define(['jquery'], function ($) {
 
 				modalObj = $(modal);
 				modalObj.on('show.bs.modal',function(){
-					if(params.autosearch=='1') {
-						$.get(params.url, {
-							keyword: ''
-						}, function (dat) {
-							$('.content', modalObj).html(dat);
-						});
-					};
+                    if (params.autosearch == '1') {
+                        $.get(params.url, {
+                            keyword: ''
+                        }, function (dat) {
+                            $('.content', modalObj).html(dat);
+                            // 处理选中
+                            if (params.callback !== '' && params.callback === 'syncGiftGoods') {
+                                var callbackFunction = eval(params.callback);
+                                if (callbackFunction !== undefined) {
+                                    callbackFunction('sync');
+                                }
+                            }
+                        });
+                    }
 				});
 			};
 			modalObj.modal('show');
@@ -106,10 +113,22 @@ define(['jquery'], function ($) {
                 }
             }
 		}
-		, set: function (obj, data) {
-
-
-
+		, set: function (obj, data, call) {
+		    // 反选效果
+            if (typeof data.type !== 'undefined' && data.type === 'gift_plus') {
+                if ($(obj).hasClass('cancelit')) {
+                    $(obj).removeClass('cancelit').removeClass('label-danger').addClass('selectit').addClass('label-primary').text('选择');
+                    if (call !== '') {
+                        var callFunction = eval(call);
+                        if (callFunction !== undefined) {
+                            callFunction(data.id);
+                        }
+                    }
+                    return;
+                } else {
+                    $(obj).removeClass("selectit").removeClass("label-primary").addClass("cancelit").addClass("label-danger").text("取消");
+                }
+            }
 
 			var name = $(obj).closest('.content').data('name');
 			var modalObj =  $('#' +name +"-selector-modal");
@@ -159,7 +178,7 @@ define(['jquery'], function ($) {
 				html += '<img class="img-responsive img-thumbnail" src="' + data[thumb] + '" onerror="this.src=\'../addons/ewei_shopv2/static/images/nopic.png\'" style="width:100px;height:100px;">';
 				html += '<div class="img-nickname">' + data[text] + '</div>';
 				html += '<input type="hidden" value="' + data[key] + '" name="' + id +'">';
-				html += '<em onclick="biz.selector.remove(this,\'' + name + '\',\'' + data[key] + '\')" class="close">×</em>';
+				html += '<em onclick="biz.selector.remove(this,\'' + name + '\',\'' + data[key] + '\', \'' + callback + '\')" class="close">×</em>';
 				html += '</div>';
 			} else if(type=='coupon'){
 				html += "<tr class='multi-product-item' data-"+ key+"='"+ data[key] + "'>";

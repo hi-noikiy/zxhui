@@ -170,7 +170,7 @@
                         <label class="col-lg control-label">赠品缩略图</label>
                         <div class="col-sm-9 col-xs-12">
                             {ife 'sale.gift' $item}
-                            {php echo tpl_form_field_image2('thumb', $item['thumb']);}
+                            {php echo tpl_form_field_image2('thumb', $item['thumb'], '', ['dest_dir' => 'merch/' . $_W['merchid']])}
                             <span class="help-block image-block" style="display: block;">建议为正方型图片，尺寸建议宽度为640，如果不上传默认为第一件赠品缩略图。</span>
                             {else}
                             <input type="hidden" name="thumb" value="{$item['thumb']}" />
@@ -254,7 +254,7 @@
                         <label class="col-lg control-label">分享图标</label>
                         <div class="col-sm-9 col-xs-12">
                             {ife 'sale.gift' $item}
-                            {php echo tpl_form_field_image2('share_icon', $item['share_icon'])}
+                            {php echo tpl_form_field_image2('share_icon', $item['share_icon'], '', ['dest_dir' => 'merch/' . $_W['merchid']])}
                             <span class='help-block'>如果不选择，默认为赠品缩略图片</span>
                             {else}
                             {if !empty($item['share_icon'])}
