@@ -61,3 +61,6 @@ ALTER TABLE `ims_ewei_shop_order_goods` ADD `gift_plus_from_platform` tinyint(3)
 
 -- 2019-10-11 01:35:01
 ALTER TABLE `ims_ewei_shop_order` ADD `gift_plus_from_platform` tinyint(3) NOT NULL DEFAULT 0 COMMENT '超级赠品活动是否来自平台' AFTER `gift_plus_market`;
+
+-- 2019-11-07 12:49:53
+ALTER TABLE `ims_ewei_shop_gift_plus` ADD `deleted` tinyint(3) NOT NULL DEFAULT 0 COMMENT '是否删除 0 否 1 是' AFTER `merchant_id`;

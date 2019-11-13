@@ -77,11 +77,10 @@
                         <div class="text goodstitle towline"><%if g.seckill_task%><span class="fui-label fui-label-danger"><%g.seckill_task.tag%></span><%/if%><%g.title%></div>
                         <%if g.status==2 || g.is_gift_plus==1%><span class="fui-label fui-label-danger"><%if g.is_gift_plus%>超级<%/if%>赠品</span><%/if%>
                         <%if g.optionid!='0'%><div class='subtitle'  style="color:#999;"><%g.optiontitle%></div><%/if%>
-
                     </div>
                     <!--超级赠品-->
                     <div class='fui-list-angle'>
-                        &yen; <span><span class='marketprice <%if g.is_gift_plus == 1%>original<%/if%>'><%(g.price/g.total).toFixed(2)%></span><br/>
+                        &yen; <span><span class='marketprice <%if g.is_gift_plus == 1%>original<%/if%>'><%if g.is_gift_plus == 1%><%g.gift_price_market%><%else%><%(g.price/g.total).toFixed(2)%><%/if%></span><br/>
                         <span style="color: #999">x<%g.total%></span><br/>
                         <%if g.single_refundid>0%>
                             <span class="text-warning">

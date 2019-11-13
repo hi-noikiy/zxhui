@@ -82,7 +82,7 @@
                             </div>
                             <!--超级赠品-->
                             <div class='fui-list-angle'>
-                                ￥<span><span class='marketprice <%if g.is_gift_plus == 1%>original<%/if%>'><%(g.price/g.total).toFixed(2)%></span><br/><span style="color: #999">x<%g.total%></span><br/>
+                                ￥<span><span class='marketprice <%if g.is_gift_plus == 1%>original<%/if%>'><%if g.is_gift_plus == 1%><%g.gift_price_market%><%else%><%(g.price/g.total).toFixed(2)%><%/if%></span><br/><span style="color: #999">x<%g.total%></span><br/>
                                  <%if g.single_refundid>0%>
                                     <span class="text-warning">
                                         <%if g.single_refundstate==9%>

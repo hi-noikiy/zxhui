@@ -119,7 +119,7 @@ paytype,expresssn,refundstate,dispatchtype,verifyinfo,merchid,isparent,iscycelbu
 
             // 所有商品 && 超级赠品
             $sql = "SELECT og.id,og.goodsid,og.total,g.title,g.thumb,g.type,g.status,og.price,og.title as gtitle,og.optionname as optiontitle,og.optionid,op.specs,g.merchid,og.seckill,og.seckill_taskid,
-                og.sendtype,og.expresscom,og.expresssn,og.express,og.sendtime,og.finishtime,og.remarksend,og.single_refundid,og.single_refundstate,og.is_gift_plus
+                og.sendtype,og.expresscom,og.expresssn,og.express,og.sendtime,og.finishtime,og.remarksend,og.single_refundid,og.single_refundstate,og.is_gift_plus,og.gift_price_market
                 FROM " . tablename('ewei_shop_order_goods') . " og "
                 . " left join " . tablename('ewei_shop_goods') . " g on og.goodsid = g.id "
                 . " left join " . tablename('ewei_shop_goods_option') . " op on og.optionid = op.id "

@@ -116,7 +116,7 @@
 <!--商品详情已完成-->
 <div class="fui-content detail-block  {if !$goods['canbuy']}notbuy{/if}">
     <div class="text-danger look-basic"><i class='icon icon-unfold'></i> <span>上拉返回商品详情</span></div>
-<!--    <div class='content-block content-images'></div>-->
+    <div class='content-block content-images'></div>
     {loop $goods['bottomFixedImageUrls']  $img}
         <img src="{$img}" width="100%">
     {/loop}

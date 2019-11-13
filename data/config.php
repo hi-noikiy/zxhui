@@ -10,7 +10,7 @@ $config = array();
 
 $config['db']['master']['host'] = '127.0.0.1';
 $config['db']['master']['username'] = 'zxhui_www';
-$config['db']['master']['password'] = '7FKFAZAbmc';
+$config['db']['master']['password'] = 'IzQhfDtS5x';
 $config['db']['master']['port'] = '3306';
 $config['db']['master']['database'] = 'zxhui_www';
 $config['db']['master']['charset'] = 'utf8';
@@ -43,7 +43,7 @@ $config['setting']['memory_limit'] = '256M';
 $config['setting']['filemode'] = 0644;
 $config['setting']['authkey'] = '3de5321e';
 $config['setting']['founder'] = '1';
-$config['setting']['development'] = 0;
+$config['setting']['development'] = '0';
 $config['setting']['referrer'] = 0;
 
 // --------------------------  CONFIG UPLOAD  --------------------------- //
